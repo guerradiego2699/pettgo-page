@@ -1,0 +1,82 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
+import type { Session, User } from "@supabase/supabase-js"
+import { supabase } from "../lib/supabase"
+
+export type UserRole = "persona" | "admin" | "especialista" | "veterinaria"
+
+export interface Profile {
+  id: string
+  name: string
+  email: string
+  role: UserRole
+  avatar_url: string | null
+  created_at: string
+}
+
+interface AuthContextValue {
+  session: Session | null
+  user: User | null
+  profile: Profile | null
+  loading: boolean
+  signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
+}
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [session, setSession] = useState<Session | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  async function loadProfile(userId: string) {
+    const { data } = await supabase.from("profiles").select("*").eq("id", userId).single()
+    setProfile(data)
+  }
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      if (session?.user) {
+        loadProfile(session.user.id).finally(() => setLoading(false))
+      } else {
+        setLoading(false)
+      }
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      if (session?.user) {
+        loadProfile(session.user.id)
+      } else {
+        setProfile(null)
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  async function signOut() {
+    await supabase.auth.signOut()
+  }
+
+  async function refreshProfile() {
+    if (session?.user) await loadProfile(session.user.id)
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{ session, user: session?.user ?? null, profile, loading, signOut, refreshProfile }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>")
+  return ctx
+}

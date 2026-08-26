@@ -6,15 +6,15 @@ function NotFound() {
       <span className="text-5xl" aria-hidden="true">
         🐕‍🦺
       </span>
-      <h1 className="mt-4 text-3xl font-bold text-slate-900">
+      <h1 className="mt-4 font-heading text-3xl font-bold text-ink-900">
         Página no encontrada
       </h1>
-      <p className="mt-3 text-slate-600">
+      <p className="mt-3 text-ink-500">
         La página que buscas no existe o fue movida.
       </p>
       <Link
         to="/"
-        className="mt-8 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800"
+        className="mt-8 text-sm font-semibold text-brand-700 transition hover:text-brand-800"
       >
         ← Volver al inicio
       </Link>

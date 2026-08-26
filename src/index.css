@@ -1,10 +1,46 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Baloo 2", ui-rounded, "Plus Jakarta Sans", sans-serif;
+
+  --color-cream-50: #fffdf9;
+  --color-cream-100: #fbf3e8;
+  --color-cream-200: #f5e8d6;
+  --color-cream-300: #ede1d1;
+  --color-cream-400: #e2d2ba;
+
+  --color-brand-50: #fdf1e4;
+  --color-brand-100: #fbe3c8;
+  --color-brand-200: #f6c793;
+  --color-brand-300: #f0aa66;
+  --color-brand-400: #e89a4e;
+  --color-brand-500: #e08a3f;
+  --color-brand-600: #c96f2c;
+  --color-brand-700: #a85a22;
+  --color-brand-800: #7a3f19;
+  --color-brand-900: #5a2e13;
+
+  --color-ink-50: #f5eeea;
+  --color-ink-100: #e8d9d0;
+  --color-ink-300: #8c5a4a;
+  --color-ink-500: #5c2a22;
+  --color-ink-700: #431d18;
+  --color-ink-900: #3c1416;
+  --color-ink-950: #2a0d0f;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans);
+  background-color: var(--color-cream-100);
+  color: var(--color-ink-900);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
 }

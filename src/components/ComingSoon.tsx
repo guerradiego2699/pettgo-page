@@ -12,14 +12,14 @@ function ComingSoon({ icon, title, description }: ComingSoonProps) {
       <span className="text-5xl" aria-hidden="true">
         {icon}
       </span>
-      <h1 className="mt-4 text-3xl font-bold text-slate-900">{title}</h1>
-      <p className="mt-3 text-slate-600">{description}</p>
-      <span className="mt-6 inline-flex items-center rounded-full bg-sky-100 px-4 py-1.5 text-sm font-semibold text-sky-700">
+      <h1 className="mt-4 font-heading text-3xl font-bold text-ink-900">{title}</h1>
+      <p className="mt-3 text-ink-500">{description}</p>
+      <span className="mt-6 inline-flex items-center rounded-full bg-brand-100 px-4 py-1.5 text-sm font-semibold text-brand-700">
         En construcción
       </span>
       <Link
         to="/"
-        className="mt-8 text-sm font-semibold text-emerald-700 transition hover:text-emerald-800"
+        className="mt-8 text-sm font-semibold text-brand-700 transition hover:text-brand-800"
       >
         ← Volver al inicio
       </Link>
