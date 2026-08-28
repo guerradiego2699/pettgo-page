@@ -39,7 +39,7 @@ function ProductForm({ product, onCancel, onSaved }: ProductFormProps) {
     try {
       let photoUrl = product?.photo_url ?? null
       if (photoFile) {
-        const path = `${product?.id ?? crypto.randomUUID()}.${extensionFor(photoFile)}`
+        const path = `${crypto.randomUUID()}.${extensionFor(photoFile)}`
         photoUrl = await uploadImage("products", path, photoFile)
       }
 

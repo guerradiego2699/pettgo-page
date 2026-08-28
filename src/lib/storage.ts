@@ -2,7 +2,7 @@ import { supabase } from "./supabase"
 
 export async function uploadImage(bucket: string, path: string, file: File) {
   const { error } = await supabase.storage.from(bucket).upload(path, file, {
-    upsert: true,
+    upsert: false,
     cacheControl: "3600",
   })
   if (error) throw error

@@ -39,7 +39,7 @@ function PetForm({ pet, onCancel, onSaved }: PetFormProps) {
     try {
       let photoUrl = pet?.photo_url ?? null
       if (photoFile) {
-        const path = `${user.id}/${pet?.id ?? crypto.randomUUID()}.${extensionFor(photoFile)}`
+        const path = `${user.id}/${crypto.randomUUID()}.${extensionFor(photoFile)}`
         photoUrl = await uploadImage("pets", path, photoFile)
       }
 

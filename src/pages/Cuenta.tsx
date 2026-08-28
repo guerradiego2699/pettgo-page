@@ -40,7 +40,7 @@ function Cuenta() {
     try {
       let avatarUrl = profile.avatar_url
       if (avatarFile) {
-        const path = `${profile.id}/avatar.${extensionFor(avatarFile)}`
+        const path = `${profile.id}/${crypto.randomUUID()}.${extensionFor(avatarFile)}`
         avatarUrl = await uploadImage("avatars", path, avatarFile)
       }
 
