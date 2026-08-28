@@ -65,3 +65,26 @@ Se revisó el Security Advisor de Supabase antes del primer despliegue:
 - **Pendiente, no bloqueante**: activar Captcha (hCaptcha/Turnstile) en
   Authentication → Attack Protection antes de un lanzamiento con tráfico público, para
   frenar bots en registro/login.
+
+## Gotcha: `upsert: true` en Storage rompe las políticas RLS por carpeta (28 ago 2026)
+
+Detectado en producción: subir fotos (avatar, mascota, producto) fallaba siempre con
+`403 — new row violates row-level security policy`, aunque la política y la ruta eran
+correctas (confirmado en Logs → Storage: `role: authenticated`, ruta con el UUID correcto).
+
+**Causa:** `supabase.storage.from(bucket).upload(path, file, { upsert: true })` genera
+un `INSERT ... ON CONFLICT (name, bucket_id) DO UPDATE`. Postgres evalúa las políticas de
+RLS de forma distinta para ese tipo de consulta (falla en la rutina interna
+`ExecWithCheckOptions`), incluso cuando no existe ninguna fila en conflicto. No es un
+error en la política — es una interacción conocida y no obvia entre `ON CONFLICT DO
+UPDATE` y RLS en Postgres/Supabase Storage.
+
+**Solución aplicada:** en `src/lib/storage.ts` se usa `upsert: false`, y cada subida
+(`Cuenta.tsx`, `PetForm.tsx`, `ProductForm.tsx`, `VetForm.tsx`, `SpecialistForm.tsx`)
+genera un nombre de archivo nuevo con `crypto.randomUUID()` en cada subida — nunca se
+reutiliza la misma ruta, así que nunca hay conflicto y no hace falta upsert.
+
+**Si en el futuro se necesita "reemplazar" un archivo en la misma ruta** (en vez de subir
+uno nuevo), no uses `upsert: true`. En su lugar, borra el archivo anterior primero
+(`supabase.storage.from(bucket).remove([path])`) y luego sube el nuevo con
+`upsert: false`.
