@@ -96,15 +96,24 @@ gratis productos de pymes chilenas y deriva tráfico a su tienda. El flujo compl
 crear la propuesta, enviarla por correo, que la pyme acepte/edite/rechace desde un
 enlace único, y medir vistas/clics — vive en `/api` (ver `api/README.md`).
 
-### 1. Aplicar las migraciones
+### 1. Migraciones (ya aplicadas en el proyecto real)
 
-En el SQL Editor de Supabase, en orden:
+`migrations/0006_drop_dropshipping_columns.sql`, `0007_productos_pyme.sql` y
+`0008_fix_search_path.sql` ya se aplicaron directamente al proyecto de Supabase de
+producción. Solo hace falta correrlas a mano si trabajas contra otro proyecto (por
+ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
 
-1. `migrations/0006_drop_dropshipping_columns.sql` — revierte las columnas que había
-   dejado un intento anterior de dropshipping por AliExpress (nunca se usó en producción).
-2. `migrations/0007_productos_pyme.sql` — crea `productos_pyme`, `eventos_producto`,
-   las funciones `metricas_producto`/`metricas_diarias` y la vista pública
-   `productos_pyme_publicos`.
+- `0006`: revierte las columnas que había dejado un intento anterior de dropshipping
+  por AliExpress (nunca se usó en producción).
+- `0007`: crea `productos_pyme`, `eventos_producto`, las funciones
+  `metricas_producto`/`metricas_diarias` y la vista pública `productos_pyme_publicos`.
+- `0008`: corrige un "Function Search Path Mutable" que marcó el Security Advisor en
+  las 3 funciones nuevas de `0007`.
+
+`productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
+que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:
+necesita saltarse el RLS de `productos_pyme` fila por fila para poder mostrar
+públicamente solo los campos seguros de los productos `publicado`.
 
 ### 2. Variables de entorno
 
