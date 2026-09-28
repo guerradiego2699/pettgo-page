@@ -2,7 +2,9 @@ import { Routes, Route } from "react-router-dom"
 import Layout from "./components/Layout"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Home from "./pages/Home"
-import Tienda from "./pages/Tienda"
+import Productos from "./pages/Productos"
+import ProductoDetalle from "./pages/ProductoDetalle"
+import Propuesta from "./pages/Propuesta"
 import Especialistas from "./pages/Especialistas"
 import EspecialistaDetalle from "./pages/EspecialistaDetalle"
 import Veterinarias from "./pages/Veterinarias"
@@ -31,7 +33,9 @@ function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="tienda" element={<Tienda />} />
+        <Route path="productos" element={<Productos />} />
+        <Route path="productos/:id" element={<ProductoDetalle />} />
+        <Route path="propuesta/:token" element={<Propuesta />} />
         <Route path="especialistas" element={<Especialistas />} />
         <Route path="especialistas/:id" element={<EspecialistaDetalle />} />
         <Route path="veterinarias" element={<Veterinarias />} />

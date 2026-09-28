@@ -80,11 +80,75 @@ error en la política — es una interacción conocida y no obvia entre `ON CONF
 UPDATE` y RLS en Postgres/Supabase Storage.
 
 **Solución aplicada:** en `src/lib/storage.ts` se usa `upsert: false`, y cada subida
-(`Cuenta.tsx`, `PetForm.tsx`, `ProductForm.tsx`, `VetForm.tsx`, `SpecialistForm.tsx`)
-genera un nombre de archivo nuevo con `crypto.randomUUID()` en cada subida — nunca se
-reutiliza la misma ruta, así que nunca hay conflicto y no hace falta upsert.
+(`Cuenta.tsx`, `PetForm.tsx`, `VetForm.tsx`, `SpecialistForm.tsx`) genera un nombre de
+archivo nuevo con `crypto.randomUUID()` en cada subida — nunca se reutiliza la misma
+ruta, así que nunca hay conflicto y no hace falta upsert.
 
 **Si en el futuro se necesita "reemplazar" un archivo en la misma ruta** (en vez de subir
 uno nuevo), no uses `upsert: true`. En su lugar, borra el archivo anterior primero
 (`supabase.storage.from(bucket).remove([path])`) y luego sube el nuevo con
 `upsert: false`.
+
+## Productos de pymes (recomendación con propuesta por correo)
+
+Reemplaza la antigua "Tienda" (venta directa, retirada). PettGo ya no vende: recomienda
+gratis productos de pymes chilenas y deriva tráfico a su tienda. El flujo completo —
+crear la propuesta, enviarla por correo, que la pyme acepte/edite/rechace desde un
+enlace único, y medir vistas/clics — vive en `/api` (ver `api/README.md`).
+
+### 1. Aplicar las migraciones
+
+En el SQL Editor de Supabase, en orden:
+
+1. `migrations/0006_drop_dropshipping_columns.sql` — revierte las columnas que había
+   dejado un intento anterior de dropshipping por AliExpress (nunca se usó en producción).
+2. `migrations/0007_productos_pyme.sql` — crea `productos_pyme`, `eventos_producto`,
+   las funciones `metricas_producto`/`metricas_diarias` y la vista pública
+   `productos_pyme_publicos`.
+
+### 2. Variables de entorno
+
+Además de `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (frontend), las funciones de
+`/api` necesitan estas, **solo en Vercel → Project Settings → Environment Variables**
+(nunca con prefijo `VITE_`, nunca en el frontend):
+
+| Variable | De dónde sale |
+|---|---|
+| `SUPABASE_URL` | Igual que `VITE_SUPABASE_URL` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Project Settings → API Keys → "service_role" (secreta) |
+| `RESEND_API_KEY` | Resend → API Keys |
+| `ADMIN_EMAIL` | El correo con el que inicias sesión como admin en PettGo |
+| `SITE_URL` | `https://pettgo.cl` en producción |
+
+### 3. Resend (correo de propuesta)
+
+1. Verifica el dominio `pettgo.cl` en Resend (Domains → Add Domain), agregando los
+   registros DNS que te indique donde tengas comprado el dominio.
+2. En la configuración del dominio, **desactiva "Open Tracking" y "Click Tracking"**
+   (el correo se envía sin JavaScript ni redirecciones intermedias, como pide el flujo).
+3. Crea una API Key y ponla en `RESEND_API_KEY`.
+
+### 4. Usuario administrador
+
+El check de admin de `/api` es distinto al de `profiles.role`: compara el email de la
+sesión contra `ADMIN_EMAIL`. Usa la cuenta con la que ya inicias sesión como admin en
+PettGo (la que tiene `role = 'admin'` en `profiles`) y pon ese mismo correo en
+`ADMIN_EMAIL`.
+
+### 5. Probar en local con `vercel dev`
+
+`vite dev` (el `npm run dev` normal) no ejecuta las funciones de `/api` — para probar el
+flujo completo (correo, propuesta, métricas) hace falta la CLI de Vercel:
+
+```bash
+npm install -g vercel
+vercel link      # conecta esta carpeta con tu proyecto de Vercel (una sola vez)
+vercel env pull .env   # descarga las variables de entorno del proyecto a .env local
+vercel dev
+```
+
+`vercel dev` sirve el frontend y las funciones de `/api` juntos (por defecto en
+`http://localhost:3000`). Desde ahí puedes: proponer un producto en `/admin/productos`,
+abrir el correo que llega a la pyme (revisa la bandeja del `pyme_email` que hayas usado
+para probar), aceptar/editar/rechazar en `/propuesta/:token`, y ver el producto
+publicado en `/productos`.

@@ -6,7 +6,7 @@ import logo from "../assets/pettgo-logo.webp"
 
 const navLinks = [
   { to: "/", label: "Inicio", end: true },
-  { to: "/tienda", label: "Tienda" },
+  { to: "/productos", label: "Productos" },
   { to: "/especialistas", label: "Especialistas" },
   { to: "/veterinarias", label: "Veterinarias" },
   { to: "/mapa", label: "Mapa" },
