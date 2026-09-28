@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { supabase } from "../lib/supabase"
 import { fetchAuthorNames } from "../lib/profiles"
 import { useAuth } from "../context/AuthContext"
@@ -7,6 +7,7 @@ import type { ForumThread } from "../types/forum"
 
 function Comunidad() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [threads, setThreads] = useState<ForumThread[]>([])
   const [authorNames, setAuthorNames] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(true)
@@ -128,18 +129,24 @@ function Comunidad() {
       ) : (
         <div className="mt-8 flex flex-col gap-4">
           {threads.map((thread) => (
-            <Link
+            <div
               key={thread.id}
-              to={`/comunidad/${thread.id}`}
-              className="rounded-2xl border border-brand-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              onClick={() => navigate(`/comunidad/${thread.id}`)}
+              className="cursor-pointer rounded-2xl border border-brand-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <h3 className="font-heading text-lg font-bold text-ink-900">{thread.title}</h3>
               <p className="mt-1 line-clamp-2 text-sm text-ink-500">{thread.body}</p>
               <p className="mt-2 text-xs font-medium text-ink-400">
-                {authorNames[thread.author_id] ?? "Alguien"} ·{" "}
-                {new Date(thread.created_at).toLocaleDateString("es-CL")}
+                <Link
+                  to={`/perfil/${thread.author_id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative z-10 hover:text-brand-600 hover:underline"
+                >
+                  {authorNames[thread.author_id] ?? "Alguien"}
+                </Link>{" "}
+                · {new Date(thread.created_at).toLocaleDateString("es-CL")}
               </p>
-            </Link>
+            </div>
           ))}
         </div>
       )}

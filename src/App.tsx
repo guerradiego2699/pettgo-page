@@ -12,6 +12,7 @@ import VeterinariaDetalle from "./pages/VeterinariaDetalle"
 import Mapa from "./pages/Mapa"
 import Comunidad from "./pages/Comunidad"
 import ForoTema from "./pages/ForoTema"
+import PerfilPublico from "./pages/PerfilPublico"
 import Login from "./pages/Login"
 import Registro from "./pages/Registro"
 import RecuperarPassword from "./pages/RecuperarPassword"
@@ -52,6 +53,7 @@ function App() {
           <Route path="mascotas" element={<Mascotas />} />
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="comunidad/:id" element={<ForoTema />} />
+          <Route path="perfil/:id" element={<PerfilPublico />} />
         </Route>
         <Route element={<ProtectedRoute roles={["admin"]} />}>
           <Route path="admin" element={<AdminHome />} />

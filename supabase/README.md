@@ -19,6 +19,14 @@
    (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) en Project Settings → Environment
    Variables del proyecto en Vercel.
 
+## Perfil público con mascotas (`0009_public_pets_view.sql`)
+
+Al hacer clic en el nombre de alguien en el foro (`/perfil/:id`), se muestran sus
+mascotas. La tabla `pets` sigue con RLS restringido al dueño/admin; la vista
+`public_pets` (mismo patrón que `public_profiles`) expone solo los campos de la
+mascota (nombre, especie, raza, edad, foto, frase) — nunca datos del dueño más allá
+de lo que ya muestra `public_profiles`. Ya aplicada en el proyecto real.
+
 ## Roles
 
 El rol vive en `public.profiles.role` (`persona` por defecto al registrarse). Para
