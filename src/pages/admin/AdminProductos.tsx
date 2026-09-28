@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react"
+import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "react"
 import { Link } from "react-router-dom"
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useAuth } from "../../context/AuthContext"
+import { uploadImage, extensionFor } from "../../lib/storage"
 import type { MetricasResponse, ProductoPymeMetrica } from "../../types/productoPyme"
 
 const RANGOS = [
@@ -34,6 +35,8 @@ function AdminProductos() {
   const [cargandoMetricas, setCargandoMetricas] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
   const [form, setForm] = useState(CAMPOS_INICIALES)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [enviando, setEnviando] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
@@ -70,6 +73,13 @@ function AdminProductos() {
     cargarMetricas()
   }, [cargarMetricas])
 
+  function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setPhotoFile(file)
+    setPreview(URL.createObjectURL(file))
+  }
+
   async function handleProponer(event: FormEvent) {
     event.preventDefault()
     if (!session) return
@@ -78,11 +88,18 @@ function AdminProductos() {
     setEnviando("nuevo")
 
     try {
+      let imagenUrl = form.imagen_url || null
+      if (photoFile) {
+        const path = `${crypto.randomUUID()}.${extensionFor(photoFile)}`
+        imagenUrl = await uploadImage("products", path, photoFile)
+      }
+
       const res = await fetch("/api/admin/proponer", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
         body: JSON.stringify({
           ...form,
+          imagen_url: imagenUrl,
           precio_ref: form.precio_ref ? Number(form.precio_ref) : null,
         }),
       })
@@ -91,6 +108,8 @@ function AdminProductos() {
 
       setAviso("Propuesta enviada por correo a la pyme.")
       setForm(CAMPOS_INICIALES)
+      setPhotoFile(null)
+      setPreview(null)
       setFormOpen(false)
       cargarMetricas()
     } catch (err) {
@@ -207,27 +226,36 @@ function AdminProductos() {
             />
           </label>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
-              Imagen (URL https)
+          <div className="flex items-center gap-4">
+            <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-brand-100">
+              {preview ? (
+                <img src={preview} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <span className="flex h-full items-center justify-center text-2xl" aria-hidden="true">
+                  🛍️
+                </span>
+              )}
+            </div>
+            <label className="text-sm font-medium text-ink-700">
+              Foto del producto
               <input
-                type="url"
-                value={form.imagen_url}
-                onChange={(e) => setForm({ ...form, imagen_url: e.target.value })}
-                placeholder="https://..."
-                className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
-              Precio de referencia (CLP)
-              <input
-                type="number"
-                value={form.precio_ref}
-                onChange={(e) => setForm({ ...form, precio_ref: e.target.value })}
-                className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="mt-1 block text-sm text-ink-500 file:mr-3 file:rounded-full file:border-0 file:bg-brand-100 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-700"
               />
             </label>
           </div>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Precio de referencia (CLP)
+            <input
+              type="number"
+              value={form.precio_ref}
+              onChange={(e) => setForm({ ...form, precio_ref: e.target.value })}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            />
+          </label>
 
           <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
             Link de la tienda (URL https) *
