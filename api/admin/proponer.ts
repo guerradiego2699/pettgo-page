@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto"
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { supabaseAdmin } from "../_lib/supabaseAdmin"
-import { requireAdmin } from "../_lib/auth"
-import { esUrlHttpsValida, esEmailValido, textoValido, precioValido } from "../_lib/validation"
-import { enviarPropuesta } from "../_lib/resend"
+import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
+import { requireAdmin } from "../_lib/auth.js"
+import { esUrlHttpsValida, esEmailValido, textoValido, precioValido } from "../_lib/validation.js"
+import { enviarPropuesta } from "../_lib/resend.js"
 
 const CATORCE_DIAS_MS = 14 * 24 * 60 * 60 * 1000
 

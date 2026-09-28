@@ -1,5 +1,5 @@
 import type { VercelRequest } from "@vercel/node"
-import { supabaseAdmin } from "./supabaseAdmin"
+import { supabaseAdmin } from "./supabaseAdmin.js"
 
 type AdminCheck = { ok: true } | { ok: false; status: number; error: string }
 

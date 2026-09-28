@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { supabaseAdmin } from "../_lib/supabaseAdmin"
-import { esUrlHttpsValida, textoValido, precioValido } from "../_lib/validation"
-import { enviarAvisoRespuesta } from "../_lib/resend"
+import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
+import { esUrlHttpsValida, textoValido, precioValido } from "../_lib/validation.js"
+import { enviarAvisoRespuesta } from "../_lib/resend.js"
 
 const CAMPOS_EDITABLES = ["nombre", "descripcion", "precio_ref", "link_tienda", "imagen_url"] as const
 type CampoEditable = (typeof CAMPOS_EDITABLES)[number]

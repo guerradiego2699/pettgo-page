@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
-import { supabaseAdmin } from "../_lib/supabaseAdmin"
-import { hashVisitante, esBot } from "../_lib/hash"
+import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
+import { hashVisitante, esBot } from "../_lib/hash.js"
 
 function obtenerIp(req: VercelRequest): string {
   const forwarded = req.headers["x-forwarded-for"]
