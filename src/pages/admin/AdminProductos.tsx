@@ -28,6 +28,14 @@ const CAMPOS_INICIALES = {
   pyme_email: "",
 }
 
+const CAMPOS_EDICION_INICIALES = {
+  nombre: "",
+  descripcion: "",
+  precio_ref: "",
+  link_tienda: "",
+  categoria: "",
+}
+
 function AdminProductos() {
   const { session } = useAuth()
   const [rango, setRango] = useState<(typeof RANGOS)[number]["id"]>("30")
@@ -37,6 +45,11 @@ function AdminProductos() {
   const [form, setForm] = useState(CAMPOS_INICIALES)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState(CAMPOS_EDICION_INICIALES)
+  const [editPhotoFile, setEditPhotoFile] = useState<File | null>(null)
+  const [editPreview, setEditPreview] = useState<string | null>(null)
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null)
   const [enviando, setEnviando] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
@@ -143,6 +156,121 @@ function AdminProductos() {
     }
   }
 
+  function openEdit(producto: ProductoPymeMetrica) {
+    setFormOpen(false)
+    setConfirmingDeleteId(null)
+    setEditingId(producto.id)
+    setEditForm({
+      nombre: producto.nombre,
+      descripcion: producto.descripcion ?? "",
+      precio_ref: producto.precio_ref != null ? String(producto.precio_ref) : "",
+      link_tienda: producto.link_tienda ?? "",
+      categoria: producto.categoria ?? "",
+    })
+    setEditPreview(producto.imagen_url ?? null)
+    setEditPhotoFile(null)
+  }
+
+  function closeEdit() {
+    setEditingId(null)
+    setEditForm(CAMPOS_EDICION_INICIALES)
+    setEditPhotoFile(null)
+    setEditPreview(null)
+  }
+
+  function handleEditPhotoChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setEditPhotoFile(file)
+    setEditPreview(URL.createObjectURL(file))
+  }
+
+  async function handleGuardarEdicion(event: FormEvent) {
+    event.preventDefault()
+    if (!session || !editingId) return
+    setError(null)
+    setAviso(null)
+    setEnviando(editingId)
+
+    try {
+      const payload: Record<string, unknown> = {
+        nombre: editForm.nombre,
+        descripcion: editForm.descripcion || null,
+        precio_ref: editForm.precio_ref ? Number(editForm.precio_ref) : null,
+        link_tienda: editForm.link_tienda,
+        categoria: editForm.categoria || null,
+      }
+      if (editPhotoFile) {
+        const path = `${crypto.randomUUID()}.${extensionFor(editPhotoFile)}`
+        payload.imagen_url = await uploadImage("products", path, editPhotoFile)
+      }
+
+      const res = await fetch(`/api/admin/producto/${editingId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify(payload),
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || "No se pudieron guardar los cambios.")
+
+      setAviso("Cambios guardados.")
+      closeEdit()
+      cargarMetricas()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudieron guardar los cambios.")
+    } finally {
+      setEnviando(null)
+    }
+  }
+
+  async function handleEliminar(id: string) {
+    if (!session) return
+    setError(null)
+    setAviso(null)
+    setEnviando(id)
+
+    try {
+      const res = await fetch(`/api/admin/producto/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || "No se pudo eliminar el producto.")
+
+      setAviso("Producto eliminado.")
+      setConfirmingDeleteId(null)
+      cargarMetricas()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo eliminar el producto.")
+    } finally {
+      setEnviando(null)
+    }
+  }
+
+  async function handleEstado(id: string, estado: "publicado" | "rechazado") {
+    if (!session) return
+    setError(null)
+    setAviso(null)
+    setEnviando(id)
+
+    try {
+      const res = await fetch(`/api/admin/producto/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ estado }),
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || "No se pudo actualizar el estado.")
+
+      setAviso(estado === "publicado" ? "Producto publicado directamente por ti." : "Producto rechazado.")
+      cargarMetricas()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo actualizar el estado.")
+    } finally {
+      setEnviando(null)
+    }
+  }
+
   function exportarCsv() {
     if (!metricas) return
     const encabezado = [
@@ -183,7 +311,10 @@ function AdminProductos() {
         {!formOpen && (
           <button
             type="button"
-            onClick={() => setFormOpen(true)}
+            onClick={() => {
+              closeEdit()
+              setFormOpen(true)
+            }}
             className="rounded-full bg-gradient-to-br from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/25 transition hover:shadow-lg"
           >
             + Proponer producto
@@ -310,6 +441,101 @@ function AdminProductos() {
         </form>
       )}
 
+      {editingId && (
+        <form onSubmit={handleGuardarEdicion} className="mt-6 flex flex-col gap-4 rounded-2xl border border-brand-100 bg-white p-6">
+          <h3 className="font-heading text-lg font-bold text-ink-900">Editar producto</h3>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+              Nombre del producto *
+              <input
+                required
+                value={editForm.nombre}
+                onChange={(e) => setEditForm({ ...editForm, nombre: e.target.value })}
+                className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+              Categoría
+              <input
+                value={editForm.categoria}
+                onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
+                className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+              />
+            </label>
+          </div>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Descripción
+            <textarea
+              value={editForm.descripcion}
+              onChange={(e) => setEditForm({ ...editForm, descripcion: e.target.value })}
+              rows={3}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            />
+          </label>
+
+          <div className="flex items-center gap-4">
+            <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-brand-100">
+              {editPreview ? (
+                <img src={editPreview} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <span className="flex h-full items-center justify-center text-2xl" aria-hidden="true">
+                  🛍️
+                </span>
+              )}
+            </div>
+            <label className="text-sm font-medium text-ink-700">
+              Foto del producto
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleEditPhotoChange}
+                className="mt-1 block text-sm text-ink-500 file:mr-3 file:rounded-full file:border-0 file:bg-brand-100 file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-700"
+              />
+            </label>
+          </div>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Precio de referencia (CLP)
+            <input
+              type="number"
+              value={editForm.precio_ref}
+              onChange={(e) => setEditForm({ ...editForm, precio_ref: e.target.value })}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Link de la tienda (URL https) *
+            <input
+              type="url"
+              required
+              value={editForm.link_tienda}
+              onChange={(e) => setEditForm({ ...editForm, link_tienda: e.target.value })}
+              placeholder="https://..."
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            />
+          </label>
+
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={enviando === editingId}
+              className="rounded-full bg-gradient-to-br from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/25 transition hover:shadow-lg disabled:opacity-60"
+            >
+              {enviando === editingId ? "Guardando…" : "Guardar cambios"}
+            </button>
+            <button
+              type="button"
+              onClick={closeEdit}
+              className="rounded-full border border-ink-900/15 px-5 py-2.5 text-sm font-medium text-ink-600 hover:bg-brand-50"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      )}
+
       <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
         <h2 className="font-heading text-xl font-bold text-ink-900">Métricas</h2>
         <div className="flex gap-2">
@@ -389,16 +615,69 @@ function AdminProductos() {
                     </td>
                     <td className="px-4 py-3 text-ink-700">{producto.tasa_clic}%</td>
                     <td className="px-4 py-3">
-                      {producto.estado !== "publicado" && (
-                        <button
-                          type="button"
-                          disabled={enviando === producto.id}
-                          onClick={() => handleReenviar(producto.id)}
-                          className="font-semibold text-brand-700 hover:underline disabled:opacity-50"
-                        >
-                          {enviando === producto.id ? "Enviando…" : "Reenviar"}
+                      <div className="flex flex-wrap items-center gap-3 text-sm font-semibold">
+                        {producto.estado === "pendiente" && (
+                          <>
+                            <button
+                              type="button"
+                              disabled={enviando === producto.id}
+                              onClick={() => handleEstado(producto.id, "publicado")}
+                              className="text-emerald-700 hover:underline disabled:opacity-50"
+                            >
+                              Aceptar
+                            </button>
+                            <button
+                              type="button"
+                              disabled={enviando === producto.id}
+                              onClick={() => handleEstado(producto.id, "rechazado")}
+                              className="text-red-600 hover:underline disabled:opacity-50"
+                            >
+                              Rechazar
+                            </button>
+                          </>
+                        )}
+                        {producto.estado !== "publicado" && (
+                          <button
+                            type="button"
+                            disabled={enviando === producto.id}
+                            onClick={() => handleReenviar(producto.id)}
+                            className="text-brand-700 hover:underline disabled:opacity-50"
+                          >
+                            {enviando === producto.id ? "…" : "Reenviar"}
+                          </button>
+                        )}
+                        <button type="button" onClick={() => openEdit(producto)} className="text-ink-600 hover:underline">
+                          Editar
                         </button>
-                      )}
+                        {confirmingDeleteId === producto.id ? (
+                          <>
+                            <span className="font-normal text-ink-500">¿Eliminar?</span>
+                            <button
+                              type="button"
+                              disabled={enviando === producto.id}
+                              onClick={() => handleEliminar(producto.id)}
+                              className="text-red-600 hover:underline disabled:opacity-50"
+                            >
+                              Sí
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setConfirmingDeleteId(null)}
+                              className="font-normal text-ink-500 hover:underline"
+                            >
+                              No
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setConfirmingDeleteId(producto.id)}
+                            className="text-red-600 hover:underline"
+                          >
+                            Eliminar
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

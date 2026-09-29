@@ -26,6 +26,10 @@ export interface ProductoPymePropuesta {
 export interface ProductoPymeMetrica {
   id: string
   nombre: string
+  descripcion: string | null
+  imagen_url: string | null
+  precio_ref: number | null
+  link_tienda: string
   estado: ProductoPymeEstado
   pyme_nombre: string
   pyme_email: string
