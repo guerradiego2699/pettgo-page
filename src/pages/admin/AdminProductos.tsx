@@ -93,6 +93,17 @@ function AdminProductos() {
     setPreview(URL.createObjectURL(file))
   }
 
+  async function subirFotoProducto(file: File): Promise<string> {
+    try {
+      const path = `${crypto.randomUUID()}.${extensionFor(file)}`
+      return await uploadImage("products", path, file)
+    } catch {
+      throw new Error(
+        "No se pudo confirmar la subida de la foto (puede ser un corte de conexión momentáneo). Intenta de nuevo."
+      )
+    }
+  }
+
   async function handleProponer(event: FormEvent) {
     event.preventDefault()
     if (!session) return
@@ -103,8 +114,7 @@ function AdminProductos() {
     try {
       let imagenUrl = form.imagen_url || null
       if (photoFile) {
-        const path = `${crypto.randomUUID()}.${extensionFor(photoFile)}`
-        imagenUrl = await uploadImage("products", path, photoFile)
+        imagenUrl = await subirFotoProducto(photoFile)
       }
 
       const res = await fetch("/api/admin/proponer", {
@@ -201,8 +211,7 @@ function AdminProductos() {
         categoria: editForm.categoria || null,
       }
       if (editPhotoFile) {
-        const path = `${crypto.randomUUID()}.${extensionFor(editPhotoFile)}`
-        payload.imagen_url = await uploadImage("products", path, editPhotoFile)
+        payload.imagen_url = await subirFotoProducto(editPhotoFile)
       }
 
       const res = await fetch(`/api/admin/producto/${editingId}`, {
