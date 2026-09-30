@@ -30,7 +30,7 @@ migraciones y variables de entorno necesarias.
 - **`POST /api/admin/tendencias/informe`** — solo admin. Envía por correo (con el PDF
   adjunto, generado en el navegador) el informe de Tendencias a cualquier destinatario.
 
-### Gestión de Proyecto (`/api/admin/proyecto/*`, todo solo admin)
+### Gestión de Proyecto (`/api/admin/proyecto`, un solo endpoint, todo solo admin)
 
 Herramienta interna (actividades, hitos, riesgos, propuestas, reportes de área y
 auditoría) — no la ven los usuarios de PettGo. Importante: las reglas de cálculo
@@ -38,24 +38,31 @@ auditoría) — no la ven los usuarios de PettGo. Importante: las reglas de cál
 `api/_lib/proyectoCalculos.ts` y son un diseño propio para este proyecto, pensado para
 ser transparente y fácil de ajustar — no la réplica de ningún sistema externo.
 
+Todo el módulo vive en un único archivo (`api/admin/proyecto.ts`) que rutea
+internamente por `?seccion=`, en vez de un archivo por recurso: el plan Hobby de Vercel
+tope a 12 Funciones Serverless por deploy, y 9 archivos separados para este módulo por
+sí solo excedían ese límite. El ruteo interno usa query params (no segmentos de carpeta
+tipo `[codigo].ts`) porque este proyecto es una Vite SPA, no Next.js, y no depende de
+convenciones de ruteo dinámico específicas de un framework.
+
 - **`GET /api/admin/proyecto`** — calcula y devuelve todo: resumen, actividades con sus
   métricas, hitos, alertas, ruta crítica, ciclos y el grafo de dependencias.
   `?registrar=analisis|reporte` además guarda una entrada en la auditoría.
-- **`POST /api/admin/proyecto/actividades`** — crea una actividad.
-- **`PATCH/DELETE /api/admin/proyecto/actividades/[codigo]`** — edita o elimina. Tocar un
-  campo sensible (actividad, responsable, fechas, prioridad, dependencias) o eliminar
-  devuelve 409 pidiendo `{ aprobado_por, confirmar_cambio_sensible: true }` — es el mismo
-  flujo de aprobación en las dos rutas (actividades y hitos).
-- **`POST /api/admin/proyecto/hitos`** / **`PATCH/DELETE .../hitos/[codigo]`** — igual que
-  actividades.
-- **`GET/POST /api/admin/proyecto/propuestas`** — lista o genera una propuesta de
+- **`POST /api/admin/proyecto?seccion=actividades`** — crea una actividad.
+- **`PATCH/DELETE /api/admin/proyecto?seccion=actividades&codigo=...`** — edita o elimina.
+  Tocar un campo sensible (actividad, responsable, fechas, prioridad, dependencias) o
+  eliminar devuelve 409 pidiendo `{ aprobado_por, confirmar_cambio_sensible: true }` — es
+  el mismo flujo de aprobación en actividades y hitos.
+- **`POST /api/admin/proyecto?seccion=hitos`** / **`PATCH/DELETE ...&codigo=...`** — igual
+  que actividades.
+- **`GET/POST /api/admin/proyecto?seccion=propuestas`** — lista o genera una propuesta de
   reprogramación (calcula el desplazamiento y qué actividades dependientes se verían
   afectadas). Nunca mueve fechas sola.
-- **`POST /api/admin/proyecto/propuestas/[id]`** — aprueba o rechaza una propuesta
-  (`{ aprobado, responsable, comentario? }`).
-- **`GET/POST /api/admin/proyecto/reportes-area`** — reportes de avance de cada agente de
-  área, con la diferencia contra el avance real registrado en la actividad.
-- **`GET /api/admin/proyecto/auditoria`** — últimas 150 entradas.
+- **`POST /api/admin/proyecto?seccion=propuestas&id=...`** — aprueba o rechaza una
+  propuesta (`{ aprobado, responsable, comentario? }`).
+- **`GET/POST /api/admin/proyecto?seccion=reportes-area`** — reportes de avance de cada
+  agente de área, con la diferencia contra el avance real registrado en la actividad.
+- **`GET /api/admin/proyecto?seccion=auditoria`** — últimas 150 entradas.
 
 ## Autenticación de admin (`_lib/auth.ts`)
 
