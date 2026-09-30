@@ -26,6 +26,7 @@ const AdminVeterinarias = lazy(() => import("./pages/admin/AdminVeterinarias"))
 const AdminEspecialistas = lazy(() => import("./pages/admin/AdminEspecialistas"))
 const AdminProductos = lazy(() => import("./pages/admin/AdminProductos"))
 const AdminTendencias = lazy(() => import("./pages/admin/AdminTendencias"))
+const AdminProyecto = lazy(() => import("./pages/admin/AdminProyecto"))
 const AdminUsuarios = lazy(() => import("./pages/admin/AdminUsuarios"))
 const AdminReportes = lazy(() => import("./pages/admin/AdminReportes"))
 const Privacidad = lazy(() => import("./pages/Privacidad"))
@@ -64,6 +65,7 @@ function App() {
           <Route path="admin/especialistas" element={<AdminEspecialistas />} />
           <Route path="admin/productos" element={<AdminProductos />} />
           <Route path="admin/tendencias" element={<AdminTendencias />} />
+          <Route path="admin/proyecto" element={<AdminProyecto />} />
           <Route path="admin/usuarios" element={<AdminUsuarios />} />
           <Route path="admin/reportes" element={<AdminReportes />} />
         </Route>

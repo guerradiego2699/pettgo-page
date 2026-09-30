@@ -30,6 +30,33 @@ migraciones y variables de entorno necesarias.
 - **`POST /api/admin/tendencias/informe`** — solo admin. Envía por correo (con el PDF
   adjunto, generado en el navegador) el informe de Tendencias a cualquier destinatario.
 
+### Gestión de Proyecto (`/api/admin/proyecto/*`, todo solo admin)
+
+Herramienta interna (actividades, hitos, riesgos, propuestas, reportes de área y
+auditoría) — no la ven los usuarios de PettGo. Importante: las reglas de cálculo
+(puntaje de riesgo, ruta crítica, prioridad sugerida) están en
+`api/_lib/proyectoCalculos.ts` y son un diseño propio para este proyecto, pensado para
+ser transparente y fácil de ajustar — no la réplica de ningún sistema externo.
+
+- **`GET /api/admin/proyecto`** — calcula y devuelve todo: resumen, actividades con sus
+  métricas, hitos, alertas, ruta crítica, ciclos y el grafo de dependencias.
+  `?registrar=analisis|reporte` además guarda una entrada en la auditoría.
+- **`POST /api/admin/proyecto/actividades`** — crea una actividad.
+- **`PATCH/DELETE /api/admin/proyecto/actividades/[codigo]`** — edita o elimina. Tocar un
+  campo sensible (actividad, responsable, fechas, prioridad, dependencias) o eliminar
+  devuelve 409 pidiendo `{ aprobado_por, confirmar_cambio_sensible: true }` — es el mismo
+  flujo de aprobación en las dos rutas (actividades y hitos).
+- **`POST /api/admin/proyecto/hitos`** / **`PATCH/DELETE .../hitos/[codigo]`** — igual que
+  actividades.
+- **`GET/POST /api/admin/proyecto/propuestas`** — lista o genera una propuesta de
+  reprogramación (calcula el desplazamiento y qué actividades dependientes se verían
+  afectadas). Nunca mueve fechas sola.
+- **`POST /api/admin/proyecto/propuestas/[id]`** — aprueba o rechaza una propuesta
+  (`{ aprobado, responsable, comentario? }`).
+- **`GET/POST /api/admin/proyecto/reportes-area`** — reportes de avance de cada agente de
+  área, con la diferencia contra el avance real registrado en la actividad.
+- **`GET /api/admin/proyecto/auditoria`** — últimas 150 entradas.
+
 ## Autenticación de admin (`_lib/auth.ts`)
 
 El frontend manda el `access_token` de la sesión de Supabase Auth en
