@@ -1,7 +1,16 @@
 import type { VercelRequest } from "@vercel/node"
 import { supabaseAdmin } from "./supabaseAdmin.js"
 
-type AdminCheck = { ok: true } | { ok: false; status: number; error: string }
+// Nota: a propósito NO es una unión discriminada ({ok:true} | {ok:false,...}).
+// El chequeo de tipos aislado que Vercel corre por cada función serverless
+// angostaba mal ese patrón (auth.ok era false en tiempo de ejecución pero el
+// tipo se resolvía como {ok:true}), así que status/error siempre están
+// presentes en la forma — más verboso, pero no depende de narrowing.
+interface AdminCheck {
+  ok: boolean
+  status: number
+  error: string
+}
 
 // Verifica la sesión de Supabase Auth del admin en el servidor (nunca confía
 // en el frontend): el JWT debe ser válido y la cuenta debe tener role='admin'
@@ -30,5 +39,5 @@ export async function requireAdmin(req: VercelRequest): Promise<AdminCheck> {
     return { ok: false, status: 403, error: "No tienes permisos de administrador." }
   }
 
-  return { ok: true }
+  return { ok: true, status: 200, error: "" }
 }

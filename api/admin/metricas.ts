@@ -42,13 +42,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     tasa_clic: number
   }
 
-  const porProducto = new Map((metricas ?? []).map((m: MetricaFila) => [m.producto_id, m]))
-  const vacio = { vistas_totales: 0, vistas_unicas: 0, clics_totales: 0, clics_unicos: 0, tasa_clic: 0 }
+  const filasMetricas: MetricaFila[] = metricas ?? []
+  const porProducto = new Map<string, MetricaFila>(filasMetricas.map((m) => [m.producto_id, m]))
 
-  const productosConMetricas = (productos ?? []).map((producto: { id: string }) => ({
-    ...producto,
-    ...(porProducto.get(producto.id) ?? vacio),
-  }))
+  const productosConMetricas = (productos ?? []).map((producto: { id: string }) => {
+    const m = porProducto.get(producto.id)
+    return {
+      ...producto,
+      vistas_totales: m?.vistas_totales ?? 0,
+      vistas_unicas: m?.vistas_unicas ?? 0,
+      clics_totales: m?.clics_totales ?? 0,
+      clics_unicos: m?.clics_unicos ?? 0,
+      tasa_clic: m?.tasa_clic ?? 0,
+    }
+  })
 
   return res.status(200).json({ productos: productosConMetricas, serieDiaria: serieDiaria ?? [] })
 }
