@@ -134,7 +134,7 @@ Además de `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (frontend), las funcione
 | `SUPABASE_URL` | Igual que `VITE_SUPABASE_URL` |
 | `SUPABASE_SERVICE_ROLE_KEY` | Project Settings → API Keys → "service_role" (secreta) |
 | `RESEND_API_KEY` | Resend → API Keys |
-| `ADMIN_EMAIL` | El correo con el que inicias sesión como admin en PettGo |
+| `ADMIN_EMAIL` | Correo que recibe el aviso cuando una pyme acepta/rechaza una propuesta |
 | `SITE_URL` | `https://pettgo.cl` en producción |
 
 ### 3. Resend (correo de propuesta)
@@ -147,10 +147,11 @@ Además de `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (frontend), las funcione
 
 ### 4. Usuario administrador
 
-El check de admin de `/api` es distinto al de `profiles.role`: compara el email de la
-sesión contra `ADMIN_EMAIL`. Usa la cuenta con la que ya inicias sesión como admin en
-PettGo (la que tiene `role = 'admin'` en `profiles`) y pon ese mismo correo en
-`ADMIN_EMAIL`.
+Las rutas de `/api` que requieren admin validan el JWT contra Supabase y luego revisan
+`profiles.role = 'admin'` de esa cuenta — el mismo criterio que usa el resto del sitio.
+Cualquier cuenta con `role = 'admin'` puede usarlas; no hace falta que coincida con
+`ADMIN_EMAIL` (esa variable solo se usa como destinatario del aviso por correo cuando
+una pyme responde una propuesta).
 
 ### 5. Probar en local con `vercel dev`
 
