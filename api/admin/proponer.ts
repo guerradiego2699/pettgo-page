@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto"
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../_lib/auth.js"
-import { esUrlHttpsValida, esEmailValido, textoValido, precioValido } from "../_lib/validation.js"
+import { esUrlHttpsValida, esEmailValido, textoValido, precioValido, especieValida } from "../_lib/validation.js"
 import { enviarPropuesta } from "../_lib/resend.js"
 
 const CATORCE_DIAS_MS = 14 * 24 * 60 * 60 * 1000
@@ -56,6 +56,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!textoValido(body.categoria, { maxLength: 60 })) {
         return res.status(400).json({ error: "La categoría no es válida." })
       }
+      if (body.especie != null && !especieValida(body.especie)) {
+        return res.status(400).json({ error: "La mascota no es válida." })
+      }
       if (!textoValido(body.pyme_nombre, { maxLength: 120, requerido: true })) {
         return res.status(400).json({ error: "El nombre de la pyme no es válido." })
       }
@@ -72,6 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           precio_ref: body.precio_ref ?? null,
           link_tienda: (body.link_tienda as string).trim(),
           categoria: body.categoria ? (body.categoria as string).trim() : null,
+          especie: especieValida(body.especie) ? body.especie : "ambos",
           pyme_nombre: (body.pyme_nombre as string).trim(),
           pyme_email: (body.pyme_email as string).trim().toLowerCase(),
         })

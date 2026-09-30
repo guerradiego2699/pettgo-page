@@ -139,3 +139,41 @@ export async function enviarAvisoRespuesta(datos: DatosAviso) {
     text,
   })
 }
+
+interface DatosInforme {
+  destinatario: string
+  periodoLabel: string
+  rangoTexto: string
+  pdfBase64: string
+}
+
+// Envía el informe de Tendencias (PDF generado en el navegador) como adjunto.
+export async function enviarInformeTendencias(datos: DatosInforme) {
+  const html = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:24px 16px;font-family:Arial,Helvetica,sans-serif;color:#292524;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;margin:0 auto;">
+          <tr><td>
+            <p style="margin:0 0 16px;font-size:15px;">Adjunto el informe de Tendencias de PettGo.</p>
+            <p style="margin:0 0 16px;font-size:14px;color:#57534e;">Período: ${datos.periodoLabel} · ${datos.rangoTexto}</p>
+            <p style="margin:24px 0 0;font-size:14px;">Equipo PettGo<br /><a href="https://pettgo.cl" style="color:#e08a3f;">pettgo.cl</a></p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  `.trim()
+
+  await resend.emails.send({
+    from: "PettGo <contacto@pettgo.cl>",
+    to: datos.destinatario,
+    subject: `Informe de Tendencias PettGo — ${datos.periodoLabel}`,
+    html,
+    text: `Adjunto el informe de Tendencias de PettGo. Período: ${datos.periodoLabel} · ${datos.rangoTexto}`,
+    attachments: [
+      {
+        filename: `informe-tendencias-pettgo-${datos.periodoLabel.toLowerCase()}.pdf`,
+        content: datos.pdfBase64,
+      },
+    ],
+  })
+}

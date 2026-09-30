@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { supabaseAdmin } from "../../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../../_lib/auth.js"
-import { esUrlHttpsValida, textoValido, precioValido } from "../../_lib/validation.js"
+import { esUrlHttpsValida, textoValido, precioValido, especieValida } from "../../_lib/validation.js"
 
 const ESTADOS_VALIDOS = ["pendiente", "publicado", "rechazado"]
 
@@ -65,6 +65,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: "La categoría no es válida." })
       }
       actualizacion.categoria = body.categoria ? (body.categoria as string).trim() : null
+    }
+    if ("especie" in body) {
+      if (!especieValida(body.especie)) {
+        return res.status(400).json({ error: "La mascota no es válida." })
+      }
+      actualizacion.especie = body.especie
     }
     if ("estado" in body) {
       if (!ESTADOS_VALIDOS.includes(body.estado)) {

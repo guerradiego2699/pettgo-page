@@ -22,3 +22,7 @@ export function textoValido(valor: unknown, opciones: { maxLength: number; reque
 export function precioValido(valor: unknown): valor is number {
   return typeof valor === "number" && Number.isFinite(valor) && Number.isInteger(valor) && valor >= 0
 }
+
+export function especieValida(valor: unknown): valor is "perro" | "gato" | "ambos" {
+  return valor === "perro" || valor === "gato" || valor === "ambos"
+}

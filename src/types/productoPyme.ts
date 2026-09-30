@@ -1,4 +1,5 @@
 export type ProductoPymeEstado = "pendiente" | "publicado" | "rechazado"
+export type ProductoPymeEspecie = "perro" | "gato" | "ambos"
 
 export interface ProductoPymePublico {
   id: string
@@ -34,6 +35,7 @@ export interface ProductoPymeMetrica {
   pyme_nombre: string
   pyme_email: string
   categoria: string | null
+  especie: ProductoPymeEspecie
   vistas_totales: number
   vistas_unicas: number
   clics_totales: number

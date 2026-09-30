@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useAuth } from "../../context/AuthContext"
 import { uploadImage, extensionFor } from "../../lib/storage"
-import type { MetricasResponse, ProductoPymeMetrica } from "../../types/productoPyme"
+import type { MetricasResponse, ProductoPymeEspecie, ProductoPymeMetrica } from "../../types/productoPyme"
 
 const RANGOS = [
   { id: "7", label: "7 días", dias: 7 },
@@ -24,6 +24,7 @@ const CAMPOS_INICIALES = {
   precio_ref: "",
   link_tienda: "",
   categoria: "",
+  especie: "ambos" as ProductoPymeEspecie,
   pyme_nombre: "",
   pyme_email: "",
 }
@@ -34,6 +35,7 @@ const CAMPOS_EDICION_INICIALES = {
   precio_ref: "",
   link_tienda: "",
   categoria: "",
+  especie: "ambos" as ProductoPymeEspecie,
 }
 
 function AdminProductos() {
@@ -176,6 +178,7 @@ function AdminProductos() {
       precio_ref: producto.precio_ref != null ? String(producto.precio_ref) : "",
       link_tienda: producto.link_tienda ?? "",
       categoria: producto.categoria ?? "",
+      especie: producto.especie ?? "ambos",
     })
     setEditPreview(producto.imagen_url ?? null)
     setEditPhotoFile(null)
@@ -209,6 +212,7 @@ function AdminProductos() {
         precio_ref: editForm.precio_ref ? Number(editForm.precio_ref) : null,
         link_tienda: editForm.link_tienda,
         categoria: editForm.categoria || null,
+        especie: editForm.especie,
       }
       if (editPhotoFile) {
         payload.imagen_url = await subirFotoProducto(editPhotoFile)
@@ -357,6 +361,19 @@ function AdminProductos() {
           </div>
 
           <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Mascota
+            <select
+              value={form.especie}
+              onChange={(e) => setForm({ ...form, especie: e.target.value as ProductoPymeEspecie })}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            >
+              <option value="ambos">Perro y gato</option>
+              <option value="perro">Perro</option>
+              <option value="gato">Gato</option>
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
             Descripción
             <textarea
               value={form.descripcion}
@@ -472,6 +489,19 @@ function AdminProductos() {
               />
             </label>
           </div>
+
+          <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+            Mascota
+            <select
+              value={editForm.especie}
+              onChange={(e) => setEditForm({ ...editForm, especie: e.target.value as ProductoPymeEspecie })}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            >
+              <option value="ambos">Perro y gato</option>
+              <option value="perro">Perro</option>
+              <option value="gato">Gato</option>
+            </select>
+          </label>
 
           <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
             Descripción
