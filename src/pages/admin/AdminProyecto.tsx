@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { proyectoApi, ErrorAprobacion } from "../../lib/proyectoApi"
+import ErrorBoundary from "../../components/ErrorBoundary"
 import AprobacionModal from "../../components/proyecto/AprobacionModal"
 import ActividadesTab from "../../components/proyecto/ActividadesTab"
 import DependenciasTab from "../../components/proyecto/DependenciasTab"
@@ -161,6 +162,7 @@ function AdminProyecto() {
       {cargando ? (
         <p className="mt-10 text-ink-500">Cargando datos del proyecto…</p>
       ) : !analisis ? null : (
+        <ErrorBoundary key={tab} mensaje="No se pudo mostrar esta pestaña.">
         <div className="mt-6">
           {tab === "dashboard" && (
             <DashboardTab analisis={analisis} onRecargar={() => cargar("analisis")} onNuevoHito={abrirNuevoHito} onEditarHito={abrirEditarHito} setTab={setTab} />
@@ -177,6 +179,7 @@ function AdminProyecto() {
           {tab === "areas" && <AreasTab session={session} />}
           {tab === "auditoria" && <AuditoriaTab session={session} />}
         </div>
+        </ErrorBoundary>
       )}
 
       {hitoFormAbierto && (
