@@ -60,7 +60,7 @@ function AuditoriaTab({ session }: { session: Session }) {
             ) : (
               entradas.map((e) => (
                 <tr key={e.id} className="border-b border-brand-50 last:border-0">
-                  <td className="whitespace-nowrap px-3 py-2 text-xs text-ink-500">{e.fecha.replace("T", " ").slice(0, 19)}</td>
+                  <td className="whitespace-nowrap px-3 py-2 text-xs text-ink-500">{e.creado_en.replace("T", " ").slice(0, 19)}</td>
                   <td className="px-3 py-2 text-ink-700">{e.tipo_analisis}</td>
                   <td className="px-3 py-2 text-ink-500">{e.origen}</td>
                   <td className="px-3 py-2 text-ink-500">{e.actividad || "—"}</td>

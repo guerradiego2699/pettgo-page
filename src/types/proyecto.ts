@@ -173,7 +173,7 @@ export interface ReporteArea {
 
 export interface EntradaAuditoria {
   id: number
-  fecha: string
+  creado_en: string
   tipo_analisis: string
   origen: string
   actividad: string | null
