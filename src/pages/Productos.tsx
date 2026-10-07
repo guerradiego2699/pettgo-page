@@ -13,20 +13,15 @@ import type { ProductoPymePublico } from "../types/productoPyme"
 
 type FiltroMascota = "perro" | "gato" | null
 
-const MASCOTAS: { id: FiltroMascota; label: string }[] = [
-  { id: null, label: "Todas las mascotas" },
-  { id: "perro", label: "Perros" },
-  { id: "gato", label: "Gatos" },
-]
-
 function formatoClp(valor: number | null) {
   if (valor == null) return null
   return new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 }).format(valor)
 }
 
-function chipClase(activo: boolean) {
-  return `rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-    activo ? "bg-brand-500 text-white" : "bg-brand-100 text-brand-700 hover:bg-brand-200"
+// Desplegable compacto; se resalta cuando tiene un filtro aplicado.
+function claseSelect(activo: boolean) {
+  return `rounded-full border bg-white py-2 pl-4 pr-9 text-sm font-semibold transition focus:border-brand-500 focus:outline-none ${
+    activo ? "border-brand-500 text-brand-700" : "border-brand-100 text-ink-600 hover:border-brand-300"
   }`
 }
 
@@ -57,17 +52,7 @@ function Productos() {
       })
   }, [])
 
-  // Los conteos de cada categoría respetan el filtro de mascota elegido.
   const porMascota = useMemo(() => productos.filter((p) => coincideMascota(p.especie, mascota)), [productos, mascota])
-  const conteos = useMemo(() => {
-    const c: Record<string, number> = {}
-    for (const p of porMascota) {
-      const id = normalizarCategoria(p.categoria)
-      if (id) c[id] = (c[id] ?? 0) + 1
-    }
-    return c
-  }, [porMascota])
-
   const visibles = categoria ? porMascota.filter((p) => normalizarCategoria(p.categoria) === categoria) : porMascota
   const hayFiltros = mascota !== null || categoria !== null
 
@@ -79,25 +64,35 @@ function Productos() {
         directamente: cada "Ver en tienda" te lleva al sitio de la pyme.
       </p>
 
-      <div className="mt-6 flex flex-col gap-3">
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por mascota">
-          {MASCOTAS.map((m) => (
-            <button key={m.label} type="button" onClick={() => cambiarFiltro("mascota", m.id)} className={chipClase(mascota === m.id)}>
-              {m.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Filtrar por categoría">
-          <button type="button" onClick={() => cambiarFiltro("categoria", null)} className={chipClase(categoria === null)}>
-            Todas las categorías
-          </button>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <select
+          aria-label="Filtrar por mascota"
+          value={mascota ?? ""}
+          onChange={(e) => cambiarFiltro("mascota", e.target.value || null)}
+          className={claseSelect(mascota !== null)}
+        >
+          <option value="">Todas las mascotas</option>
+          <option value="perro">Perros</option>
+          <option value="gato">Gatos</option>
+        </select>
+        <select
+          aria-label="Filtrar por categoría"
+          value={categoria ?? ""}
+          onChange={(e) => cambiarFiltro("categoria", e.target.value || null)}
+          className={claseSelect(categoria !== null)}
+        >
+          <option value="">Todas las categorías</option>
           {CATEGORIAS_PRODUCTO.map((c) => (
-            <button key={c.id} type="button" onClick={() => cambiarFiltro("categoria", c.id)} className={chipClase(categoria === c.id)}>
+            <option key={c.id} value={c.id}>
               {c.label}
-              {!loading && <span className="ml-1.5 text-xs font-medium opacity-70">{conteos[c.id] ?? 0}</span>}
-            </button>
+            </option>
           ))}
-        </div>
+        </select>
+        {hayFiltros && (
+          <button type="button" onClick={() => setParams({}, { replace: true })} className="text-sm font-semibold text-brand-700 hover:underline">
+            Quitar filtros
+          </button>
+        )}
       </div>
 
       {loading ? (
@@ -105,15 +100,6 @@ function Productos() {
       ) : visibles.length === 0 ? (
         <div className="mt-10 text-ink-500">
           <p>{hayFiltros ? "No hay productos con estos filtros todavía." : "Todavía no hay productos publicados."}</p>
-          {hayFiltros && (
-            <button
-              type="button"
-              onClick={() => setParams({}, { replace: true })}
-              className="mt-2 text-sm font-semibold text-brand-700 hover:underline"
-            >
-              Quitar filtros
-            </button>
-          )}
         </div>
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
