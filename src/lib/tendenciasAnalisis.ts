@@ -1,12 +1,11 @@
 import type { ResumenTendencias } from "../types/tendencias"
-import { nf, pctS, pct1 } from "./tendenciasTexto"
+import { nf, pctS, pct1, PERIODO_PREV } from "./tendenciasTexto"
 
 const PERIODO_LARGO: Record<string, string> = {
   diario: "diario (hoy vs. ayer)",
   semanal: "semanal (7 días vs. 7 anteriores)",
   mensual: "mensual (30 días vs. 30 anteriores)",
 }
-const PERIODO_PREV: Record<string, string> = { diario: "ayer", semanal: "los 7 días anteriores", mensual: "los 30 días anteriores" }
 
 // Resumen calculado a partir de los números reales del período — sin IA,
 // gratis e inmediato (mismo criterio que el respaldo del mockup original).
@@ -40,8 +39,8 @@ export function analisisLocal(r: ResumenTendencias): string {
 
   s +=
     bajoPaso && r.pasoTienda > 0 && bajoPaso.pasoTienda < r.pasoTienda * 0.75
-      ? `${bajoPaso.nombre} despierta interés pero pocos pasan a la tienda (${pct1(bajoPaso.pasoTienda)}); conviene revisar su ficha: precio visible, fotos y el link a la tienda.`
-      : "Recomendación: asegurar que los productos en alza sigan disponibles con sus pymes antes de destacarlos en la portada."
+      ? `${bajoPaso.nombre} despierta interés pero pocos pasan a la tienda (${pct1(bajoPaso.pasoTienda)}); conviene revisar su ficha: precio visible, fotos y botón de tienda.`
+      : "Recomendación: asegurar stock de los productos en alza con sus pymes antes de destacarlos en la portada."
 
   return s
 }

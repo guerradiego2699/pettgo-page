@@ -6,6 +6,7 @@ import {
   CartesianGrid,
   Cell,
   ComposedChart,
+  Legend,
   Line,
   LineChart,
   Pie,
@@ -16,7 +17,7 @@ import {
   YAxis,
 } from "recharts"
 import { useAuth } from "../../context/AuthContext"
-import { nf, pctS, pct1 } from "../../lib/tendenciasTexto"
+import { nf, pctS, pct1, PERIODO_PREV } from "../../lib/tendenciasTexto"
 import { analisisLocal } from "../../lib/tendenciasAnalisis"
 import { construirInformePdf } from "../../lib/informePdf"
 import { construirInformeExcel } from "../../lib/informeExcel"
@@ -85,13 +86,31 @@ function Funnel({ filas }: { filas: { label: string; sub?: string; valor: number
   )
 }
 
-function PayList({ filas }: { filas: { nombre: string; valor: number; pct?: string; color?: string }[] }) {
+function LiveRow({ texto }: { texto: string }) {
+  return (
+    <div className="flex items-center gap-2 text-xs text-ink-500">
+      <span className="h-2 w-2 rounded-full bg-emerald-500" />
+      <span>{texto}</span>
+    </div>
+  )
+}
+
+function NotaFuente({ texto }: { texto: string }) {
+  return <p className="mt-3 text-xs text-ink-400">En la base de datos: {texto}</p>
+}
+
+function PayList({ filas }: { filas: { nombre: string; valor: number; pct?: string; color?: string; barra?: number }[] }) {
   return (
     <div className="mt-2 flex flex-col gap-2">
       {filas.map((f) => (
         <div key={f.nombre} className="flex items-center gap-2 text-sm">
           {f.color && <span className="h-2.5 w-2.5 shrink-0 rounded" style={{ background: f.color }} />}
           <span className="flex-1 truncate text-ink-700">{f.nombre}</span>
+          {f.barra != null && (
+            <span className="h-1.5 w-24 overflow-hidden rounded-full bg-brand-100">
+              <span className="block h-full rounded-full bg-brand-500" style={{ width: `${Math.max(4, f.barra * 100)}%` }} />
+            </span>
+          )}
           <span className="font-semibold text-ink-900">{nf.format(f.valor)}</span>
           {f.pct && <span className="w-14 text-right text-xs text-ink-400">{f.pct}</span>}
         </div>
@@ -310,7 +329,11 @@ function ResumenTab({
   const r = data.resumen
   const deltaClics = r.totales.clicsPrev ? r.totales.clics / r.totales.clicsPrev - 1 : 0
   const deltaTienda = r.totales.tiendaPrev ? r.totales.tienda / r.totales.tiendaPrev - 1 : 0
+  const deltaPaso = r.pasoTiendaPrev ? r.pasoTienda - r.pasoTiendaPrev : 0
   const enAlza = r.productos.filter((p) => p.estadoTendencia === "up").length
+  const prev = PERIODO_PREV[r.periodo]
+  const topClics = [...r.productos].sort((a, b) => b.clics - a.clics).slice(0, 6)
+  const topTiendas = r.pymes.slice(0, 6)
 
   return (
     <div className="flex flex-col gap-8">
@@ -318,14 +341,19 @@ function ResumenTab({
         <SelectorPeriodo periodo={periodo} onChange={setPeriodo} />
         <p className="text-sm font-medium text-ink-500">{r.rangoTexto}</p>
       </div>
+      <LiveRow texto="Actualizado automáticamente" />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        <KpiCard label="Clics en productos" value={nf.format(r.totales.clics)} delta={`${pctS(deltaClics)} vs. período anterior`} />
-        <KpiCard label="Clics a la tienda" value={nf.format(r.totales.tienda)} delta={`${pctS(deltaTienda)} vs. período anterior`} />
-        <KpiCard label="Paso a la tienda" value={pct1(r.pasoTienda)} />
+        <KpiCard label="Clics en productos" value={nf.format(r.totales.clics)} delta={`${pctS(deltaClics)} vs. ${prev}`} />
+        <KpiCard label="Clics a la tienda" value={nf.format(r.totales.tienda)} delta={`${pctS(deltaTienda)} vs. ${prev}`} />
+        <KpiCard
+          label="Paso a la tienda"
+          value={pct1(r.pasoTienda)}
+          delta={`${deltaPaso >= 0 ? "+" : ""}${(deltaPaso * 100).toFixed(1).replace(".", ",")} pp vs. ${prev}`}
+        />
         <KpiCard label="Productos en alza" value={`${enAlza} de ${r.productos.length}`} delta="crecen más de 12%" />
         <KpiCard
-          label="Pyme líder"
+          label="Tienda líder"
           value={r.pymes[0]?.nombre ?? "—"}
           delta={r.pymes[0] ? `${pct1(r.pymes[0].share)} de los clics a tienda` : undefined}
         />
@@ -342,12 +370,15 @@ function ResumenTab({
             ]}
           />
         </div>
+        <p className="mt-4 rounded-xl bg-brand-50 px-4 py-2.5 text-sm text-ink-600">
+          <b className="text-ink-900">{pct1(r.pasoTienda)}</b> de quienes hacen clic en un producto hacen clic en "Ver en la tienda".
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
           <h2 className="font-heading text-lg font-bold text-ink-900">En tendencia</h2>
-          <p className="text-xs text-ink-500">Mayor crecimiento de clics frente al período anterior</p>
+          <p className="text-xs text-ink-500">Mayor crecimiento de clics en el producto y a la tienda frente a {prev}</p>
           {r.trending.length === 0 ? (
             <p className="mt-4 text-sm text-ink-400">Ningún producto con volumen suficiente crece en este período.</p>
           ) : (
@@ -361,7 +392,10 @@ function ResumenTab({
                       {p.pymeNombre} · {nf.format(p.clics)} clics · {nf.format(p.tienda)} a tienda
                     </div>
                   </div>
-                  <div className="text-right font-heading text-base font-bold text-emerald-600">{pctS(p.tendencia)}</div>
+                  <div className="text-right font-heading text-base font-bold text-emerald-600">
+                    {pctS(p.tendencia)}
+                    <span className="block text-xs font-normal text-ink-400">tendencia</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -378,6 +412,7 @@ function ResumenTab({
                 <XAxis dataKey="dia" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                 <Tooltip />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Line type="monotone" dataKey="vistas" name="Clics en producto" stroke="#c96f2c" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="clics" name="Clics a tienda" stroke="#292524" strokeWidth={2} dot={false} />
               </LineChart>
@@ -388,11 +423,11 @@ function ResumenTab({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
-          <h2 className="font-heading text-lg font-bold text-ink-900">Más clics en productos</h2>
-          <p className="text-xs text-ink-500">Clics en la ficha del producto (interés)</p>
+          <h2 className="font-heading text-lg font-bold text-ink-900">Productos con más clics</h2>
+          <p className="text-xs text-ink-500">Los 6 productos con más clics en su ficha</p>
           <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={[...r.productos].sort((a, b) => b.clics - a.clics).slice(0, 8)} layout="vertical" margin={{ left: 8 }}>
+              <BarChart data={topClics} layout="vertical" margin={{ left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0ded0" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
                 <YAxis type="category" dataKey="nombre" tick={{ fontSize: 11 }} width={110} />
@@ -403,16 +438,21 @@ function ResumenTab({
           </div>
         </div>
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
-          <h2 className="font-heading text-lg font-bold text-ink-900">Más clics a la tienda</h2>
-          <p className="text-xs text-ink-500">Clics en "Ver en la tienda"</p>
+          <h2 className="font-heading text-lg font-bold text-ink-900">Tiendas con más clics</h2>
+          <p className="text-xs text-ink-500">Las 6 tiendas con más clics en «Ver en la tienda»</p>
           <div className="mt-3 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={[...r.productos].sort((a, b) => b.tienda - a.tienda).slice(0, 8)} layout="vertical" margin={{ left: 8 }}>
+              <BarChart data={topTiendas} layout="vertical" margin={{ left: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0ded0" horizontal={false} />
                 <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
                 <YAxis type="category" dataKey="nombre" tick={{ fontSize: 11 }} width={110} />
-                <Tooltip />
-                <Bar dataKey="tienda" fill="#292524" radius={4} barSize={14} />
+                <Tooltip
+                  labelFormatter={(label, payload) => {
+                    const estrella = (payload?.[0]?.payload as { productoEstrella?: { nombre: string } | null } | undefined)?.productoEstrella
+                    return estrella ? `${label} · Producto estrella: ${estrella.nombre}` : String(label)
+                  }}
+                />
+                <Bar dataKey="tienda" name="Clics a tienda" fill="#292524" radius={4} barSize={14} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -420,8 +460,8 @@ function ResumenTab({
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
-        <h2 className="font-heading text-lg font-bold text-ink-900">Clics a la tienda por pyme</h2>
-        <p className="text-xs text-ink-500">Visitas que PettGo le envía a cada pyme</p>
+        <h2 className="font-heading text-lg font-bold text-ink-900">Participación de cada tienda</h2>
+        <p className="text-xs text-ink-500">Porcentaje del total de clics en «Ver en la tienda»</p>
         <div className="mt-3 grid grid-cols-1 items-center gap-4 sm:grid-cols-2">
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
@@ -442,16 +482,16 @@ function ResumenTab({
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
-        <h2 className="font-heading text-lg font-bold text-ink-900">Producto estrella de cada pyme</h2>
-        <p className="text-xs text-ink-500">El producto con más clics a la tienda de cada pyme en el período</p>
+        <h2 className="font-heading text-lg font-bold text-ink-900">Producto estrella de cada tienda</h2>
+        <p className="text-xs text-ink-500">El producto con más clics en «Ver en la tienda» de cada tienda en el período</p>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full min-w-[560px] text-left text-sm">
             <thead className="border-b border-brand-100 text-xs font-semibold uppercase text-ink-400">
               <tr>
-                <th className="px-3 py-2">Pyme</th>
+                <th className="px-3 py-2">Tienda</th>
                 <th className="px-3 py-2">Producto estrella</th>
                 <th className="px-3 py-2 text-right">Clics a tienda</th>
-                <th className="px-3 py-2 text-right">% de la pyme</th>
+                <th className="px-3 py-2 text-right">% de la tienda</th>
                 <th className="px-3 py-2 text-right">Tendencia</th>
               </tr>
             </thead>
@@ -523,7 +563,7 @@ function ProductosTab({
 
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink-500">
-            Pyme
+            Tienda
             <select
               value={filtroPyme}
               onChange={(e) => setFiltroPyme(e.target.value)}
@@ -570,7 +610,7 @@ function ProductosTab({
             <thead className="border-b border-brand-100 text-xs font-semibold uppercase text-ink-400">
               <tr>
                 <th className="px-3 py-2">Producto</th>
-                <th className="px-3 py-2">Pyme</th>
+                <th className="px-3 py-2">Tienda</th>
                 <th className="px-3 py-2 text-right">Clics</th>
                 <th className="px-3 py-2 text-right">A tienda</th>
                 <th className="px-3 py-2 text-right">Paso a tienda</th>
@@ -598,7 +638,7 @@ function ProductosTab({
               {productos.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-3 py-6 text-center text-ink-400">
-                    No hay productos publicados con esos filtros.
+                    No hay productos con esos filtros. Cambia la tienda o la mascota.
                   </td>
                 </tr>
               )}
@@ -624,30 +664,50 @@ function PlataformaTab({
   setPeriodo: (p: PeriodoTendencias) => void
 }) {
   const p = data.plataforma
-  const deltaUsuarios = p.usuarios.nuevos - p.usuarios.nuevosPrev >= 0
-  const deltaMascotas = p.mascotas.nuevas - p.mascotas.nuevasPrev >= 0
+  const totalMascotas = Math.max(p.mascotas.total, 1)
   const edades = [
     { nombre: "Cachorro (menos de 1 año)", valor: p.mascotas.cachorros },
     { nombre: "Adulto (1 a 7 años)", valor: p.mascotas.adultos },
     { nombre: "Senior (8 años o más)", valor: p.mascotas.seniors },
-  ]
+  ].map((e) => ({ ...e, pct: pct1(e.valor / totalMascotas) }))
+
+  // Comparación entre lo que tienen los usuarios y lo que ofrece el catálogo (un "ambos" cuenta mitad perro, mitad gato).
+  const productos = data.resumen.productos
+  const catGato = productos.length
+    ? (productos.filter((x) => x.especie === "gato").length + productos.filter((x) => x.especie === "ambos").length / 2) / productos.length
+    : 0
+  const shGato = p.mascotas.gatos / Math.max(p.mascotas.perros + p.mascotas.gatos, 1)
+  const brechaGato = shGato - catGato
+  const notaCatalogo =
+    productos.length === 0
+      ? null
+      : `Los gatos son el ${pct1(shGato)} de las mascotas registradas, pero el ${pct1(catGato)} del catálogo. ${
+          Math.abs(brechaGato) < 0.05
+            ? "El catálogo está equilibrado con lo que tienen los usuarios."
+            : brechaGato > 0
+              ? "Conviene sumar más productos para gatos."
+              : "Conviene sumar más productos para perros."
+        }`
+  const com = p.comunidad
+  const maxServicio = Math.max(...p.servicios.map((x) => x.cantidad), 1)
 
   return (
     <div className="flex flex-col gap-8">
       <SelectorPeriodo periodo={periodo} onChange={setPeriodo} />
+      <LiveRow texto="Datos que pettgo.cl ya guarda hoy" />
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <KpiCard label="Usuarios registrados" value={nf.format(p.usuarios.total)} delta={`+${nf.format(p.usuarios.nuevos)} nuevos`} />
+        <KpiCard label="Usuarios registrados" value={nf.format(p.usuarios.total)} delta={`+${nf.format(p.usuarios.nuevos)} nuevos en el período`} />
         <KpiCard
           label="Mascotas registradas"
           value={nf.format(p.mascotas.total)}
-          delta={`+${nf.format(p.mascotas.nuevas)} nuevas`}
+          delta={`+${nf.format(p.mascotas.nuevas)} nuevas en el período`}
           valueClass="text-brand-700"
         />
         <KpiCard label="Usuarios con mascota" value={pct1(p.activacion)} delta="registró al menos una" />
-        <KpiCard label="Veterinarias publicadas" value={String(p.veterinarias.aprobadas)} delta={`${p.veterinarias.pendientes} esperan revisión`} valueClass="text-emerald-600" />
-        <KpiCard label="Especialistas publicados" value={String(p.especialistas.aprobados)} delta={`${p.especialistas.pendientes} esperan revisión`} valueClass="text-emerald-600" />
-        <KpiCard label="Productos publicados" value={String(p.propuestas.publicadas)} delta={`de ${p.propuestas.enviadas} propuestas`} />
+        <KpiCard label="Clínicas veterinarias publicadas" value={String(p.veterinarias.aprobadas)} delta={`${p.veterinarias.pendientes} en revisión`} valueClass="text-emerald-600" />
+        <KpiCard label="Profesionales publicados" value={String(p.especialistas.aprobados)} delta={`${p.especialistas.pendientes} en revisión`} valueClass="text-emerald-600" />
+        <KpiCard label="Productos de pymes publicados" value={String(p.propuestas.publicadas)} delta={`de ${p.propuestas.enviadas} propuestas enviadas`} />
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
@@ -658,22 +718,22 @@ function PlataformaTab({
             <ComposedChart data={p.crecimientoUsuarios}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0ded0" />
               <XAxis dataKey="etiqueta" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+              <YAxis yAxisId="nuevos" tick={{ fontSize: 11 }} allowDecimals={false} />
+              <YAxis yAxisId="acumulado" orientation="right" tick={{ fontSize: 11 }} allowDecimals={false} />
               <Tooltip />
-              <Bar dataKey="nuevos" name="Nuevos registros" fill="#c96f2c" radius={4} barSize={16} />
-              <Line type="monotone" dataKey="acumulado" name="Total acumulado" stroke="#292524" strokeWidth={2} dot={false} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Bar yAxisId="nuevos" dataKey="nuevos" name="Nuevos registros" fill="#c96f2c" radius={4} barSize={16} />
+              <Line yAxisId="acumulado" type="monotone" dataKey="acumulado" name="Total acumulado" stroke="#292524" strokeWidth={2} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
-        <p className={`mt-2 text-xs font-semibold ${deltaUsuarios ? "text-emerald-600" : "text-red-600"}`}>
-          {deltaMascotas ? "Las mascotas nuevas" : "Las mascotas"} van {deltaMascotas ? "al alza" : "más lento"} este período.
-        </p>
+        <NotaFuente texto="tabla de perfiles, fecha de registro." />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
           <h2 className="font-heading text-lg font-bold text-ink-900">Mascotas de los usuarios</h2>
-          <p className="text-xs text-ink-500">Qué tienen los usuarios registrados</p>
+          <p className="text-xs text-ink-500">Qué tienen los usuarios, comparado con lo que ofrece el catálogo</p>
           <div className="mt-3 grid grid-cols-1 items-center gap-4 sm:grid-cols-2">
             <div className="h-40">
               <ResponsiveContainer width="100%" height="100%">
@@ -697,24 +757,26 @@ function PlataformaTab({
             </div>
             <PayList
               filas={[
-                { nombre: "Perros", valor: p.mascotas.perros, color: "#c96f2c" },
-                { nombre: "Gatos", valor: p.mascotas.gatos, color: "#2f6f5e" },
+                { nombre: "Perros", valor: p.mascotas.perros, pct: pct1(1 - shGato), color: "#c96f2c" },
+                { nombre: "Gatos", valor: p.mascotas.gatos, pct: pct1(shGato), color: "#2f6f5e" },
               ]}
             />
           </div>
           <div className="mt-3 border-t border-brand-50 pt-3">
             <PayList filas={edades} />
           </div>
+          {notaCatalogo && <p className="mt-3 text-xs text-ink-500">{notaCatalogo}</p>}
+          <NotaFuente texto="tabla de mascotas (especie y edad)." />
         </div>
 
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
           <h2 className="font-heading text-lg font-bold text-ink-900">Propuestas a pymes</h2>
-          <p className="text-xs text-ink-500">Desde que se invita a una pyme hasta que su producto aparece publicado</p>
+          <p className="text-xs text-ink-500">Desde que se invita a una pyme hasta que su producto aparece en la página</p>
           <div className="mt-4">
             <Funnel
               filas={[
                 { label: "Propuestas enviadas", valor: p.propuestas.enviadas, color: "#f0aa66" },
-                { label: "Publicadas", valor: p.propuestas.publicadas, color: "#292524" },
+                { label: "Publicadas en la página", valor: p.propuestas.publicadas, color: "#292524" },
               ]}
             />
           </div>
@@ -725,28 +787,29 @@ function PlataformaTab({
               <> Las pymes tardan en promedio <b className="text-ink-900">{p.propuestas.diasRespuestaProm.toFixed(1).replace(".", ",")} días</b> en responder.</>
             )}
           </p>
+          <NotaFuente texto="productos de pymes (estado, enlace de aceptación y fechas)." />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
-          <h2 className="font-heading text-lg font-bold text-ink-900">Veterinarias y especialistas</h2>
-          <p className="text-xs text-ink-500">Estado de revisión del directorio y el mapa</p>
+          <h2 className="font-heading text-lg font-bold text-ink-900">Directorio de servicios</h2>
+          <p className="text-xs text-ink-500">Estado de revisión de cada categoría del directorio y el mapa</p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[420px] text-left text-sm">
               <thead className="border-b border-brand-100 text-xs font-semibold uppercase text-ink-400">
                 <tr>
-                  <th className="px-2 py-2">Tipo</th>
-                  <th className="px-2 py-2 text-right">Publicadas</th>
+                  <th className="px-2 py-2">Categoría</th>
+                  <th className="px-2 py-2 text-right">Publicados</th>
                   <th className="px-2 py-2 text-right">En revisión</th>
-                  <th className="px-2 py-2 text-right">Rechazadas</th>
+                  <th className="px-2 py-2 text-right">Rechazados</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-brand-50">
                   <td className="px-2 py-2 font-semibold text-ink-900">
-                    Veterinarias
-                    <div className="text-xs font-normal text-ink-400">{p.veterinarias.h24} atienden 24 horas</div>
+                    Clínicas veterinarias
+                    <div className="text-xs font-normal text-ink-400">{p.veterinarias.h24} atienden las 24 horas</div>
                   </td>
                   <td className="px-2 py-2 text-right">{p.veterinarias.aprobadas}</td>
                   <td className="px-2 py-2 text-right">{p.veterinarias.pendientes}</td>
@@ -754,7 +817,7 @@ function PlataformaTab({
                 </tr>
                 <tr>
                   <td className="px-2 py-2 font-semibold text-ink-900">
-                    Especialistas
+                    Profesionales
                     <div className="text-xs font-normal text-ink-400">peluquería, adiestramiento, etc.</div>
                   </td>
                   <td className="px-2 py-2 text-right">{p.especialistas.aprobados}</td>
@@ -768,8 +831,9 @@ function PlataformaTab({
           {p.servicios.length === 0 ? (
             <p className="mt-2 text-sm text-ink-400">Todavía no hay servicios cargados.</p>
           ) : (
-            <PayList filas={p.servicios.map((s) => ({ nombre: s.nombre, valor: s.cantidad }))} />
+            <PayList filas={p.servicios.map((s) => ({ nombre: s.nombre, valor: s.cantidad, barra: s.cantidad / maxServicio }))} />
           )}
+          <NotaFuente texto="tablas de veterinarias y especialistas." />
         </div>
 
         <div className="rounded-2xl border border-brand-100 bg-white p-5">
@@ -782,11 +846,13 @@ function PlataformaTab({
                 <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
                 <YAxis type="category" dataKey="origen" tick={{ fontSize: 11 }} width={90} />
                 <Tooltip />
-                <Bar dataKey="vistas" name="Vistas de productos" fill="#c96f2c" radius={4} barSize={10} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+                <Bar dataKey="vistas" name="Clics en productos" fill="#c96f2c" radius={4} barSize={10} />
                 <Bar dataKey="clics" name="Clics a la tienda" fill="#292524" radius={4} barSize={10} />
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <NotaFuente texto="página de origen de cada vista y clic." />
         </div>
       </div>
 
@@ -794,23 +860,22 @@ function PlataformaTab({
         <h2 className="font-heading text-lg font-bold text-ink-900">Comunidad</h2>
         <p className="text-xs text-ink-500">Actividad del foro en el período</p>
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <div>
-            <div className="text-xs text-ink-500">Temas nuevos</div>
-            <div className="font-heading text-xl font-bold text-ink-900">{nf.format(data.plataforma.comunidad.temasNuevos)}</div>
-          </div>
-          <div>
-            <div className="text-xs text-ink-500">Respuestas</div>
-            <div className="font-heading text-xl font-bold text-ink-900">{nf.format(data.plataforma.comunidad.respuestas)}</div>
-          </div>
-          <div>
-            <div className="text-xs text-ink-500">Temas sin respuesta</div>
-            <div className="font-heading text-xl font-bold text-ink-900">{nf.format(data.plataforma.comunidad.temasSinRespuesta)}</div>
-          </div>
-          <div>
-            <div className="text-xs text-ink-500">Reportes por revisar</div>
-            <div className="font-heading text-xl font-bold text-ink-900">{nf.format(data.plataforma.comunidad.reportesPendientes)}</div>
-          </div>
+          {(
+            [
+              ["Temas nuevos", com.temasNuevos, "en el período"],
+              ["Respuestas", com.respuestas, com.temasNuevos ? `${(com.respuestas / com.temasNuevos).toFixed(1).replace(".", ",")} por tema` : "—"],
+              ["Temas sin respuesta", com.temasSinRespuesta, com.temasNuevos ? `${pct1(com.temasSinRespuesta / com.temasNuevos)} de los temas` : "—"],
+              ["Reportes por revisar", com.reportesPendientes, "moderación pendiente"],
+            ] as [string, number, string][]
+          ).map(([label, valor, sub]) => (
+            <div key={label}>
+              <div className="text-xs text-ink-500">{label}</div>
+              <div className="font-heading text-xl font-bold text-ink-900">{nf.format(valor)}</div>
+              <div className="text-xs text-ink-400">{sub}</div>
+            </div>
+          ))}
         </div>
+        <NotaFuente texto="temas, respuestas y reportes del foro." />
       </div>
     </div>
   )
@@ -854,23 +919,28 @@ function InformesTab({
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
-        <h2 className="font-heading text-lg font-bold text-ink-900">Resumen del período</h2>
-        <p className="text-xs text-ink-500">Un resumen calculado con los números reales del período (sin IA).</p>
+        <h2 className="font-heading text-lg font-bold text-ink-900">Reporte del agente</h2>
+        <p className="text-xs text-ink-500">Analiza tendencias, productos estrella y pymes del período {periodo}.</p>
         <button
           type="button"
           onClick={onGenerar}
           disabled={generando}
           className="mt-3 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand-500/25 transition hover:shadow-lg disabled:opacity-60"
         >
-          {generando ? "Calculando…" : "Generar resumen del período"}
+          {generando ? "Analizando…" : "Generar reporte de tendencias"}
         </button>
-        {reporteTexto && <p className="mt-4 rounded-xl bg-brand-50 p-4 text-sm leading-relaxed text-ink-700">{reporteTexto}</p>}
+        {reporteTexto && (
+          <>
+            <p className="mt-3 text-xs text-ink-400">Análisis automático, calculado con los datos del panel.</p>
+            <p className="mt-2 rounded-xl bg-brand-50 p-4 text-sm leading-relaxed text-ink-700">{reporteTexto}</p>
+          </>
+        )}
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
         <h2 className="font-heading text-lg font-bold text-ink-900">Informe</h2>
         <p className="text-xs text-ink-500">
-          El PDF incluye indicadores, el paso de interés a tienda, rankings, pymes y el resumen del período. El Excel trae los datos
+          El PDF incluye indicadores, el paso de interés a tienda, rankings, pymes y el análisis del agente. El Excel trae los datos
           para trabajarlos.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">

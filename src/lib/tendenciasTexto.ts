@@ -11,3 +11,10 @@ export function formatoClpCorto(valor: number): string {
   }
   return String(Math.round(valor))
 }
+
+// Texto de comparación según el período ("vs. ayer", "vs. los 7 días anteriores"…).
+export const PERIODO_PREV: Record<string, string> = {
+  diario: "ayer",
+  semanal: "los 7 días anteriores",
+  mensual: "los 30 días anteriores",
+}

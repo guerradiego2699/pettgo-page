@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf"
 import type { ResumenTendencias, PlataformaTendencias } from "../types/tendencias"
-import { nf, pctS, pct1 } from "./tendenciasTexto"
+import { nf, pctS, pct1, formatoClpCorto, PERIODO_PREV } from "./tendenciasTexto"
 
 const C = {
   navy: [11, 42, 91] as [number, number, number],
@@ -31,7 +31,7 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
     doc.setFont("helvetica", style || "normal")
     doc.setFontSize(size)
   }
-  doc.setProperties({ title: "Informe de Tendencias — PettGo" })
+  doc.setProperties({ title: "Informe de Tendencias — PettGo", author: "PettGo" })
 
   fill(C.navy)
   doc.rect(0, 0, W, 40, "F")
@@ -45,7 +45,7 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
   doc.text("Informe de Tendencias", M, 26)
   font(9, "normal")
   ink(C.pale)
-  doc.text("Productos en tendencia, clics a la tienda y visitas por pyme", M, 33.5)
+  doc.text("Productos en tendencia, clics en productos, clics a la tienda y visitas por pyme", M, 33.5)
   font(12, "bold")
   ink(C.white)
   doc.text("Reporte " + PERIODO_LABEL[r.periodo], W - M, 13, { align: "right" })
@@ -83,13 +83,14 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
   const deltaClics = r.totales.clicsPrev ? r.totales.clics / r.totales.clicsPrev - 1 : 0
   const deltaTienda = r.totales.tiendaPrev ? r.totales.tienda / r.totales.tiendaPrev - 1 : 0
   const deltaPasoTienda = r.pasoTiendaPrev ? r.pasoTienda - r.pasoTiendaPrev : 0
+  const prev = PERIODO_PREV[r.periodo]
   const kpis: [string, string, string, [number, number, number]][] = [
-    ["Clics en productos", nf.format(r.totales.clics), pctS(deltaClics) + " vs. período anterior", deltaClics >= 0 ? C.up : C.down],
-    ["Clics a la tienda", nf.format(r.totales.tienda), pctS(deltaTienda) + " vs. período anterior", deltaTienda >= 0 ? C.up : C.down],
+    ["Clics en productos", nf.format(r.totales.clics), pctS(deltaClics) + " vs. " + prev, deltaClics >= 0 ? C.up : C.down],
+    ["Clics a la tienda", nf.format(r.totales.tienda), pctS(deltaTienda) + " vs. " + prev, deltaTienda >= 0 ? C.up : C.down],
     [
       "Paso a la tienda",
       pct1(r.pasoTienda),
-      (deltaPasoTienda >= 0 ? "+" : "") + (deltaPasoTienda * 100).toFixed(1).replace(".", ",") + " pp",
+      (deltaPasoTienda >= 0 ? "+" : "") + (deltaPasoTienda * 100).toFixed(1).replace(".", ",") + " pp vs. " + prev,
       deltaPasoTienda >= 0 ? C.up : C.down,
     ],
     [
@@ -98,8 +99,13 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
       "crecen más de 12%",
       C.soft,
     ],
-    ["Pyme líder", r.pymes[0]?.nombre ?? "—", r.pymes[0] ? pct1(r.pymes[0].share) + " de los clics a tienda" : "", C.soft],
-    ["N° 1 en tendencia", topTendencia?.nombre ?? "—", topTendencia ? pctS(topTendencia.tendencia) : "sin datos", C.soft],
+    ["Tienda líder", r.pymes[0]?.nombre ?? "—", r.pymes[0] ? pct1(r.pymes[0].share) + " de los clics a tienda" : "", C.soft],
+    [
+      "N° 1 en tendencia",
+      topTendencia?.nombre ?? "—",
+      topTendencia ? pctS(topTendencia.tendencia) + " de tendencia" : "sin productos en alza",
+      topTendencia ? C.up : C.soft,
+    ],
   ]
   kpis.forEach((k, i) => {
     const cx = M + (i % 3) * (kw + 4)
@@ -151,6 +157,57 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
     y += fh + 7
   }
 
+  // Clics en el tiempo (barras agrupadas: clics en producto y clics a la tienda)
+  if (r.serieDiaria.length) {
+    ensure(62)
+    y = secTitle("Clics en el tiempo · " + r.serieSub.toLowerCase(), M, y)
+    const ch = 54
+    panel(M, y, CW, ch)
+    fill(C.pale)
+    doc.rect(M + 5, y + 4, 2.6, 2.6, "F")
+    font(7.5, "normal")
+    ink(C.soft)
+    doc.text("Clics en producto", M + 9, y + 6.2)
+    fill(C.blue)
+    doc.rect(M + 40, y + 4, 2.6, 2.6, "F")
+    doc.text("Clics a la tienda", M + 44, y + 6.2)
+    const maxSerie = Math.max(...r.serieDiaria.map((x) => x.vistas), ...r.serieDiaria.map((x) => x.clics), 1)
+    const exp = Math.pow(10, Math.floor(Math.log10(maxSerie)))
+    const frac = maxSerie / exp
+    const mxC = (frac <= 1 ? 1 : frac <= 2 ? 2 : frac <= 2.5 ? 2.5 : frac <= 5 ? 5 : 10) * exp
+    const px = M + 15,
+      pw = CW - 15 - 14,
+      py = y + 11,
+      ph = ch - 11 - 9
+    stroke(C.line)
+    doc.setLineWidth(0.15)
+    font(6.5, "normal")
+    for (let g = 0; g <= 4; g++) {
+      const gy = py + ph - (ph * g) / 4
+      doc.line(px, gy, px + pw, gy)
+      ink(C.soft)
+      doc.text(formatoClpCorto((mxC * g) / 4), px - 2, gy + 0.8, { align: "right" })
+    }
+    const n = r.serieDiaria.length,
+      gw = pw / n,
+      bw = gw * 0.32,
+      step = Math.ceil(n / 8)
+    r.serieDiaria.forEach((pt, i) => {
+      const gx = px + gw * i,
+        hc = (ph * pt.vistas) / mxC,
+        ht = (ph * pt.clics) / mxC
+      fill(C.pale)
+      doc.rect(gx + gw * 0.16, py + ph - hc, bw, hc, "F")
+      fill(C.blue)
+      doc.rect(gx + gw * 0.16 + bw + 0.5, py + ph - ht, bw, ht, "F")
+      if (i % step === 0 || i === n - 1) {
+        ink(C.soft)
+        doc.text(pt.dia, gx + gw / 2, py + ph + 4.5, { align: "center" })
+      }
+    })
+    y += ch + 7
+  }
+
   // Barras horizontales: en tendencia / clics a la tienda por pyme
   const half = (CW - 4) / 2,
     shades = [C.navy, C.blue, C.mid, C.pale]
@@ -197,22 +254,22 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
   const pymeMax = Math.max(...r.pymes.map((p) => p.tienda), 1)
   twoCols(
     "En tendencia",
-    "Clics a la tienda por pyme",
-    trendRows.length ? trendRows : [{ label: "Sin productos en alza en este período", right: "", frac: 0, color: C.light }],
+    "Participación de cada tienda",
+    trendRows.length ? trendRows : [{ label: "Sin productos en alza con volumen suficiente", right: "", frac: 0, color: C.light }],
     r.pymes.map((p, i) => ({
       label: p.nombre,
-      right: nf.format(p.tienda) + "  ·  " + pct1(p.share),
+      right: pct1(p.share),
       frac: p.tienda / pymeMax,
       color: shades[i % 4],
     }))
   )
 
   const topC = [...r.productos].sort((a, b) => b.clics - a.clics).slice(0, 6)
-  const topT = [...r.productos].sort((a, b) => b.tienda - a.tienda).slice(0, 6)
+  const topT = r.pymes.slice(0, 6)
   if (topC.length || topT.length) {
     twoCols(
-      "Más clics en productos",
-      "Más clics a la tienda",
+      "Productos con más clics",
+      "Tiendas con más clics",
       topC.map((p, i) => ({ label: p.nombre, right: nf.format(p.clics), frac: p.clics / Math.max(topC[0]?.clics ?? 1, 1), color: shades[i % 4] })),
       topT.map((p, i) => ({ label: p.nombre, right: nf.format(p.tienda), frac: p.tienda / Math.max(topT[0]?.tienda ?? 1, 1), color: shades[i % 4] }))
     )
@@ -221,15 +278,16 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
   // Producto estrella por pyme
   if (r.pymes.length) {
     const cols = [
-      { t: "Pyme", x: M + 4 },
+      { t: "Tienda", x: M + 4 },
       { t: "Producto estrella", x: M + 50 },
       { t: "Clics a tienda", x: M + 122, r: true },
-      { t: "% de la pyme", x: M + 146, r: true },
+      { t: "% de la tienda", x: M + 146, r: true },
+      { t: "Tendencia", x: M + CW - 4, r: true },
     ]
     const rh = 7,
       th = 8 + rh * r.pymes.length + 3
     ensure(th + 10)
-    y = secTitle("Producto estrella de cada pyme", M, y)
+    y = secTitle("Producto estrella de cada tienda", M, y)
     panel(M, y, CW, th)
     fill(C.light)
     doc.rect(M + 0.3, y + 0.3, CW - 0.6, 7, "F")
@@ -246,6 +304,12 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
       doc.text(pm.productoEstrella?.nombre ?? "—", cols[1].x, ry)
       doc.text(nf.format(pm.productoEstrella?.tienda ?? 0), cols[2].x, ry, { align: "right" })
       doc.text(pct1(pm.starShare), cols[3].x, ry, { align: "right" })
+      if (pm.productoEstrella) {
+        const est = pm.productoEstrella.estadoTendencia
+        font(8.2, "bold")
+        ink(est === "up" ? C.up : est === "down" ? C.down : C.soft)
+        doc.text((est === "up" ? "En alza" : est === "down" ? "A la baja" : "Estable") + " " + pctS(pm.productoEstrella.tendencia), cols[4].x, ry, { align: "right" })
+      }
       if (i < r.pymes.length - 1) {
         stroke(C.line)
         doc.setLineWidth(0.15)
@@ -260,10 +324,10 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
     const filas = [
       ["Usuarios registrados", nf.format(p.usuarios.total)],
       ["Mascotas registradas", nf.format(p.mascotas.total)],
-      ["Veterinarias publicadas", String(p.veterinarias.aprobadas)],
-      ["Especialistas publicados", String(p.especialistas.aprobados)],
+      ["Clínicas veterinarias publicadas", String(p.veterinarias.aprobadas)],
+      ["Profesionales publicados", String(p.especialistas.aprobados)],
       ["Propuestas enviadas a pymes", String(p.propuestas.enviadas)],
-      ["Productos publicados", String(p.propuestas.publicadas)],
+      ["Productos de pymes publicados", String(p.propuestas.publicadas)],
     ]
     const rh = 7,
       th = 8 + rh * filas.length + 3
@@ -288,7 +352,7 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
     const lines = doc.splitTextToSize(resumenTexto, CW - 12)
     const rh2 = 9 + lines.length * 3.8
     ensure(rh2 + 8)
-    y = secTitle("Resumen del período", M, y)
+    y = secTitle("Análisis del agente", M, y)
     fill(C.light)
     doc.roundedRect(M, y, CW, rh2, 2.5, 2.5, "F")
     fill(C.blue)

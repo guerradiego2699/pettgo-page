@@ -1,5 +1,6 @@
 import * as XLSX from "xlsx"
 import type { ResumenTendencias, PlataformaTendencias } from "../types/tendencias"
+import { PERIODO_PREV } from "./tendenciasTexto"
 
 function sheet(rows: unknown[][], widths: number[]) {
   const ws = XLSX.utils.aoa_to_sheet(rows)
@@ -7,8 +8,20 @@ function sheet(rows: unknown[][], widths: number[]) {
   return ws
 }
 
+// Aplica formato de porcentaje (0,0%) a las celdas numéricas indicadas.
+function formatoPorcentaje(ws: XLSX.WorkSheet, direcciones: string[]) {
+  for (const a of direcciones) {
+    const celda = ws[a]
+    if (celda && typeof celda.v === "number") celda.z = "0.0%"
+  }
+}
+
 export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendencias): ArrayBuffer {
   const wb = XLSX.utils.book_new()
+  const prev = PERIODO_PREV[r.periodo]
+  const deltaClics = r.totales.clicsPrev ? r.totales.clics / r.totales.clicsPrev - 1 : 0
+  const deltaTienda = r.totales.tiendaPrev ? r.totales.tienda / r.totales.tiendaPrev - 1 : 0
+  const deltaPaso = r.pasoTiendaPrev ? r.pasoTienda - r.pasoTiendaPrev : 0
 
   const resumen: unknown[][] = [
     ["PettGo — Informe de Tendencias"],
@@ -16,30 +29,32 @@ export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendenc
     ["Período", r.rangoTexto],
     ["Generado", new Date().toLocaleString("es-CL")],
     [],
-    ["Indicador", "Valor"],
-    ["Clics en productos", r.totales.clics],
-    ["Clics a la tienda", r.totales.tienda],
-    ["Paso a la tienda", +r.pasoTienda.toFixed(4)],
-    ["Productos en alza", r.productos.filter((x) => x.estadoTendencia === "up").length],
-    ["Pyme líder", r.pymes[0]?.nombre ?? "—"],
+    ["Indicador", "Valor", "Variación vs. " + prev],
+    ["Clics en productos", r.totales.clics, +deltaClics.toFixed(4)],
+    ["Clics a la tienda", r.totales.tienda, +deltaTienda.toFixed(4)],
+    ["Paso a la tienda", +r.pasoTienda.toFixed(4), +deltaPaso.toFixed(4)],
+    ["Productos en alza", r.productos.filter((x) => x.estadoTendencia === "up").length, ""],
+    ["Tienda líder", r.pymes[0]?.nombre ?? "—", ""],
     [],
     ["Usuarios registrados", p.usuarios.total],
     ["Mascotas registradas", p.mascotas.total],
-    ["Veterinarias publicadas", p.veterinarias.aprobadas],
-    ["Especialistas publicados", p.especialistas.aprobados],
+    ["Clínicas veterinarias publicadas", p.veterinarias.aprobadas],
+    ["Profesionales publicados", p.especialistas.aprobados],
     ["Propuestas enviadas a pymes", p.propuestas.enviadas],
-    ["Productos publicados", p.propuestas.publicadas],
+    ["Productos de pymes publicados", p.propuestas.publicadas],
     [],
-    ["Top en tendencia", "Pyme", "Tendencia"],
+    ["Top en tendencia", "Tienda", "Tendencia"],
     ...r.trending.map((x) => [x.nombre, x.pymeNombre, +x.tendencia.toFixed(4)]),
   ]
-  const wsR = sheet(resumen, [30, 26, 20])
+  const wsR = sheet(resumen, [32, 26, 24])
+  const filaTrending = resumen.length - r.trending.length + 1
+  formatoPorcentaje(wsR, ["C7", "C8", "B9", "C9", ...r.trending.map((_, i) => "C" + (filaTrending + i))])
   XLSX.utils.book_append_sheet(wb, wsR, "Resumen")
 
   const prods: unknown[][] = [
     [
       "Producto",
-      "Pyme",
+      "Tienda",
       "Categoría",
       "Mascota",
       "Clics en producto",
@@ -67,10 +82,25 @@ export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendenc
       ]),
   ]
   const wsP = sheet(prods, [24, 20, 14, 13, 17, 14, 13, 23, 21, 11, 11])
+  formatoPorcentaje(
+    wsP,
+    prods.slice(1).flatMap((_, i) => ["G" + (i + 2), "J" + (i + 2)])
+  )
+  wsP["!autofilter"] = { ref: "A1:K" + prods.length }
   XLSX.utils.book_append_sheet(wb, wsP, "Productos")
 
   const pym: unknown[][] = [
-    ["Pyme", "Correo", "Productos", "Clics en producto", "Clics a tienda", "Participación", "Producto estrella", "Clics del estrella"],
+    [
+      "Tienda",
+      "Correo",
+      "Productos",
+      "Clics en producto",
+      "Clics a tienda",
+      "Participación en clics a tienda",
+      "Producto estrella",
+      "Clics a tienda del estrella",
+      "% de la tienda",
+    ],
     ...r.pymes.map((x) => [
       x.nombre,
       x.email,
@@ -80,17 +110,22 @@ export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendenc
       +x.share.toFixed(4),
       x.productoEstrella?.nombre ?? "—",
       x.productoEstrella?.tienda ?? 0,
+      +x.starShare.toFixed(4),
     ]),
   ]
-  const wsY = sheet(pym, [22, 26, 10, 17, 14, 13, 24, 16])
-  XLSX.utils.book_append_sheet(wb, wsY, "Pymes")
+  const wsY = sheet(pym, [22, 26, 10, 17, 14, 28, 24, 25, 14])
+  formatoPorcentaje(
+    wsY,
+    pym.slice(1).flatMap((_, i) => ["F" + (i + 2), "I" + (i + 2)])
+  )
+  XLSX.utils.book_append_sheet(wb, wsY, "Tiendas")
 
-  const serie: unknown[][] = [["Período", "Vistas (clics en producto)", "Clics a la tienda"], ...r.serieDiaria.map((s) => [s.dia, s.vistas, s.clics])]
+  const serie: unknown[][] = [["Período", "Clics en producto", "Clics a la tienda"], ...r.serieDiaria.map((s) => [s.dia, s.vistas, s.clics])]
   const wsS = sheet(serie, [16, 22, 16])
   XLSX.utils.book_append_sheet(wb, wsS, "Serie de tiempo")
 
-  const origen: unknown[][] = [["Origen", "Vistas", "Clics a tienda"], ...p.origenVisitas.map((o) => [o.origen, o.vistas, o.clics])]
-  const wsO = sheet(origen, [18, 12, 14])
+  const origen: unknown[][] = [["Origen", "Clics en producto", "Clics a tienda"], ...p.origenVisitas.map((o) => [o.origen, o.vistas, o.clics])]
+  const wsO = sheet(origen, [18, 18, 14])
   XLSX.utils.book_append_sheet(wb, wsO, "Origen de visitas")
 
   return XLSX.write(wb, { bookType: "xlsx", type: "array" })
