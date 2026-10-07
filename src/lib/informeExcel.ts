@@ -1,6 +1,7 @@
 import * as XLSX from "xlsx"
 import type { ResumenTendencias, PlataformaTendencias } from "../types/tendencias"
 import { PERIODO_PREV } from "./tendenciasTexto"
+import { etiquetaIdCategoria } from "./categoriasProducto"
 
 function sheet(rows: unknown[][], widths: number[]) {
   const ws = XLSX.utils.aoa_to_sheet(rows)
@@ -70,7 +71,7 @@ export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendenc
       .map((x) => [
         x.nombre,
         x.pymeNombre,
-        x.categoria ?? "",
+        etiquetaIdCategoria(x.categoria ?? "sin_categoria"),
         x.especie === "ambos" ? "Perro y gato" : x.especie === "perro" ? "Perro" : "Gato",
         x.clics,
         x.tienda,
@@ -119,6 +120,26 @@ export function construirInformeExcel(r: ResumenTendencias, p: PlataformaTendenc
     pym.slice(1).flatMap((_, i) => ["F" + (i + 2), "I" + (i + 2)])
   )
   XLSX.utils.book_append_sheet(wb, wsY, "Tiendas")
+
+  const cats: unknown[][] = [
+    ["Categoría", "Productos", "Clics en producto", "Clics a tienda", "Participación en clics a tienda", "Paso a tienda", "Tendencia", "Producto estrella"],
+    ...r.categorias.map((c) => [
+      etiquetaIdCategoria(c.id),
+      c.nProductos,
+      c.clics,
+      c.tienda,
+      +c.share.toFixed(4),
+      +c.pasoTienda.toFixed(4),
+      +c.tendencia.toFixed(4),
+      c.productoEstrella ?? "—",
+    ]),
+  ]
+  const wsC = sheet(cats, [18, 10, 17, 14, 28, 13, 11, 24])
+  formatoPorcentaje(
+    wsC,
+    cats.slice(1).flatMap((_, i) => ["E" + (i + 2), "F" + (i + 2), "G" + (i + 2)])
+  )
+  XLSX.utils.book_append_sheet(wb, wsC, "Categorías")
 
   const serie: unknown[][] = [["Período", "Clics en producto", "Clics a la tienda"], ...r.serieDiaria.map((s) => [s.dia, s.vistas, s.clics])]
   const wsS = sheet(serie, [16, 22, 16])

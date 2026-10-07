@@ -19,6 +19,7 @@ import {
 import { useAuth } from "../../context/AuthContext"
 import { nf, pctS, pct1, PERIODO_PREV } from "../../lib/tendenciasTexto"
 import { analisisLocal } from "../../lib/tendenciasAnalisis"
+import { CATEGORIAS_PRODUCTO, etiquetaIdCategoria } from "../../lib/categoriasProducto"
 import { construirInformePdf } from "../../lib/informePdf"
 import { construirInformeExcel } from "../../lib/informeExcel"
 import type { PeriodoTendencias, ProductoTendencia, TendenciasResponse } from "../../types/tendencias"
@@ -129,6 +130,7 @@ function AdminTendencias() {
 
   const [filtroPyme, setFiltroPyme] = useState("")
   const [filtroEspecie, setFiltroEspecie] = useState("")
+  const [filtroCategoria, setFiltroCategoria] = useState("")
   const [orden, setOrden] = useState<"tendencia" | "clics" | "tienda" | "pasoTienda">("tendencia")
 
   const [reporteTexto, setReporteTexto] = useState<string | null>(null)
@@ -170,6 +172,7 @@ function AdminTendencias() {
     let lista = data.resumen.productos
     if (filtroPyme) lista = lista.filter((p) => p.pymeEmail === filtroPyme)
     if (filtroEspecie) lista = lista.filter((p) => p.especie === filtroEspecie)
+    if (filtroCategoria) lista = lista.filter((p) => (p.categoria ?? "sin_categoria") === filtroCategoria)
     const key: Record<string, (p: ProductoTendencia) => number> = {
       tendencia: (p) => p.tendencia,
       clics: (p) => p.clics,
@@ -177,7 +180,7 @@ function AdminTendencias() {
       pasoTienda: (p) => p.pasoTienda,
     }
     return [...lista].sort((a, b) => key[orden](b) - key[orden](a))
-  }, [data, filtroPyme, filtroEspecie, orden])
+  }, [data, filtroPyme, filtroEspecie, filtroCategoria, orden])
 
   function generarResumen() {
     if (!data) return
@@ -289,6 +292,8 @@ function AdminTendencias() {
               setFiltroPyme={setFiltroPyme}
               filtroEspecie={filtroEspecie}
               setFiltroEspecie={setFiltroEspecie}
+              filtroCategoria={filtroCategoria}
+              setFiltroCategoria={setFiltroCategoria}
               orden={orden}
               setOrden={setOrden}
               productos={productosFiltrados}
@@ -482,6 +487,67 @@ function ResumenTab({
       </div>
 
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
+        <h2 className="font-heading text-lg font-bold text-ink-900">Interés por categoría</h2>
+        <p className="text-xs text-ink-500">Qué categorías de productos generan más clics en su ficha y en «Ver en la tienda»</p>
+        {r.categorias.length === 0 ? (
+          <p className="mt-4 text-sm text-ink-400">Todavía no hay productos publicados con datos en este período.</p>
+        ) : (
+          <div className="mt-3 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={r.categorias.map((c) => ({ nombre: etiquetaIdCategoria(c.id), clics: c.clics, tienda: c.tienda }))}
+                  layout="vertical"
+                  margin={{ left: 8 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0ded0" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 11 }} allowDecimals={false} />
+                  <YAxis type="category" dataKey="nombre" tick={{ fontSize: 11 }} width={90} />
+                  <Tooltip />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar dataKey="clics" name="Clics en productos" fill="#c96f2c" radius={4} barSize={10} />
+                  <Bar dataKey="tienda" name="Clics a la tienda" fill="#292524" radius={4} barSize={10} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[420px] text-left text-sm">
+                <thead className="border-b border-brand-100 text-xs font-semibold uppercase text-ink-400">
+                  <tr>
+                    <th className="px-2 py-2">Categoría</th>
+                    <th className="px-2 py-2 text-right">Clics</th>
+                    <th className="px-2 py-2 text-right">A tienda</th>
+                    <th className="px-2 py-2 text-right">Paso</th>
+                    <th className="px-2 py-2 text-right">Tendencia</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {r.categorias.map((c) => (
+                    <tr key={c.id} className="border-b border-brand-50 last:border-0">
+                      <td className="px-2 py-2 font-semibold text-ink-900">
+                        {etiquetaIdCategoria(c.id)}
+                        <div className="text-xs font-normal text-ink-400">
+                          {c.nProductos} {c.nProductos === 1 ? "producto" : "productos"} · {pct1(c.share)} de los clics a tienda
+                        </div>
+                      </td>
+                      <td className="px-2 py-2 text-right text-ink-700">{nf.format(c.clics)}</td>
+                      <td className="px-2 py-2 text-right text-ink-700">{nf.format(c.tienda)}</td>
+                      <td className="px-2 py-2 text-right text-ink-700">{pct1(c.pasoTienda)}</td>
+                      <td className="px-2 py-2 text-right">
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${TAG_ESTILO[c.estadoTendencia]}`}>
+                          {TAG_LABEL[c.estadoTendencia]} {pctS(c.tendencia)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-brand-100 bg-white p-5">
         <h2 className="font-heading text-lg font-bold text-ink-900">Producto estrella de cada tienda</h2>
         <p className="text-xs text-ink-500">El producto con más clics en «Ver en la tienda» de cada tienda en el período</p>
         <div className="mt-4 overflow-x-auto">
@@ -539,6 +605,8 @@ function ProductosTab({
   setFiltroPyme,
   filtroEspecie,
   setFiltroEspecie,
+  filtroCategoria,
+  setFiltroCategoria,
   orden,
   setOrden,
   productos,
@@ -550,6 +618,8 @@ function ProductosTab({
   setFiltroPyme: (v: string) => void
   filtroEspecie: string
   setFiltroEspecie: (v: string) => void
+  filtroCategoria: string
+  setFiltroCategoria: (v: string) => void
   orden: "tendencia" | "clics" | "tienda" | "pasoTienda"
   setOrden: (v: "tendencia" | "clics" | "tienda" | "pasoTienda") => void
   productos: ProductoTendencia[]
@@ -559,9 +629,9 @@ function ProductosTab({
       <SelectorPeriodo periodo={periodo} onChange={setPeriodo} />
       <div className="rounded-2xl border border-brand-100 bg-white p-5">
         <h2 className="font-heading text-lg font-bold text-ink-900">Catálogo completo</h2>
-        <p className="text-xs text-ink-500">Filtra por pyme o mascota y ordena por el indicador que te interese.</p>
+        <p className="text-xs text-ink-500">Filtra por tienda, mascota o categoría y ordena por el indicador que te interese.</p>
 
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink-500">
             Tienda
             <select
@@ -588,6 +658,22 @@ function ProductosTab({
               <option value="perro">Perro</option>
               <option value="gato">Gato</option>
               <option value="ambos">Perro y gato</option>
+            </select>
+          </label>
+          <label className="flex flex-col gap-1 text-xs font-semibold text-ink-500">
+            Categoría
+            <select
+              value={filtroCategoria}
+              onChange={(e) => setFiltroCategoria(e.target.value)}
+              className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+            >
+              <option value="">Todas</option>
+              {CATEGORIAS_PRODUCTO.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.label}
+                </option>
+              ))}
+              <option value="sin_categoria">Sin categoría</option>
             </select>
           </label>
           <label className="flex flex-col gap-1 text-xs font-semibold text-ink-500">
@@ -622,7 +708,9 @@ function ProductosTab({
                 <tr key={p.id} className="border-b border-brand-50 last:border-0">
                   <td className="px-3 py-2 font-semibold text-ink-900">
                     {p.nombre}
-                    <div className="text-xs font-normal text-ink-400">{ESPECIE_LABEL[p.especie]}</div>
+                    <div className="text-xs font-normal text-ink-400">
+                      {etiquetaIdCategoria(p.categoria ?? "sin_categoria")} · {ESPECIE_LABEL[p.especie]}
+                    </div>
                   </td>
                   <td className="px-3 py-2 text-ink-600">{p.pymeNombre}</td>
                   <td className="px-3 py-2 text-right text-ink-700">{nf.format(p.clics)}</td>
@@ -638,7 +726,7 @@ function ProductosTab({
               {productos.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-3 py-6 text-center text-ink-400">
-                    No hay productos con esos filtros. Cambia la tienda o la mascota.
+                    No hay productos con esos filtros. Cambia la tienda, la mascota o la categoría.
                   </td>
                 </tr>
               )}

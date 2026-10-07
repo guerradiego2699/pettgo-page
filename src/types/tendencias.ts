@@ -1,4 +1,5 @@
 import type { ProductoPymeEspecie } from "./productoPyme"
+import type { CategoriaProducto } from "../lib/categoriasProducto"
 
 export type PeriodoTendencias = "diario" | "semanal" | "mensual"
 export type EstadoTendencia = "up" | "down" | "flat"
@@ -6,7 +7,7 @@ export type EstadoTendencia = "up" | "down" | "flat"
 export interface ProductoTendencia {
   id: string
   nombre: string
-  categoria: string | null
+  categoria: CategoriaProducto | null
   especie: ProductoPymeEspecie
   pymeNombre: string
   pymeEmail: string
@@ -30,6 +31,19 @@ export interface PymeTendencia {
   starShare: number
 }
 
+export interface CategoriaTendencia {
+  // "sin_categoria" agrupa los productos antiguos que no calzaron con ninguna categoría.
+  id: CategoriaProducto | "sin_categoria"
+  nProductos: number
+  clics: number
+  tienda: number
+  share: number
+  pasoTienda: number
+  tendencia: number
+  estadoTendencia: EstadoTendencia
+  productoEstrella: string | null
+}
+
 export interface SerieDiariaTendencia {
   dia: string
   vistas: number
@@ -50,6 +64,7 @@ export interface ResumenTendencias {
   pasoTiendaPrev: number
   productos: ProductoTendencia[]
   pymes: PymeTendencia[]
+  categorias: CategoriaTendencia[]
   trending: ProductoTendencia[]
   serieDiaria: SerieDiariaTendencia[]
   serieSub: string

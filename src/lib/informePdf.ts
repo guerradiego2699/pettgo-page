@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf"
 import type { ResumenTendencias, PlataformaTendencias } from "../types/tendencias"
 import { nf, pctS, pct1, formatoClpCorto, PERIODO_PREV } from "./tendenciasTexto"
+import { etiquetaIdCategoria } from "./categoriasProducto"
 
 const C = {
   navy: [11, 42, 91] as [number, number, number],
@@ -272,6 +273,28 @@ export function construirInformePdf(r: ResumenTendencias, p: PlataformaTendencia
       "Tiendas con más clics",
       topC.map((p, i) => ({ label: p.nombre, right: nf.format(p.clics), frac: p.clics / Math.max(topC[0]?.clics ?? 1, 1), color: shades[i % 4] })),
       topT.map((p, i) => ({ label: p.nombre, right: nf.format(p.tienda), frac: p.tienda / Math.max(topT[0]?.tienda ?? 1, 1), color: shades[i % 4] }))
+    )
+  }
+
+  // Categorías: dónde se concentra el interés
+  const catClics = [...r.categorias].sort((a, b) => b.clics - a.clics).filter((c) => c.clics > 0)
+  const catTienda = [...r.categorias].sort((a, b) => b.tienda - a.tienda).filter((c) => c.tienda > 0)
+  if (catClics.length || catTienda.length) {
+    twoCols(
+      "Categorías con más clics",
+      "Categorías con más clics a la tienda",
+      catClics.map((c, i) => ({
+        label: etiquetaIdCategoria(c.id),
+        right: nf.format(c.clics),
+        frac: c.clics / Math.max(catClics[0]?.clics ?? 1, 1),
+        color: shades[i % 4],
+      })),
+      catTienda.map((c, i) => ({
+        label: etiquetaIdCategoria(c.id),
+        right: nf.format(c.tienda) + "  ·  " + pct1(c.share),
+        frac: c.tienda / Math.max(catTienda[0]?.tienda ?? 1, 1),
+        color: shades[i % 4],
+      }))
     )
   }
 

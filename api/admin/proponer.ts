@@ -4,6 +4,7 @@ import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../_lib/auth.js"
 import { esUrlHttpsValida, esEmailValido, textoValido, precioValido, especieValida } from "../_lib/validation.js"
 import { enviarPropuesta } from "../_lib/resend.js"
+import { categoriaValida } from "../_lib/categorias.js"
 
 const CATORCE_DIAS_MS = 14 * 24 * 60 * 60 * 1000
 
@@ -53,8 +54,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (body.precio_ref != null && !precioValido(body.precio_ref)) {
         return res.status(400).json({ error: "El precio de referencia no es válido." })
       }
-      if (!textoValido(body.categoria, { maxLength: 60 })) {
-        return res.status(400).json({ error: "La categoría no es válida." })
+      if (!categoriaValida(body.categoria)) {
+        return res.status(400).json({ error: "Elige una categoría válida." })
       }
       if (body.especie != null && !especieValida(body.especie)) {
         return res.status(400).json({ error: "La mascota no es válida." })
@@ -74,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           imagen_url: body.imagen_url ? (body.imagen_url as string).trim() : null,
           precio_ref: body.precio_ref ?? null,
           link_tienda: (body.link_tienda as string).trim(),
-          categoria: body.categoria ? (body.categoria as string).trim() : null,
+          categoria: body.categoria,
           especie: especieValida(body.especie) ? body.especie : "ambos",
           pyme_nombre: (body.pyme_nombre as string).trim(),
           pyme_email: (body.pyme_email as string).trim().toLowerCase(),

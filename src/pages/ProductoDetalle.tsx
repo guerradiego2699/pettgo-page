@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { supabase } from "../lib/supabase"
 import { registrarVista } from "../lib/eventos"
+import { ESPECIE_LABEL, etiquetaCategoria } from "../lib/categoriasProducto"
 import type { ProductoPymePublico } from "../types/productoPyme"
 
 function formatoClp(valor: number | null) {
@@ -54,11 +55,18 @@ function ProductoDetalle() {
           )}
         </div>
         <div>
-          {producto.categoria && (
-            <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">
-              {producto.categoria}
-            </span>
-          )}
+          <div className="flex flex-wrap gap-1.5">
+            {etiquetaCategoria(producto.categoria) && (
+              <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">
+                {etiquetaCategoria(producto.categoria)}
+              </span>
+            )}
+            {producto.especie && (
+              <span className="rounded-full bg-ink-100 px-2 py-0.5 text-xs font-semibold text-ink-600">
+                {ESPECIE_LABEL[producto.especie]}
+              </span>
+            )}
+          </div>
           <h1 className="mt-3 font-heading text-3xl font-bold text-ink-900">{producto.nombre}</h1>
           {formatoClp(producto.precio_ref) && (
             <p className="mt-2 text-xl font-semibold text-ink-700">{formatoClp(producto.precio_ref)}</p>

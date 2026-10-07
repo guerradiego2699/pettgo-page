@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../_lib/auth.js"
+import { normalizarCategoria } from "../_lib/categorias.js"
 
 type Periodo = "diario" | "semanal" | "mensual"
 const DIAS_POR_PERIODO: Record<Periodo, number> = { diario: 1, semanal: 7, mensual: 30 }
@@ -138,7 +139,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return {
       id: p.id,
       nombre: p.nombre,
-      categoria: p.categoria,
+      categoria: normalizarCategoria(p.categoria),
       especie: p.especie,
       pymeNombre: p.pyme_nombre,
       pymeEmail: p.pyme_email,
@@ -194,6 +195,37 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     })
     .sort((a, b) => b.tienda - a.tienda)
+
+  // Agrupación por categoría (los productos sin categoría asignada quedan juntos en "sin_categoria").
+  const categoriasMap = new Map<string, typeof productosCalc>()
+  for (const p of productosCalc) {
+    const clave: string = p.categoria ?? "sin_categoria"
+    const lista = categoriasMap.get(clave) ?? []
+    lista.push(p)
+    categoriasMap.set(clave, lista)
+  }
+  const categorias = [...categoriasMap.entries()]
+    .map(([id, lista]) => {
+      const clics = lista.reduce((a, p) => a + p.clics, 0)
+      const tienda = lista.reduce((a, p) => a + p.tienda, 0)
+      const clicsPrev = lista.reduce((a, p) => a + p.clicsPrev, 0)
+      const tiendaPrev = lista.reduce((a, p) => a + p.tiendaPrev, 0)
+      const tendencia = ((clics + k) / (clicsPrev + k) - 1 + ((tienda + k / 2) / (tiendaPrev + k / 2) - 1)) / 2
+      const estadoTendencia = tendencia > 0.12 ? "up" : tendencia < -0.12 ? "down" : "flat"
+      const star = [...lista].sort((a, b) => b.tienda - a.tienda || b.clics - a.clics)[0] ?? null
+      return {
+        id,
+        nProductos: lista.length,
+        clics,
+        tienda,
+        share: totales.tienda ? tienda / totales.tienda : 0,
+        pasoTienda: clics ? tienda / clics : 0,
+        tendencia,
+        estadoTendencia: estadoTendencia as "up" | "down" | "flat",
+        productoEstrella: star ? star.nombre : null,
+      }
+    })
+    .sort((a, b) => b.tienda - a.tienda || b.clics - a.clics)
 
   // Serie diaria: últimos 14 días para "diario", 12 semanas para "semanal", 6 bloques de 30 días para "mensual".
   const serieDiaria: { dia: string; vistas: number; clics: number }[] = []
@@ -339,6 +371,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       pasoTiendaPrev,
       productos: productosCalc,
       pymes,
+      categorias,
       trending,
       serieDiaria,
       serieSub,

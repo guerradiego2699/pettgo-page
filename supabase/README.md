@@ -118,6 +118,13 @@ ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
 - `0008`: corrige un "Function Search Path Mutable" que marcó el Security Advisor en
   las 3 funciones nuevas de `0007`.
 
+- `0011`: agrega `especie` (perro/gato/ambos) a `productos_pyme`.
+- `0013`: `categoria` pasa de texto libre a una lista fija (alimento, higiene, juguetes,
+  accesorios, salud, descanso) y la vista pública expone también `especie`. Antes de
+  correrla conviene ver qué categorías hay hoy
+  (`select categoria, count(*) from public.productos_pyme group by 1;`): los textos
+  antiguos se convierten por palabras clave y lo que no calce queda "Sin categoría".
+
 `productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
 que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:
 necesita saltarse el RLS de `productos_pyme` fila por fila para poder mostrar

@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { supabaseAdmin } from "../../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../../_lib/auth.js"
 import { esUrlHttpsValida, textoValido, precioValido, especieValida } from "../../_lib/validation.js"
+import { categoriaValida } from "../../_lib/categorias.js"
 
 const ESTADOS_VALIDOS = ["pendiente", "publicado", "rechazado"]
 
@@ -61,10 +62,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       actualizacion.imagen_url = body.imagen_url ? (body.imagen_url as string).trim() : null
     }
     if ("categoria" in body) {
-      if (!textoValido(body.categoria, { maxLength: 60 })) {
+      // Vacío o null = "Sin categoría" (productos antiguos que no calzaron con ninguna).
+      if (body.categoria != null && body.categoria !== "" && !categoriaValida(body.categoria)) {
         return res.status(400).json({ error: "La categoría no es válida." })
       }
-      actualizacion.categoria = body.categoria ? (body.categoria as string).trim() : null
+      actualizacion.categoria = body.categoria || null
     }
     if ("especie" in body) {
       if (!especieValida(body.especie)) {

@@ -8,6 +8,8 @@ export interface ProductoPymePublico {
   imagen_url: string | null
   precio_ref: number | null
   categoria: string | null
+  // Puede faltar si la migración 0013 todavía no se aplicó: se trata como "ambos".
+  especie?: ProductoPymeEspecie
   pyme_nombre: string
   creado_en: string
 }

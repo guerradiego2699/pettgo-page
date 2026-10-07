@@ -1,5 +1,6 @@
 import type { ResumenTendencias } from "../types/tendencias"
 import { nf, pctS, pct1, PERIODO_PREV } from "./tendenciasTexto"
+import { etiquetaIdCategoria } from "./categoriasProducto"
 
 const PERIODO_LARGO: Record<string, string> = {
   diario: "diario (hoy vs. ayer)",
@@ -31,6 +32,11 @@ export function analisisLocal(r: ResumenTendencias): string {
   }
   if (pymeLider) {
     s += `${pymeLider.nombre} recibe el ${pct1(pymeLider.share)} de los clics a tienda${pymeLider.productoEstrella ? `, y su producto estrella es ${pymeLider.productoEstrella.nombre}` : ""}. `
+  }
+
+  const topCategoria = r.categorias.find((c) => c.id !== "sin_categoria" && c.tienda > 0)
+  if (topCategoria) {
+    s += `La categoría que más visitas envió a la tienda fue ${etiquetaIdCategoria(topCategoria.id).toLowerCase()} (${pct1(topCategoria.share)} de los clics a tienda). `
   }
 
   const conVolumen = [...r.productos].filter((p) => p.clics > 0)

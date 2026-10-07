@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 import { useAuth } from "../../context/AuthContext"
 import { uploadImage, extensionFor } from "../../lib/storage"
+import { CATEGORIAS_PRODUCTO, ESPECIE_LABEL, etiquetaCategoria, normalizarCategoria } from "../../lib/categoriasProducto"
 import type { MetricasResponse, ProductoPymeEspecie, ProductoPymeMetrica } from "../../types/productoPyme"
 
 const RANGOS = [
@@ -55,6 +56,8 @@ function AdminProductos() {
   const [enviando, setEnviando] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
+  const [filtroCategoria, setFiltroCategoria] = useState("")
+  const [filtroMascota, setFiltroMascota] = useState("")
 
   const desde = useMemo(() => {
     const rangoActual = RANGOS.find((r) => r.id === rango)
@@ -87,6 +90,16 @@ function AdminProductos() {
   useEffect(() => {
     cargarMetricas()
   }, [cargarMetricas])
+
+  const productosFiltrados = useMemo(() => {
+    const lista = metricas?.productos ?? []
+    return lista.filter((p) => {
+      const cat = normalizarCategoria(p.categoria)
+      if (filtroCategoria === "sin_categoria" ? cat !== null : filtroCategoria && cat !== filtroCategoria) return false
+      if (filtroMascota && p.especie !== filtroMascota) return false
+      return true
+    })
+  }, [metricas, filtroCategoria, filtroMascota])
 
   function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -177,7 +190,7 @@ function AdminProductos() {
       descripcion: producto.descripcion ?? "",
       precio_ref: producto.precio_ref != null ? String(producto.precio_ref) : "",
       link_tienda: producto.link_tienda ?? "",
-      categoria: producto.categoria ?? "",
+      categoria: normalizarCategoria(producto.categoria) ?? "",
       especie: producto.especie ?? "ambos",
     })
     setEditPreview(producto.imagen_url ?? null)
@@ -291,6 +304,7 @@ function AdminProductos() {
       "pyme_nombre",
       "pyme_email",
       "categoria",
+      "mascota",
       "estado",
       "vistas_totales",
       "vistas_unicas",
@@ -299,7 +313,7 @@ function AdminProductos() {
       "tasa_clic",
     ]
     const filas = metricas.productos.map((p) =>
-      [p.nombre, p.pyme_nombre, p.pyme_email, p.categoria ?? "", p.estado, p.vistas_totales, p.vistas_unicas, p.clics_totales, p.clics_unicos, p.tasa_clic]
+      [p.nombre, p.pyme_nombre, p.pyme_email, etiquetaCategoria(p.categoria) ?? "", ESPECIE_LABEL[p.especie ?? "ambos"], p.estado, p.vistas_totales, p.vistas_unicas, p.clics_totales, p.clics_unicos, p.tasa_clic]
         .map((valor) => `"${String(valor).replace(/"/g, '""')}"`)
         .join(",")
     )
@@ -351,12 +365,20 @@ function AdminProductos() {
               />
             </label>
             <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
-              Categoría
-              <input
+              Categoría *
+              <select
+                required
                 value={form.categoria}
                 onChange={(e) => setForm({ ...form, categoria: e.target.value })}
                 className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
-              />
+              >
+                <option value="">Elige una categoría…</option>
+                {CATEGORIAS_PRODUCTO.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
 
@@ -482,11 +504,18 @@ function AdminProductos() {
             </label>
             <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
               Categoría
-              <input
+              <select
                 value={editForm.categoria}
                 onChange={(e) => setEditForm({ ...editForm, categoria: e.target.value })}
                 className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
-              />
+              >
+                <option value="">Sin categoría</option>
+                {CATEGORIAS_PRODUCTO.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
 
@@ -620,7 +649,51 @@ function AdminProductos() {
             </div>
           )}
 
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-brand-100 bg-white">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <label className="flex items-center gap-2 text-sm font-medium text-ink-600">
+              Categoría
+              <select
+                value={filtroCategoria}
+                onChange={(e) => setFiltroCategoria(e.target.value)}
+                className="rounded-lg border border-ink-900/15 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none"
+              >
+                <option value="">Todas</option>
+                {CATEGORIAS_PRODUCTO.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label}
+                  </option>
+                ))}
+                <option value="sin_categoria">Sin categoría</option>
+              </select>
+            </label>
+            <label className="flex items-center gap-2 text-sm font-medium text-ink-600">
+              Mascota
+              <select
+                value={filtroMascota}
+                onChange={(e) => setFiltroMascota(e.target.value)}
+                className="rounded-lg border border-ink-900/15 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none"
+              >
+                <option value="">Todas</option>
+                <option value="perro">Perro</option>
+                <option value="gato">Gato</option>
+                <option value="ambos">Perro y gato</option>
+              </select>
+            </label>
+            {(filtroCategoria || filtroMascota) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setFiltroCategoria("")
+                  setFiltroMascota("")
+                }}
+                className="text-sm font-semibold text-brand-700 hover:underline"
+              >
+                Quitar filtros
+              </button>
+            )}
+          </div>
+
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-brand-100 bg-white">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-brand-100 text-xs font-semibold uppercase text-ink-400">
                 <tr>
@@ -634,9 +707,14 @@ function AdminProductos() {
                 </tr>
               </thead>
               <tbody>
-                {(metricas?.productos ?? []).map((producto: ProductoPymeMetrica) => (
+                {productosFiltrados.map((producto: ProductoPymeMetrica) => (
                   <tr key={producto.id} className="border-b border-brand-50 last:border-0">
-                    <td className="px-4 py-3 font-medium text-ink-900">{producto.nombre}</td>
+                    <td className="px-4 py-3 font-medium text-ink-900">
+                      {producto.nombre}
+                      <div className="text-xs font-normal text-ink-400">
+                        {etiquetaCategoria(producto.categoria) ?? "Sin categoría"} · {ESPECIE_LABEL[producto.especie ?? "ambos"]}
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-ink-500">
                       {producto.pyme_nombre}
                       <div className="text-xs text-ink-400">{producto.pyme_email}</div>
@@ -720,10 +798,12 @@ function AdminProductos() {
                     </td>
                   </tr>
                 ))}
-                {(metricas?.productos ?? []).length === 0 && (
+                {productosFiltrados.length === 0 && (
                   <tr>
                     <td colSpan={7} className="px-4 py-6 text-center text-ink-400">
-                      Todavía no has propuesto ningún producto.
+                      {(metricas?.productos ?? []).length === 0
+                        ? "Todavía no has propuesto ningún producto."
+                        : "No hay productos con esos filtros."}
                     </td>
                   </tr>
                 )}

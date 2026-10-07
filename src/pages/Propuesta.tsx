@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { etiquetaCategoria } from "../lib/categoriasProducto"
 import type { ProductoPymePropuesta } from "../types/productoPyme"
 
 function formatoClp(valor: number | null) {
@@ -167,9 +168,9 @@ function Propuesta() {
           </div>
         ) : (
           <div>
-            {datos.categoria && (
+            {etiquetaCategoria(datos.categoria) && (
               <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-semibold text-brand-700">
-                {datos.categoria}
+                {etiquetaCategoria(datos.categoria)}
               </span>
             )}
             <h2 className="mt-3 font-heading text-2xl font-bold text-ink-900">{datos.nombre}</h2>
