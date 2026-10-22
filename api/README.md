@@ -64,6 +64,22 @@ convenciones de ruteo dinámico específicas de un framework.
   agente de área, con la diferencia contra el avance real registrado en la actividad.
 - **`GET /api/admin/proyecto?seccion=auditoria`** — últimas 150 entradas.
 
+## Avisos de moderación del foro
+
+- **`POST /api/foro/aviso`** — lo llaman los **Database Webhooks de Supabase**, no el
+  navegador. Cada vez que se inserta un tema en `forum_threads` o un reporte en `reports`,
+  manda un correo a `seguridad@pettgo.cl` (plantillas en `_lib/avisosForoPlantilla.ts`).
+  Se autentica con el header `x-webhook-secret`; del cuerpo solo usa la tabla y el id, y el
+  resto lo lee de la base con la service role. Un fallo de correo no afecta al foro.
+
+Variables de entorno (Vercel): `FORO_WEBHOOK_SECRET` (obligatoria, el mismo valor que se
+pone en el header de los dos webhooks), `SEGURIDAD_EMAIL` (opcional, por defecto
+`seguridad@pettgo.cl`), más `RESEND_API_KEY` y `SITE_URL`, que ya existen.
+
+Configuración en Supabase (Database → Webhooks), una vez por tabla (`forum_threads` y
+`reports`): evento **Insert**, tipo HTTP Request, método POST, URL
+`https://pettgo.cl/api/foro/aviso`, timeout 5000 ms y header `x-webhook-secret`.
+
 ## Autenticación de admin (`_lib/auth.ts`)
 
 El frontend manda el `access_token` de la sesión de Supabase Auth en
