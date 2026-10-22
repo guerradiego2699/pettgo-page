@@ -66,19 +66,20 @@ convenciones de ruteo dinámico específicas de un framework.
 
 ## Avisos de moderación del foro
 
-- **`POST /api/foro/aviso`** — lo llaman los **Database Webhooks de Supabase**, no el
+- **`POST /api/foro/aviso`** — lo llaman los triggers de Supabase (migración `0014`), no el
   navegador. Cada vez que se inserta un tema en `forum_threads` o un reporte en `reports`,
   manda un correo a `seguridad@pettgo.cl` (plantillas en `_lib/avisosForoPlantilla.ts`).
   Se autentica con el header `x-webhook-secret`; del cuerpo solo usa la tabla y el id, y el
   resto lo lee de la base con la service role. Un fallo de correo no afecta al foro.
 
-Variables de entorno (Vercel): `FORO_WEBHOOK_SECRET` (obligatoria, el mismo valor que se
-pone en el header de los dos webhooks), `SEGURIDAD_EMAIL` (opcional, por defecto
-`seguridad@pettgo.cl`), más `RESEND_API_KEY` y `SITE_URL`, que ya existen.
+Variables de entorno (Vercel): `FORO_WEBHOOK_SECRET` (obligatoria; el mismo valor que el
+secreto `foro_webhook_secret` guardado en el Vault de Supabase), `SEGURIDAD_EMAIL`
+(opcional, por defecto `seguridad@pettgo.cl`), más `RESEND_API_KEY` y `SITE_URL`.
 
-Configuración en Supabase (Database → Webhooks), una vez por tabla (`forum_threads` y
-`reports`): evento **Insert**, tipo HTTP Request, método POST, URL
-`https://pettgo.cl/api/foro/aviso`, timeout 5000 ms y header `x-webhook-secret`.
+El trigger llama a `https://www.pettgo.cl/api/foro/aviso` (con `www`: el dominio sin `www`
+responde 308 y una llamada de base de datos no debe depender de seguir redirecciones).
+Para rotar el secreto hay que cambiarlo a la vez en Vercel (y redesplegar) y en el Vault
+(`vault.update_secret`).
 
 ## Autenticación de admin (`_lib/auth.ts`)
 
