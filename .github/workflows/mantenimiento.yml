@@ -1,0 +1,64 @@
+name: Mantenimiento semanal
+
+# Revisa el sitio cada lunes y guarda el informe en la rama `registro-mantenimiento`
+# (historial en git, sin tocar main ni disparar despliegues). Si algo queda en rojo, el
+# flujo termina en error y GitHub avisa por correo a quien lo programó.
+# También se puede ejecutar a mano: pestaña Actions → "Mantenimiento semanal" → Run workflow.
+
+on:
+  schedule:
+    - cron: "0 12 * * 1" # lunes 12:00 UTC (09:00 en Chile en verano, 08:00 en invierno)
+  workflow_dispatch:
+
+permissions:
+  contents: write # guardar el informe en la rama registro-mantenimiento
+  deployments: read # leer el estado de los despliegues de Vercel
+
+concurrency:
+  group: mantenimiento
+  cancel-in-progress: false
+
+jobs:
+  chequeo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Código del sitio
+        uses: actions/checkout@v4
+
+      - name: Historial de informes
+        uses: actions/checkout@v4
+        with:
+          ref: registro-mantenimiento
+          path: registro
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Ejecutar el chequeo
+        id: chequeo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SALIDA_INFORMES: registro/informes
+        run: node scripts/mantenimiento.mjs
+
+      - name: Guardar el informe en el historial
+        if: always() && steps.chequeo.outputs.fecha != ''
+        working-directory: registro
+        run: |
+          git config user.name "pettgo-mantenimiento"
+          git config user.email "mantenimiento@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "El informe de hoy ya estaba guardado."
+          else
+            git commit -m "Informe de mantenimiento ${{ steps.chequeo.outputs.fecha }} (${{ steps.chequeo.outputs.estado }})"
+            git push origin registro-mantenimiento
+          fi
+
+      - name: Avisar si hay problemas críticos
+        if: steps.chequeo.outputs.estado == 'rojo'
+        run: |
+          echo "::error::El chequeo encontró problemas críticos. Revisa el informe en la rama registro-mantenimiento."
+          exit 1
