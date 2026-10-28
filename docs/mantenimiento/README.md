@@ -9,7 +9,7 @@ git. Así hay historial: qué se revisó, qué se detectó y cuándo se corrigi�
 |---|---|---|
 | Chequeo | [`scripts/mantenimiento.mjs`](../../scripts/mantenimiento.mjs) | Revisa el sitio, dependencias, despliegues y repositorio. Solo lectura, sin IA, sin claves privadas. |
 | Programación | [`.github/workflows/mantenimiento.yml`](../../.github/workflows/mantenimiento.yml) | Lo ejecuta en GitHub Actions cada lunes, o a mano desde la pestaña Actions. |
-| Historial | Rama [`registro-mantenimiento`](https://github.com/guerradiego2699/pettgo-page/tree/registro-mantenimiento) | Un informe por semana en `informes/AAAA-MM-DD.md`. Esa rama no se despliega en Vercel. |
+| Historial | Rama [`registro-mantenimiento`](https://github.com/guerradiego2699/pettgo-page/tree/registro-mantenimiento) | Un informe por semana en `informes/AAAA-MM-DD.md`. Esa rama tiene su propio `vercel.json` que desactiva los despliegues (Vercel lee la configuración de la rama que se sube, no la de `main`). |
 
 ## Qué revisa
 
