@@ -9,6 +9,11 @@ on:
   schedule:
     - cron: "0 12 * * 1" # lunes 12:00 UTC (09:00 en Chile en verano, 08:00 en invierno)
   workflow_dispatch:
+  push: # al cambiar el chequeo o este flujo, se ejecuta para comprobar que sigue funcionando
+    branches: [main]
+    paths:
+      - scripts/mantenimiento.mjs
+      - .github/workflows/mantenimiento.yml
 
 permissions:
   contents: write # guardar el informe en la rama registro-mantenimiento
