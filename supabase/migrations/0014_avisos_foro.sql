@@ -15,7 +15,7 @@
 --
 -- La URL usa www.pettgo.cl porque pettgo.cl responde con una redirección 308.
 
-create extension if not exists pg_net;
+create extension if not exists pg_net with schema extensions;
 
 create or replace function public.avisar_moderacion_foro()
 returns trigger
