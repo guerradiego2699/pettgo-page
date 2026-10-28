@@ -82,7 +82,10 @@ function ForoTema() {
       <div className="mt-4 rounded-2xl border border-brand-100 bg-white p-6">
         <h1 className="font-heading text-2xl font-bold text-ink-900">{thread.title}</h1>
         <p className="mt-1 text-xs font-medium text-ink-400">
-          {authorNames[thread.author_id] ?? "Alguien"} · {new Date(thread.created_at).toLocaleDateString("es-CL")}
+          <Link to={`/perfil/${thread.author_id}`} className="hover:text-brand-600 hover:underline">
+            {authorNames[thread.author_id] ?? "Alguien"}
+          </Link>{" "}
+          · {new Date(thread.created_at).toLocaleDateString("es-CL")}
         </p>
         <p className="mt-4 whitespace-pre-wrap text-sm text-ink-700">{thread.body}</p>
         <div className="mt-4">
@@ -94,7 +97,10 @@ function ForoTema() {
         {posts.map((post) => (
           <div key={post.id} className="rounded-2xl border border-brand-100 bg-brand-50/40 p-5">
             <p className="text-xs font-medium text-ink-400">
-              {authorNames[post.author_id] ?? "Alguien"} · {new Date(post.created_at).toLocaleDateString("es-CL")}
+              <Link to={`/perfil/${post.author_id}`} className="hover:text-brand-600 hover:underline">
+                {authorNames[post.author_id] ?? "Alguien"}
+              </Link>{" "}
+              · {new Date(post.created_at).toLocaleDateString("es-CL")}
             </p>
             <p className="mt-2 whitespace-pre-wrap text-sm text-ink-700">{post.body}</p>
             <div className="mt-3">

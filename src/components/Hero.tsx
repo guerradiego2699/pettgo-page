@@ -76,7 +76,7 @@ function Hero() {
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-ink-500 lg:mx-0">
             PettGo centraliza productos y servicios para el cuidado de perros y
-            gatos en Curicó: tienda, especialistas, veterinarias, mapa y
+            gatos en Curicó: productos, especialistas, veterinarias, mapa y
             comunidad, todo en una sola plataforma.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">

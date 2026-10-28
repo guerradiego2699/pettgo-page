@@ -1,0 +1,61 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node"
+import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
+import { requireAdmin } from "../_lib/auth.js"
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Método no permitido." })
+  }
+
+  const auth = await requireAdmin(req)
+  if (!auth.ok) return res.status(auth.status).json({ error: auth.error })
+
+  const desde = typeof req.query.desde === "string" ? req.query.desde : null
+  const hasta = typeof req.query.hasta === "string" ? req.query.hasta : null
+
+  const { data: productos, error: errorProductos } = await supabaseAdmin
+    .from("productos_pyme")
+    .select("id, nombre, descripcion, imagen_url, precio_ref, link_tienda, estado, pyme_nombre, pyme_email, categoria, especie")
+    .order("creado_en", { ascending: false })
+
+  if (errorProductos) {
+    console.error(errorProductos)
+    return res.status(500).json({ error: "No se pudieron cargar los productos." })
+  }
+
+  const [{ data: metricas, error: errorMetricas }, { data: serieDiaria, error: errorSerie }] = await Promise.all([
+    supabaseAdmin.rpc("metricas_producto", { desde, hasta }),
+    supabaseAdmin.rpc("metricas_diarias", { desde, hasta }),
+  ])
+
+  if (errorMetricas || errorSerie) {
+    console.error(errorMetricas ?? errorSerie)
+    return res.status(500).json({ error: "No se pudieron calcular las métricas." })
+  }
+
+  interface MetricaFila {
+    producto_id: string
+    vistas_totales: number
+    vistas_unicas: number
+    clics_totales: number
+    clics_unicos: number
+    tasa_clic: number
+  }
+
+  const filasMetricas: MetricaFila[] = metricas ?? []
+  const porProducto = new Map<string, MetricaFila>(filasMetricas.map((m) => [m.producto_id, m]))
+
+  const productosConMetricas = (productos ?? []).map((producto: { id: string }) => {
+    const m = porProducto.get(producto.id)
+    return {
+      ...producto,
+      vistas_totales: m?.vistas_totales ?? 0,
+      vistas_unicas: m?.vistas_unicas ?? 0,
+      clics_totales: m?.clics_totales ?? 0,
+      clics_unicos: m?.clics_unicos ?? 0,
+      tasa_clic: m?.tasa_clic ?? 0,
+    }
+  })
+
+  return res.status(200).json({ productos: productosConMetricas, serieDiaria: serieDiaria ?? [] })
+}

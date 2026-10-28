@@ -11,6 +11,12 @@ node_modules
 dist
 dist-ssr
 *.local
+.tsbuildcache
+
+# Variables de entorno del servidor (/api) — nunca se suben a git.
+.env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*

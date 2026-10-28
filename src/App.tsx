@@ -1,37 +1,46 @@
+import { lazy } from "react"
 import { Routes, Route } from "react-router-dom"
 import Layout from "./components/Layout"
 import ProtectedRoute from "./components/ProtectedRoute"
-import Home from "./pages/Home"
-import Tienda from "./pages/Tienda"
-import Especialistas from "./pages/Especialistas"
-import EspecialistaDetalle from "./pages/EspecialistaDetalle"
-import Veterinarias from "./pages/Veterinarias"
-import VeterinariaDetalle from "./pages/VeterinariaDetalle"
-import Mapa from "./pages/Mapa"
-import Comunidad from "./pages/Comunidad"
-import ForoTema from "./pages/ForoTema"
-import Login from "./pages/Login"
-import Registro from "./pages/Registro"
-import RecuperarPassword from "./pages/RecuperarPassword"
-import RestablecerPassword from "./pages/RestablecerPassword"
-import Cuenta from "./pages/Cuenta"
-import Mascotas from "./pages/Mascotas"
-import AdminHome from "./pages/admin/AdminHome"
-import AdminVeterinarias from "./pages/admin/AdminVeterinarias"
-import AdminEspecialistas from "./pages/admin/AdminEspecialistas"
-import AdminProductos from "./pages/admin/AdminProductos"
-import AdminUsuarios from "./pages/admin/AdminUsuarios"
-import AdminReportes from "./pages/admin/AdminReportes"
-import Privacidad from "./pages/Privacidad"
-import Terminos from "./pages/Terminos"
-import NotFound from "./pages/NotFound"
+
+const Home = lazy(() => import("./pages/Home"))
+const Productos = lazy(() => import("./pages/Productos"))
+const ProductoDetalle = lazy(() => import("./pages/ProductoDetalle"))
+const Propuesta = lazy(() => import("./pages/Propuesta"))
+const Especialistas = lazy(() => import("./pages/Especialistas"))
+const EspecialistaDetalle = lazy(() => import("./pages/EspecialistaDetalle"))
+const Veterinarias = lazy(() => import("./pages/Veterinarias"))
+const VeterinariaDetalle = lazy(() => import("./pages/VeterinariaDetalle"))
+const Mapa = lazy(() => import("./pages/Mapa"))
+const Comunidad = lazy(() => import("./pages/Comunidad"))
+const ForoTema = lazy(() => import("./pages/ForoTema"))
+const PerfilPublico = lazy(() => import("./pages/PerfilPublico"))
+const Login = lazy(() => import("./pages/Login"))
+const Registro = lazy(() => import("./pages/Registro"))
+const RecuperarPassword = lazy(() => import("./pages/RecuperarPassword"))
+const RestablecerPassword = lazy(() => import("./pages/RestablecerPassword"))
+const Cuenta = lazy(() => import("./pages/Cuenta"))
+const Mascotas = lazy(() => import("./pages/Mascotas"))
+const AdminHome = lazy(() => import("./pages/admin/AdminHome"))
+const AdminVeterinarias = lazy(() => import("./pages/admin/AdminVeterinarias"))
+const AdminEspecialistas = lazy(() => import("./pages/admin/AdminEspecialistas"))
+const AdminProductos = lazy(() => import("./pages/admin/AdminProductos"))
+const AdminTendencias = lazy(() => import("./pages/admin/AdminTendencias"))
+const AdminProyecto = lazy(() => import("./pages/admin/AdminProyecto"))
+const AdminUsuarios = lazy(() => import("./pages/admin/AdminUsuarios"))
+const AdminReportes = lazy(() => import("./pages/admin/AdminReportes"))
+const Privacidad = lazy(() => import("./pages/Privacidad"))
+const Terminos = lazy(() => import("./pages/Terminos"))
+const NotFound = lazy(() => import("./pages/NotFound"))
 
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="tienda" element={<Tienda />} />
+        <Route path="productos" element={<Productos />} />
+        <Route path="productos/:id" element={<ProductoDetalle />} />
+        <Route path="propuesta/:token" element={<Propuesta />} />
         <Route path="especialistas" element={<Especialistas />} />
         <Route path="especialistas/:id" element={<EspecialistaDetalle />} />
         <Route path="veterinarias" element={<Veterinarias />} />
@@ -48,12 +57,15 @@ function App() {
           <Route path="mascotas" element={<Mascotas />} />
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="comunidad/:id" element={<ForoTema />} />
+          <Route path="perfil/:id" element={<PerfilPublico />} />
         </Route>
         <Route element={<ProtectedRoute roles={["admin"]} />}>
           <Route path="admin" element={<AdminHome />} />
           <Route path="admin/veterinarias" element={<AdminVeterinarias />} />
           <Route path="admin/especialistas" element={<AdminEspecialistas />} />
           <Route path="admin/productos" element={<AdminProductos />} />
+          <Route path="admin/tendencias" element={<AdminTendencias />} />
+          <Route path="admin/proyecto" element={<AdminProyecto />} />
           <Route path="admin/usuarios" element={<AdminUsuarios />} />
           <Route path="admin/reportes" element={<AdminReportes />} />
         </Route>

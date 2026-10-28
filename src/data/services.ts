@@ -8,12 +8,12 @@ export interface Service {
 
 export const services: Service[] = [
   {
-    id: "tienda",
-    title: "Tienda (Dropshipping)",
+    id: "productos",
+    title: "Productos recomendados",
     description:
-      "Productos de alimentación, higiene y accesorios que llegan directo a tu casa en Curicó.",
+      "Productos de pymes chilenas del rubro mascotas, recomendados por PettGo y con link directo a su tienda.",
     icon: "🛒",
-    path: "/tienda",
+    path: "/productos",
   },
   {
     id: "especialistas",

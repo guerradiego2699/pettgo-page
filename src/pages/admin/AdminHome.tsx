@@ -34,8 +34,28 @@ function AdminHome() {
           <span className="text-2xl" aria-hidden="true">
             🛍️
           </span>
-          <h2 className="mt-3 font-heading text-lg font-bold text-ink-900">Productos</h2>
-          <p className="mt-1 text-sm text-ink-500">Crear, editar y eliminar productos de la tienda.</p>
+          <h2 className="mt-3 font-heading text-lg font-bold text-ink-900">Productos de pymes</h2>
+          <p className="mt-1 text-sm text-ink-500">Proponer productos por correo y ver métricas de vistas y clics.</p>
+        </Link>
+        <Link
+          to="/admin/tendencias"
+          className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <span className="text-2xl" aria-hidden="true">
+            📈
+          </span>
+          <h2 className="mt-3 font-heading text-lg font-bold text-ink-900">Tendencias</h2>
+          <p className="mt-1 text-sm text-ink-500">Desempeño de productos, indicadores de la plataforma e informes descargables.</p>
+        </Link>
+        <Link
+          to="/admin/proyecto"
+          className="rounded-2xl border border-brand-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+        >
+          <span className="text-2xl" aria-hidden="true">
+            🗂️
+          </span>
+          <h2 className="mt-3 font-heading text-lg font-bold text-ink-900">Gestión de Proyecto</h2>
+          <p className="mt-1 text-sm text-ink-500">Actividades, dependencias, riesgos, hitos y auditoría del equipo.</p>
         </Link>
         <Link
           to="/admin/usuarios"

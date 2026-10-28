@@ -19,6 +19,14 @@
    (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) en Project Settings → Environment
    Variables del proyecto en Vercel.
 
+## Perfil público con mascotas (`0009_public_pets_view.sql`)
+
+Al hacer clic en el nombre de alguien en el foro (`/perfil/:id`), se muestran sus
+mascotas. La tabla `pets` sigue con RLS restringido al dueño/admin; la vista
+`public_pets` (mismo patrón que `public_profiles`) expone solo los campos de la
+mascota (nombre, especie, raza, edad, foto, frase) — nunca datos del dueño más allá
+de lo que ya muestra `public_profiles`. Ya aplicada en el proyecto real.
+
 ## Roles
 
 El rol vive en `public.profiles.role` (`persona` por defecto al registrarse). Para
@@ -80,11 +88,92 @@ error en la política — es una interacción conocida y no obvia entre `ON CONF
 UPDATE` y RLS en Postgres/Supabase Storage.
 
 **Solución aplicada:** en `src/lib/storage.ts` se usa `upsert: false`, y cada subida
-(`Cuenta.tsx`, `PetForm.tsx`, `ProductForm.tsx`, `VetForm.tsx`, `SpecialistForm.tsx`)
-genera un nombre de archivo nuevo con `crypto.randomUUID()` en cada subida — nunca se
-reutiliza la misma ruta, así que nunca hay conflicto y no hace falta upsert.
+(`Cuenta.tsx`, `PetForm.tsx`, `VetForm.tsx`, `SpecialistForm.tsx`) genera un nombre de
+archivo nuevo con `crypto.randomUUID()` en cada subida — nunca se reutiliza la misma
+ruta, así que nunca hay conflicto y no hace falta upsert.
 
 **Si en el futuro se necesita "reemplazar" un archivo en la misma ruta** (en vez de subir
 uno nuevo), no uses `upsert: true`. En su lugar, borra el archivo anterior primero
 (`supabase.storage.from(bucket).remove([path])`) y luego sube el nuevo con
 `upsert: false`.
+
+## Productos de pymes (recomendación con propuesta por correo)
+
+Reemplaza la antigua "Tienda" (venta directa, retirada). PettGo ya no vende: recomienda
+gratis productos de pymes chilenas y deriva tráfico a su tienda. El flujo completo —
+crear la propuesta, enviarla por correo, que la pyme acepte/edite/rechace desde un
+enlace único, y medir vistas/clics — vive en `/api` (ver `api/README.md`).
+
+### 1. Migraciones (ya aplicadas en el proyecto real)
+
+`migrations/0006_drop_dropshipping_columns.sql`, `0007_productos_pyme.sql` y
+`0008_fix_search_path.sql` ya se aplicaron directamente al proyecto de Supabase de
+producción. Solo hace falta correrlas a mano si trabajas contra otro proyecto (por
+ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
+
+- `0006`: revierte las columnas que había dejado un intento anterior de dropshipping
+  por AliExpress (nunca se usó en producción).
+- `0007`: crea `productos_pyme`, `eventos_producto`, las funciones
+  `metricas_producto`/`metricas_diarias` y la vista pública `productos_pyme_publicos`.
+- `0008`: corrige un "Function Search Path Mutable" que marcó el Security Advisor en
+  las 3 funciones nuevas de `0007`.
+
+- `0011`: agrega `especie` (perro/gato/ambos) a `productos_pyme`.
+- `0013`: `categoria` pasa de texto libre a una lista fija (alimento, higiene, juguetes,
+  accesorios, salud, descanso) y la vista pública expone también `especie`. Antes de
+  correrla conviene ver qué categorías hay hoy
+  (`select categoria, count(*) from public.productos_pyme group by 1;`): los textos
+  antiguos se convierten por palabras clave y lo que no calce queda "Sin categoría".
+
+`productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
+que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:
+necesita saltarse el RLS de `productos_pyme` fila por fila para poder mostrar
+públicamente solo los campos seguros de los productos `publicado`.
+
+### 2. Variables de entorno
+
+Además de `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` (frontend), las funciones de
+`/api` necesitan estas, **solo en Vercel → Project Settings → Environment Variables**
+(nunca con prefijo `VITE_`, nunca en el frontend):
+
+| Variable | De dónde sale |
+|---|---|
+| `SUPABASE_URL` | Igual que `VITE_SUPABASE_URL` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Project Settings → API Keys → "service_role" (secreta) |
+| `RESEND_API_KEY` | Resend → API Keys |
+| `ADMIN_EMAIL` | Correo que recibe el aviso cuando una pyme acepta/rechaza una propuesta |
+| `SITE_URL` | `https://pettgo.cl` en producción |
+
+### 3. Resend (correo de propuesta)
+
+1. Verifica el dominio `pettgo.cl` en Resend (Domains → Add Domain), agregando los
+   registros DNS que te indique donde tengas comprado el dominio.
+2. En la configuración del dominio, **desactiva "Open Tracking" y "Click Tracking"**
+   (el correo se envía sin JavaScript ni redirecciones intermedias, como pide el flujo).
+3. Crea una API Key y ponla en `RESEND_API_KEY`.
+
+### 4. Usuario administrador
+
+Las rutas de `/api` que requieren admin validan el JWT contra Supabase y luego revisan
+`profiles.role = 'admin'` de esa cuenta — el mismo criterio que usa el resto del sitio.
+Cualquier cuenta con `role = 'admin'` puede usarlas; no hace falta que coincida con
+`ADMIN_EMAIL` (esa variable solo se usa como destinatario del aviso por correo cuando
+una pyme responde una propuesta).
+
+### 5. Probar en local con `vercel dev`
+
+`vite dev` (el `npm run dev` normal) no ejecuta las funciones de `/api` — para probar el
+flujo completo (correo, propuesta, métricas) hace falta la CLI de Vercel:
+
+```bash
+npm install -g vercel
+vercel link      # conecta esta carpeta con tu proyecto de Vercel (una sola vez)
+vercel env pull .env   # descarga las variables de entorno del proyecto a .env local
+vercel dev
+```
+
+`vercel dev` sirve el frontend y las funciones de `/api` juntos (por defecto en
+`http://localhost:3000`). Desde ahí puedes: proponer un producto en `/admin/productos`,
+abrir el correo que llega a la pyme (revisa la bandeja del `pyme_email` que hayas usado
+para probar), aceptar/editar/rechazar en `/propuesta/:token`, y ver el producto
+publicado en `/productos`.
