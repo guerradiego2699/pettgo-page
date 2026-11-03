@@ -77,27 +77,34 @@ jobs:
           SMTP_CLAVE: ${{ secrets.SMTP_CLAVE }}               # opcional
           CORREO_DESTINO: ${{ secrets.CORREO_DESTINO }}       # opcional
         run: |
-          echo "fecha=$(date +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "fecha=$(TZ=America/Santiago date +%Y-%m-%d_%H%M)" >> "$GITHUB_OUTPUT"
           python agente_calidad.py
 
+      # Cada ejecución queda en su propia carpeta (calidad/AAAA-MM-DD_HHMM, hora de Chile) y nunca
+      # se sobrescribe. calidad/ultimo.json es solo la copia que usa la próxima ejecución para comparar.
       - name: Guardar el reporte en el historial
-        if: always() && steps.agente.outputs.fecha != '' && hashFiles('agente-calidad/reportes/ultimo.json') != ''
+        if: always() && steps.agente.outputs.fecha != '' && hashFiles('agente-calidad/reportes/resumen.md') != ''
         working-directory: registro
         run: |
           fecha="${{ steps.agente.outputs.fecha }}"
-          mkdir -p calidad
-          cp ../agente-calidad/reportes/ultimo.json ../agente-calidad/reportes/reporte.html calidad/
-          cp ../agente-calidad/reportes/resumen.md "calidad/$fecha.md"
+          carpeta="calidad/$fecha"
+          [ -e "$carpeta" ] && carpeta="$carpeta-${{ github.run_id }}"
+          mkdir -p "$carpeta"
+          cp ../agente-calidad/reportes/resumen.md ../agente-calidad/reportes/reporte.html ../agente-calidad/reportes/ultimo.json "$carpeta"/
+          cp ../agente-calidad/reportes/ultimo.json calidad/ultimo.json
+          if [ "${{ steps.agente.outcome }}" = success ]; then estado=verde; else estado=rojo; fi
+
+          # Índice con todas las ejecuciones, la más reciente arriba
+          [ -f calidad/README.md ] || printf '# Reportes del agente de calidad\n\n| Ejecución | Estado | Resultado |\n|---|---|---|\n' > calidad/README.md
+          fila="| [${fecha/_/ }](${carpeta#calidad/}/resumen.md) · [HTML](${carpeta#calidad/}/reporte.html) | $estado | $(sed -n 2p "$carpeta/resumen.md" | cut -d'(' -f1 | tr -d '*' | sed 's/ *$//') |"
+          sed -i "4a $fila" calidad/README.md
+
           git config user.name "pettgo-agente-calidad"
           git config user.email "agente-calidad@users.noreply.github.com"
           git add -A calidad
-          if git diff --cached --quiet; then
-            echo "El reporte de hoy ya estaba guardado."
-          else
-            git commit -m "Reporte de calidad $fecha (${{ steps.agente.outcome }})"
-            git pull --rebase origin registro-mantenimiento # por si el mantenimiento subió algo entretanto
-            git push origin registro-mantenimiento
-          fi
+          git commit -m "Reporte de calidad $fecha ($estado)"
+          git pull --rebase origin registro-mantenimiento # por si el mantenimiento subió algo entretanto
+          git push origin registro-mantenimiento
 
       - name: Publicar reporte descargable
         if: always()
