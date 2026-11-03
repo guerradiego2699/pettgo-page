@@ -14,7 +14,7 @@ export interface ProductoPymePublico {
   creado_en: string
 }
 
-// Vista productos_pyme_destacados (migración 0016): lo mismo que el público, más
+// Vista productos_pyme_destacados (migración 0017): lo mismo que el público, más
 // el total de clics acumulado, para poder rankear en la portada.
 export interface ProductoPymeDestacado extends ProductoPymePublico {
   clics: number

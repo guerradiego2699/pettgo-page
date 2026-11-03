@@ -1,4 +1,4 @@
--- PettGo — 0016: productos destacados para la portada.
+-- PettGo — 0017: productos destacados para la portada.
 --
 -- La portada muestra los productos con más clics. El problema: `eventos_producto`
 -- tiene RLS y NO tiene política de select para anon (por diseño de 0007: las
