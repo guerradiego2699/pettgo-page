@@ -45,8 +45,10 @@ function Privacidad() {
             almacenamiento de archivos), con reglas de seguridad a nivel de fila que restringen
             quién puede ver o modificar cada dato. Las fotos que subes a la plataforma (avatares,
             mascotas, fichas, productos) son de acceso público, ya que su propósito es mostrarse en
-            la plataforma. En cambio, los datos del carnet de salud de tu mascota (microchip, alergias,
-            vacunas, desparasitaciones, historial y peso) son privados: solo tú puedes verlos.
+            la plataforma. En cambio, los datos del carnet de salud de tu mascota son privados y no se
+            muestran a otros usuarios ni en perfiles públicos: el historial de vacunas, desparasitaciones,
+            salud y peso solo lo ves tú, y los datos de su ficha (como microchip y alergias) solo los ves tú
+            y, si hace falta para dar soporte, el equipo administrador de PettGo.
           </p>
         </section>
 

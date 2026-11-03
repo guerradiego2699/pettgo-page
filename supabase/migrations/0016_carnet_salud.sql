@@ -4,10 +4,14 @@
 -- salud y peso, más unos datos de ficha que antes no existían (sexo, fecha de nacimiento,
 -- esterilización, microchip, veterinaria habitual y alergias).
 --
--- PRIVACIDAD: los datos de salud son SOLO del dueño de la mascota. No hay política para anon ni
--- para admin: si algún día hace falta que un admin los vea, que sea a propósito, por /api.
--- La vista pública `public_pets` usa una lista fija de columnas, así que los campos nuevos de
--- `pets` (microchip, alergias…) no se exponen ahí.
+-- PRIVACIDAD:
+--  * Las 4 tablas nuevas (vacunas, desparasitaciones, historial y peso) son SOLO del dueño de la
+--    mascota. No hay política para anon ni para admin: si algún día hace falta que un admin las
+--    vea, que sea a propósito, por /api.
+--  * Los campos nuevos de `pets` (sexo, microchip, alergias…) quedan bajo las políticas que ya
+--    tenía esa tabla: los ve el dueño y también un admin (para soporte).
+--  * La vista pública `public_pets` usa una lista fija de columnas, así que esos campos nuevos
+--    no se exponen en perfiles públicos.
 --
 -- Es una migración aditiva: no cambia ni borra nada de lo que ya existe.
 
