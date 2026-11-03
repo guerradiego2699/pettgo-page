@@ -5,16 +5,21 @@
 //
 // Para agregar un mes: suma su paleta en src/temas.css y su entrada acá.
 
-export type Tema = "base" | "halloween"
+import fotoHalloween from "../assets/halloween-hero.webp"
+import fotoNavidad from "../assets/navidad-hero.webp"
+
+export type Tema = "base" | "halloween" | "navidad"
 
 export const TEMAS: Record<Tema, { nombre: string }> = {
   base: { nombre: "PettGo" },
   halloween: { nombre: "Halloween" },
+  navidad: { nombre: "Navidad" },
 }
 
 // Clave = mes (1 = enero … 12 = diciembre).
 const TEMA_POR_MES: Partial<Record<number, Tema>> = {
   10: "halloween",
+  12: "navidad",
 }
 
 function esTema(valor: string | null): valor is Tema {
@@ -24,9 +29,9 @@ function esTema(valor: string | null): valor is Tema {
 /**
  * Qué tema corresponde mostrar.
  *
- * El parámetro `?tema=` de la URL manda por encima del mes. Sin eso, el tema de
- * Halloween solo se podría ver durante octubre, y en una presentación o una
- * revisión con el equipo no habría forma de mostrar los demás.
+ * El parámetro `?tema=` de la URL manda por encima del mes. Sin eso, cada tema
+ * solo se podría ver durante su mes, y en una presentación o una revisión con el
+ * equipo no habría forma de mostrar los demás.
  */
 export function resolverTema(): Tema {
   const forzado = new URLSearchParams(window.location.search).get("tema")
@@ -36,6 +41,28 @@ export function resolverTema(): Tema {
 
 /** Tema de esta carga de la página. Se calcula una sola vez. */
 export const TEMA_ACTIVO = resolverTema()
+
+export interface FotoHero {
+  src: string
+  /**
+   * Clases de Tailwind para encuadrar ESTA foto en el Hero. El encuadre depende
+   * de dónde esté el animal en cada imagen, así que no puede ser uno solo para
+   * todas: la de Halloween hay que correrla para que el logo no tape al gato, y
+   * la de navidad ya viene centrada.
+   */
+  ajuste?: string
+}
+
+// Foto de fondo del Hero, por tema. Un tema sin entrada acá deja el Hero con su
+// fondo de siempre.
+const FOTO_POR_TEMA: Partial<Record<Tema, FotoHero>> = {
+  halloween: { src: fotoHalloween, ajuste: "object-center -translate-x-[9%] scale-[1.25]" },
+  // El gatito queda algo a la izquierda, donde va el texto: se corre a la derecha.
+  navidad: { src: fotoNavidad, ajuste: "object-center translate-x-[8%] scale-[1.2]" },
+}
+
+/** Foto de fondo del Hero para el tema activo, o null si este tema no lleva. */
+export const FOTO_HERO: FotoHero | null = FOTO_POR_TEMA[TEMA_ACTIVO] ?? null
 
 /** Marca el <html> para que los bloques de src/temas.css tomen efecto. */
 export function aplicarTema() {

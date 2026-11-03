@@ -2,14 +2,10 @@ import { Link } from "react-router-dom"
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import type { MouseEvent } from "react"
 import logo from "../assets/pettgo-logo.webp"
-import fotoHalloween from "../assets/halloween-hero.webp"
 import PawPrint from "./PawPrint"
-import { TEMA_ACTIVO } from "../lib/temas"
+import { FOTO_HERO } from "../lib/temas"
 
 function Hero() {
-  // La foto de fondo es parte del tema del mes: en los demás meses el Hero
-  // queda exactamente como estaba.
-  const conFoto = TEMA_ACTIVO === "halloween"
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -35,16 +31,17 @@ function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-cream-50 px-6 pb-24 pt-16 sm:pt-20">
-      {conFoto && (
+      {/* La foto de fondo la define el tema del mes (src/lib/temas.ts). Un tema
+          sin foto deja el Hero con su fondo de siempre. */}
+      {FOTO_HERO && (
         <>
           <img
-            src={fotoHalloween}
+            src={FOTO_HERO.src}
             alt=""
             aria-hidden="true"
-            // Corrida a la izquierda para que los gatos no queden detrás del logo.
-            // El scale compensa el desplazamiento: sin él asomaría el fondo por
-            // el borde derecho. Si hay que correrla más, sube los dos valores.
-            className="pointer-events-none absolute inset-0 h-full w-full origin-center -translate-x-[9%] scale-[1.25] object-cover object-center"
+            // El encuadre (correrla, agrandarla) lo define cada tema junto con su
+            // foto, porque depende de dónde esté el animal en la imagen.
+            className={`pointer-events-none absolute inset-0 h-full w-full origin-center object-cover ${FOTO_HERO.ajuste ?? "object-center"}`}
           />
           {/* Dos capas distintas porque el texto se comporta distinto según el ancho.
               En celular el título queda encima de toda la foto, así que se tapa casi

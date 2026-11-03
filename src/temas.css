@@ -47,3 +47,35 @@ html[data-tema="halloween"] {
   --color-ink-900: #2b1a47;
   --color-ink-950: #1b0f2e;
 }
+
+/* ── Diciembre: Navidad ──────────────────────────────────────────
+ * Crema cálido con un dejo rosado, naranja → rojo navideño, y el texto en
+ * verde pino muy oscuro (a simple vista se lee como negro, pero tiñe toda
+ * la página). El dorado y el verde claro viven en los adornos.
+ */
+html[data-tema="navidad"] {
+  --color-cream-50: #fffcf8;
+  --color-cream-100: #fbf1ec;
+  --color-cream-200: #f6e2da;
+  --color-cream-300: #eed3c9;
+  --color-cream-400: #e0bdb0;
+
+  --color-brand-50: #fdeceb;
+  --color-brand-100: #fad5d3;
+  --color-brand-200: #f3aaa6;
+  --color-brand-300: #e07c76;
+  --color-brand-400: #d4605a;
+  --color-brand-500: #c4433c;
+  --color-brand-600: #a82f29;
+  --color-brand-700: #8a241f;
+  --color-brand-800: #651a16;
+  --color-brand-900: #45110f;
+
+  --color-ink-50: #eef3ef;
+  --color-ink-100: #d5e2d9;
+  --color-ink-300: #5d8268;
+  --color-ink-500: #2f5a3e;
+  --color-ink-700: #1e3f2b;
+  --color-ink-900: #14301f;
+  --color-ink-950: #0b1e13;
+}
