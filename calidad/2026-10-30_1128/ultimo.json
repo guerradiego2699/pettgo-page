@@ -1,0 +1,1266 @@
+{
+  "fecha": "2026-10-30T11:28:35.077231-03:00",
+  "sitio": "https://www.pettgo.cl",
+  "conteo": {
+    "critico": 3,
+    "advertencia": 0,
+    "menor": 122
+  },
+  "metricas": {
+    "paginas_recorridas": 15,
+    "enlaces_externos": 2
+  },
+  "resumen_ia": "",
+  "hallazgos": [
+    {
+      "severidad": "critico",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "-",
+      "problema": "No se pudo leer la tabla",
+      "detalle": "Invalid leading whitespace, reserved character(s), or return character(s) in header value: '   sb_publishable_3ZnX2pVGVXjqTCZqLTkh0g_GOss0tl8'",
+      "url": "",
+      "nuevo": false
+    },
+    {
+      "severidad": "critico",
+      "origen": "Base de datos",
+      "entidad": "specialists",
+      "registro": "-",
+      "problema": "No se pudo leer la tabla",
+      "detalle": "Invalid leading whitespace, reserved character(s), or return character(s) in header value: '   sb_publishable_3ZnX2pVGVXjqTCZqLTkh0g_GOss0tl8'",
+      "url": "",
+      "nuevo": false
+    },
+    {
+      "severidad": "critico",
+      "origen": "Base de datos",
+      "entidad": "vets",
+      "registro": "-",
+      "problema": "No se pudo leer la tabla",
+      "detalle": "Invalid leading whitespace, reserved character(s), or return character(s) in header value: '   sb_publishable_3ZnX2pVGVXjqTCZqLTkh0g_GOss0tl8'",
+      "url": "",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/comunidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/especialistas",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/login",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "+",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "−",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/privacidad",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/3b6542fe-2ef9-415f-aa03-b28cdfc3ae4e",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/a2b8dce7-e522-4793-9319-a30993ae2ae3",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/productos/afc17fd8-6ba2-4a49-bf39-f01c2ea7b4e7",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/recuperar-password",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/registro",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/terminos",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_qU7NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to fetch at 'https://www.chatbase.co/api/get-chatbot-styles/mIGUgOpg7zpewHIjTHIwZ' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/baloo2/v23/wXK0E3kTposypRydzVT08TS3JnAmtdj9yqpv.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_TknNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_d0nNSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "-",
+      "problema": "Error de programación en la página (consola)",
+      "detalle": "Access to font at 'https://fonts.gstatic.com/s/plusjakartasans/v12/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_m07NSg.ttf' from origin 'https://www.pettgo.cl' has been blocked by CORS policy: Request header field x-pettgo-agente is not allowed by Access-Control-Allow-Headers in preflight response.",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "Instagram",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "nuevo": false
+    }
+  ]
+}
