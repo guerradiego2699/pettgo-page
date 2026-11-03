@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-03T00:36:19.371405-03:00",
+  "fecha": "2026-11-03T00:44:43.334726-03:00",
   "sitio": "https://www.pettgo.cl",
   "conteo": {
     "critico": 3,
@@ -32,7 +32,7 @@
       "problema": "El enlace no lleva a algo de mascotas",
       "detalle": "https://www.google.com/?hl=es — título de la página: 'Google'",
       "url": "https://www.google.com/?hl=es",
-      "nuevo": true
+      "nuevo": false
     },
     {
       "severidad": "critico",
@@ -42,7 +42,7 @@
       "problema": "El enlace no lleva a algo de mascotas",
       "detalle": "https://www.netflix.com/browse — título de la página: 'Netflix'",
       "url": "https://www.netflix.com/browse",
-      "nuevo": true
+      "nuevo": false
     },
     {
       "severidad": "advertencia",
