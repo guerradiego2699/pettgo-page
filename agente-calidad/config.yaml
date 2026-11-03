@@ -1,0 +1,67 @@
+# Configuración del Agente de Control de Calidad de la Información — PettGo
+# Las credenciales NO van aquí: van como "Secrets" en GitHub (ver README).
+
+sitio: https://www.pettgo.cl
+
+# --- Base de datos (Supabase) ------------------------------------------------
+# Si se deja vacío, el agente descubre solo todas las tablas públicas.
+# Si Supabase no permite descubrirlas con la llave pública, escríbanlas aquí.
+# Ejemplo (reemplazar por los nombres reales de las tablas de pettgo.cl):
+#
+# tablas:
+#   veterinarias:
+#     obligatorios: [nombre, telefono, direccion]   # vacío = crítico
+#   pymes:
+#     obligatorios: [nombre, sitio_web]
+#     columnas:                                     # solo si el agente no las reconoce solo
+#       url: [link_tienda]
+#   especialistas: {}
+#   productos:
+#     obligatorios: [nombre, precio, imagen_url]
+tablas:
+  vets:                              # veterinarias del mapa
+    obligatorios: [name, phone, address, lat, lng]
+    solo_si: {status: approved}      # solo las aprobadas se muestran al público
+  productos_pyme_publicos:           # vitrina de productos de pymes
+    obligatorios: [nombre, imagen_url, pyme_nombre]
+    columnas:
+      precio: [precio_ref]
+      nombre: [nombre]
+    valores_no_permitidos:
+      categoria: [alimento]          # PettGo solo publica accesorios
+  specialists: {}                    # especialistas (hoy sin registros públicos)
+
+# Tablas que existen pero no son información para el público (no se revisan)
+tablas_ignorar: [usuarios, perfiles, profiles, sesiones, logs, clics, eventos, suscripciones]
+
+# Tablas que se revisan pero que no se espera ver publicadas en el sitio
+tablas_no_publicadas: []
+
+# Zona válida para el mapa (alrededores de Curicó)
+zona_valida:
+  lat_min: -35.15
+  lat_max: -34.80
+  lng_min: -71.45
+  lng_max: -71.05
+
+# --- Recorrido del sitio -----------------------------------------------------
+revisar_sitio: true
+max_paginas: 80
+espera_ms: 1500          # tiempo extra para que cada página cargue sus datos
+paginas_extra: []        # rutas que no tienen enlace desde el inicio, ej: [/mapa, /veterinarias]
+# Rutas que el agente NO debe abrir: /api/ir/… registra un clic en "Ver en la tienda"
+# y redirige a la pyme; si el agente las abriera, inflaría las métricas de clics.
+rutas_excluidas: [/api/, /logout, /salir, /cerrar-sesion]
+revisar_imagenes_bd: true
+hilos: 10
+
+# --- Modo demostración (python agente_calidad.py --demo) ----------------------
+demo_max_enlaces: 25     # enlaces que se muestran probando, por página
+demo_pausa_ms: 350       # pausa entre enlaces (más alto = más lento, más fácil de seguir)
+
+# --- Reporte -----------------------------------------------------------------
+carpeta_reportes: reportes
+resumen_ia: true                    # solo actúa si existe ANTHROPIC_API_KEY (opcional)
+modelo_ia: claude-haiku-5-5
+correo_solo_si_hay_problemas: true
+fallar_si_hay_criticos: true        # así GitHub también avisa por correo

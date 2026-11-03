@@ -17,6 +17,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+!agente-calidad/.env.ejemplo
 
 # Editor directories and files
 .vscode/*
