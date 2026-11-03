@@ -29,6 +29,9 @@ tablas:
       nombre: [nombre]
     valores_no_permitidos:
       categoria: [alimento]          # PettGo solo publica accesorios
+    # "Ver en la tienda" pasa por /api/ir/{id}; el agente lee el destino sin contar el clic
+    enlace_publico: /api/ir/{id}
+    tematica_mascotas: true          # el destino tiene que ser de mascotas (si no, es crítico)
   specialists: {}                    # especialistas (hoy sin registros públicos)
 
 # Tablas que existen pero no son información para el público (no se revisan)

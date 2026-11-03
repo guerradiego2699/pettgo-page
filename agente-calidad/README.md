@@ -10,6 +10,9 @@ Agente que se ejecuta **solo, cada lunes a las 13:00 UTC (10:00 en Chile en vera
 | **Sitio web (como usuario)** | Un navegador automático recorre pettgo.cl y hace clic en todos los enlaces | Páginas que no cargan o dan 404, enlaces rotos, botones sin destino, imágenes rotas, "undefined" o "null" visibles en pantalla, enlaces "llamar"/"escribir" mal escritos |
 | **Enlaces externos** | Visita la tienda o web de cada pyme y veterinaria | Sitios caídos, dominios vencidos o en venta, enlaces que redirigen a otra empresa |
 | **Cruce BD ↔ sitio** | Compara lo que dice la BD con lo que muestra la página | Registros que están en la BD pero no aparecen publicados; teléfonos de la BD que no coinciden con los del sitio |
+| **Enlaces de productos** | Sigue el botón "Ver en la tienda" de cada producto publicado (`/api/ir/{id}`, sin contar el clic) y abre el destino | Enlaces que no llevan a ningún sitio o están caídos, y destinos que **no son de mascotas** (crítico): se busca en el dominio, la dirección y el título, o varias menciones en el texto. Instagram/Facebook se marcan para revisar a mano |
+
+Las visitas del agente a pettgo.cl se identifican con "bot" en el navegador, así que no cuentan en las métricas de vistas y clics de productos.
 
 Cada hallazgo se clasifica como **Crítico**, **Advertencia** o **Menor**, y se marca como **nuevo** si no estaba en el reporte de la semana anterior.
 

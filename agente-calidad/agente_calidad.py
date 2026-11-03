@@ -41,6 +41,9 @@ import yaml
 
 BASE_DIR = Path(__file__).resolve().parent
 UA = "PettGo-AgenteCalidad/1.0 (+https://pettgo.cl)"
+# Para las visitas a pettgo.cl: lleva "bot" para que el sitio (esBot en api/_lib/hash.ts)
+# no cuente las vistas ni los clics del agente en las métricas de productos.
+UA_PETTGO = "PettGo-AgenteCalidad-bot/1.0 (+https://pettgo.cl)"
 SEVERIDADES = ["critico", "advertencia", "menor"]
 ETIQUETA_SEV = {"critico": "Crítico", "advertencia": "Advertencia", "menor": "Menor"}
 
@@ -84,7 +87,7 @@ class Reporte:
     def agregar(self, severidad, origen, entidad, registro, problema, detalle="", url=""):
         self.hallazgos.append({
             "severidad": severidad,
-            "origen": origen,          # Base de datos | Sitio web | Cruce BD-sitio
+            "origen": origen,          # Base de datos | Sitio web | Cruce BD-sitio | Enlace del registro
             "entidad": entidad,        # tabla o página
             "registro": str(registro)[:120],
             "problema": problema,
@@ -334,6 +337,11 @@ TEXTO_DOMINIO_ESTACIONADO = re.compile(
 _CACHE_URL: dict[str, dict] = {}
 
 
+def bloquea_robots(url: str) -> bool:
+    host = (urlparse(url).hostname or "").lower()
+    return any(host == d or host.endswith("." + d) for d in DOMINIOS_QUE_BLOQUEAN_ROBOTS)
+
+
 def revisar_url(url: str) -> dict:
     """Visita un enlace y devuelve si funciona. Cada URL se revisa una sola vez."""
     if url not in _CACHE_URL:
@@ -342,14 +350,15 @@ def revisar_url(url: str) -> dict:
 
 
 def _revisar_url(url: str) -> dict:
-    res = {"url": url, "ok": True, "problema": None, "detalle": "", "sev": None}
+    res = {"url": url, "ok": True, "problema": None, "detalle": "", "sev": None, "titulo": "", "texto": ""}
     try:
         r = requests.get(url, headers={"User-Agent": UA}, timeout=20, allow_redirects=True, stream=True)
         cuerpo = ""
         if "text/html" in r.headers.get("Content-Type", ""):
             cuerpo = r.raw.read(200_000, decode_content=True).decode("utf-8", "ignore")
         r.close()
-        bloquea = any(d in (urlparse(url).hostname or "") for d in DOMINIOS_QUE_BLOQUEAN_ROBOTS)
+        res["titulo"], res["texto"] = textos_de_pagina(cuerpo)
+        bloquea = bloquea_robots(url)
         if r.status_code >= 400:
             if bloquea and r.status_code in (401, 403, 429, 999):
                 res.update(ok=True, sev="menor", problema="No verificable automáticamente",
@@ -371,6 +380,86 @@ def revisar_urls(urls, hilos=10) -> dict[str, dict]:
     urls = sorted({u for u in urls if u.startswith("http")})
     with cf.ThreadPoolExecutor(hilos) as ex:
         return dict(zip(urls, ex.map(revisar_url, urls)))
+
+
+def textos_de_pagina(cuerpo: str) -> tuple[str, str]:
+    """Devuelve (título, título + descripción + texto visible) de un HTML."""
+    titulo = re.search(r"(?is)<title[^>]*>(.*?)</title>", cuerpo)
+    titulo = html.unescape(re.sub(r"\s+", " ", titulo.group(1))).strip() if titulo else ""
+    metas = re.findall(r"""(?is)<meta[^>]+(?:name|property)=["'](?:description|og:title|og:description)["'][^>]*content=["']([^"']*)""", cuerpo)
+    visible = re.sub(r"(?is)<(script|style|noscript)[^>]*>.*?</\1>", " ", cuerpo)
+    visible = html.unescape(re.sub(r"<[^>]+>", " ", visible))
+    return titulo, " ".join([titulo, *metas, visible])
+
+
+# Palabras que muestran que una página trata de mascotas (ya normalizadas: sin tildes, minúsculas).
+RE_MASCOTAS = re.compile(
+    r"\b(mascotas?|perr[oa]s?|perrit[oa]s?|cachorr[oa]s?|gat[oa]s?|gatit[oa]s?|felin[oa]s?|canin[oa]s?|"
+    r"veterinari[oa]s?|antipulgas?|pulgas?|garrapatas?|desparasitante|arena sanitaria|rascador(es)?|"
+    r"comedero|bebedero|arnes|correa para|collar para|croquetas?|hamster|conejos?|acuario|"
+    r"pets?|pet ?shop|petstore|\w+pet|dogs?|cats?|pupp(y|ies)|kittens?)\b")
+# En los dominios las palabras van pegadas (tiendapetlove.cl, mundomascota.cl)
+RE_MASCOTAS_DOMINIO = re.compile(r"(mascota|perr[oia]|gatos|pet(?!ro)|dog|veterinari|canin|felin)")
+
+
+def es_de_mascotas(url: str, titulo: str, texto: str) -> bool:
+    """El dominio, la dirección o el título mencionan mascotas, o el texto de la página lo hace varias
+    veces (una sola mención en el texto puede ser el menú de una tienda general)."""
+    destacado = normalizar(urlparse(url).netloc + " " + urlparse(url).path + " " + titulo)
+    return (bool(RE_MASCOTAS.search(destacado)) or bool(RE_MASCOTAS_DOMINIO.search((urlparse(url).hostname or "")))
+            or len(RE_MASCOTAS.findall(normalizar(texto))) >= 3)
+
+
+def sin_utm(url: str) -> str:
+    p = urlparse(url)
+    query = "&".join(q for q in p.query.split("&") if q and not q.startswith("utm_"))
+    return p._replace(query=query).geturl()
+
+
+def revisar_enlaces_publicos(cfg, rep: Reporte, datos_bd):
+    """Sigue el enlace que el sitio muestra para cada registro (ej. "Ver en la tienda" de un producto,
+    que pasa por /api/ir/{id}) y revisa que el destino funcione y, si se pide, que sea de mascotas."""
+    sitio = cfg["sitio"].rstrip("/")
+    tareas = []
+    for tabla, (filas, mapa, tconf) in datos_bd.items():
+        if not tconf.get("enlace_publico"):
+            continue
+        for f in filas:
+            if esta_activo(f, mapa) and f.get("id") is not None:
+                tareas.append((tabla, tconf, etiqueta_registro(f, mapa), sitio + tconf["enlace_publico"].format(**f)))
+    if not tareas:
+        return
+
+    def destino(enlace):
+        # Sin seguir la redirección: se lee el destino desde la cabecera Location
+        try:
+            r = requests.get(enlace, headers={"User-Agent": UA_PETTGO}, timeout=20, allow_redirects=False)
+            return r.status_code, r.headers.get("Location", "")
+        except requests.exceptions.RequestException as e:
+            return None, type(e).__name__
+
+    with cf.ThreadPoolExecutor(int(cfg.get("hilos", 10))) as ex:
+        resueltos = list(ex.map(lambda t: destino(t[3]), tareas))
+    revisar_urls([loc for estado, loc in resueltos if estado in (301, 302, 303, 307, 308)], int(cfg.get("hilos", 10)))
+
+    for (tabla, tconf, ident, enlace), (estado, loc) in zip(tareas, resueltos):
+        rep.metricas["enlaces_productos"] += 1
+        if estado not in (301, 302, 303, 307, 308) or not loc.startswith("http"):
+            rep.agregar("critico", "Enlace del registro", tabla, ident, "El enlace no lleva a ningún sitio",
+                        f"{enlace} respondió {estado or loc}", enlace)
+            continue
+        res, limpio = revisar_url(loc), sin_utm(loc)
+        if res["sev"]:
+            rep.agregar(res["sev"], "Enlace del registro", tabla, ident, res["problema"], f"{limpio} — {res['detalle']}", limpio)
+        if not tconf.get("tematica_mascotas") or not res["ok"]:
+            continue
+        if bloquea_robots(loc):
+            if not es_de_mascotas(loc, res["titulo"], ""):
+                rep.agregar("menor", "Enlace del registro", tabla, ident, "Temática no verificable automáticamente",
+                            f"{limpio}: red social que bloquea robots; revisar a mano que sea de mascotas", limpio)
+        elif not es_de_mascotas(loc, res["titulo"], res["texto"]):
+            rep.agregar("critico", "Enlace del registro", tabla, ident, "El enlace no lleva a algo de mascotas",
+                        f"{limpio} — título de la página: '{res['titulo'] or 'sin título'}'", limpio)
 
 
 # ----------------------------------------------------------------------------
@@ -489,7 +578,7 @@ def recorrer_sitio(cfg, rep: Reporte) -> dict:
         nav = p.chromium.launch(headless=(not demo) or os.getenv("DEMO_SIN_VENTANA") == "1",
                                 slow_mo=120 if demo else 0)
         # La identificación permite filtrar las visitas del agente en las métricas de PettGo
-        ctx = nav.new_context(user_agent=UA + " Chrome", viewport={"width": 1366, "height": 850})
+        ctx = nav.new_context(user_agent=UA_PETTGO + " Chrome", viewport={"width": 1366, "height": 850})
         pagina = ctx.new_page()
         errores_consola, recursos_fallidos = [], []
         pagina.on("console", lambda m: errores_consola.append(m.text) if m.type == "error" else None)
@@ -692,7 +781,7 @@ th{{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut
 <div class="kpis">
 <div class="kpi critico"><b>{c['critico']}</b>Críticos</div><div class="kpi advertencia"><b>{c['advertencia']}</b>Advertencias</div>
 <div class="kpi menor"><b>{c['menor']}</b>Menores</div><div class="kpi"><b>{m.get('registros_revisados',0)}</b>Registros en BD revisados</div>
-<div class="kpi"><b>{m.get('paginas_recorridas',0)}</b>Páginas recorridas</div><div class="kpi"><b>{m.get('enlaces_externos',0)}</b>Enlaces externos probados</div>
+<div class="kpi"><b>{m.get('paginas_recorridas',0)}</b>Páginas recorridas</div><div class="kpi"><b>{m.get('enlaces_externos',0)}</b>Enlaces externos probados</div><div class="kpi"><b>{m.get('enlaces_productos',0)}</b>Enlaces de productos</div>
 </div>
 {f'<div class="ia"><b>Resumen del agente</b>\n{html.escape(resumen)}</div>' if resumen else ''}
 {'' if hay_previo else '<p class="sub">Primera ejecución: aún no hay un reporte anterior para marcar hallazgos nuevos.</p>'}
@@ -704,7 +793,7 @@ th{{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut
     # Resumen en Markdown (lo muestra GitHub en la ejecución)
     md = [f"## Control de calidad PettGo — {ahora:%d-%m-%Y %H:%M}",
           f"**{c['critico']} críticos · {c['advertencia']} advertencias · {c['menor']} menores** "
-          f"({m.get('registros_revisados',0)} registros, {m.get('paginas_recorridas',0)} páginas, {m.get('enlaces_externos',0)} enlaces externos)", ""]
+          f"({m.get('registros_revisados',0)} registros, {m.get('paginas_recorridas',0)} páginas, {m.get('enlaces_externos',0)} enlaces externos, {m.get('enlaces_productos',0)} enlaces de productos)", ""]
     if resumen:
         md += ["> " + resumen.replace("\n", "\n> "), ""]
     md += ["| Gravedad | Origen | Tabla/página | Registro | Problema |", "|---|---|---|---|---|"]
@@ -829,6 +918,9 @@ def main():
             rep.agregar(res["sev"], "Base de datos", tabla, ident, f"{res['problema']} ({col})", res["detalle"], u)
         for pag in sorted(sitio["externos"].get(u, [])):
             rep.agregar(res["sev"], "Sitio web", pag, u, res["problema"], res["detalle"], u)
+
+    if datos_bd:
+        revisar_enlaces_publicos(cfg, rep, datos_bd)
 
     if datos_bd and sitio["textos"]:
         cruzar(cfg, rep, datos_bd, sitio)
