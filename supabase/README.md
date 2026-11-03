@@ -124,6 +124,14 @@ ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
   correrla conviene ver qué categorías hay hoy
   (`select categoria, count(*) from public.productos_pyme group by 1;`): los textos
   antiguos se convierten por palabras clave y lo que no calce queda "Sin categoría".
+- `0014` y `0015`: avisos por correo de moderación del foro (triggers con `pg_net` y secreto en
+  Vault) y su endurecimiento posterior (`pg_net` fuera de `public`, funciones de trigger no
+  invocables desde la API). Ya aplicadas.
+- `0016`: carnet de salud de las mascotas. Agrega a `pets` sexo, fecha de nacimiento,
+  esterilización, microchip, veterinaria habitual y alergias, y crea `pet_vaccines`,
+  `pet_dewormings`, `pet_health_events` y `pet_weights`. Los datos de salud son SOLO del dueño
+  (RLS por dueño; sin acceso para anon ni para admin). **Debe aplicarse antes de publicar el
+  código del carnet**, porque el formulario de mascota empieza a guardar los campos nuevos.
 
 `productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
 que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:

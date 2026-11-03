@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { supabase } from "../lib/supabase"
 import { useAuth } from "../context/AuthContext"
+import { diasHasta, recordatorios } from "../lib/carnet"
 import PetForm from "../components/PetForm"
-import type { Pet } from "../types/pet"
+import { ChipEstado } from "../components/carnet/ui"
+import type { Pet, PetDeworming, PetVaccine } from "../types/pet"
 
 const speciesLabel: Record<Pet["species"], string> = {
   perro: "Perro",
@@ -17,6 +20,8 @@ function Mascotas() {
   const [editingPet, setEditingPet] = useState<Pet | null>(null)
   const [confirmingId, setConfirmingId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  // Dosis vencidas o próximas (30 días) de cada mascota, para avisar desde su tarjeta.
+  const [avisos, setAvisos] = useState<Record<string, { total: number; vencidas: number }>>({})
 
   const loadPets = useCallback(async () => {
     if (!user) return
@@ -26,8 +31,27 @@ function Mascotas() {
       .select("*")
       .eq("owner_id", user.id)
       .order("created_at", { ascending: false })
-    setPets(data ?? [])
+    const lista = data ?? []
+    setPets(lista)
     setLoading(false)
+
+    // Si el carnet no está disponible, simplemente no se muestran avisos.
+    if (lista.length === 0) return
+    const ids = lista.map((p) => p.id)
+    const [vacunas, desparas] = await Promise.all([
+      supabase.from("pet_vaccines").select("*").in("pet_id", ids),
+      supabase.from("pet_dewormings").select("*").in("pet_id", ids),
+    ])
+    const porMascota: Record<string, { total: number; vencidas: number }> = {}
+    for (const pet of lista) {
+      const pendientes = recordatorios(
+        ((vacunas.data ?? []) as PetVaccine[]).filter((v) => v.pet_id === pet.id),
+        ((desparas.data ?? []) as PetDeworming[]).filter((d) => d.pet_id === pet.id),
+        30
+      )
+      porMascota[pet.id] = { total: pendientes.length, vencidas: pendientes.filter((r) => diasHasta(r.fecha) < 0).length }
+    }
+    setAvisos(porMascota)
   }, [user])
 
   useEffect(() => {
@@ -115,6 +139,21 @@ function Mascotas() {
               </div>
 
               {pet.highlight && <p className="mt-3 text-sm italic text-ink-500">"{pet.highlight}"</p>}
+
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <Link
+                  to={`/mascotas/${pet.id}`}
+                  className="rounded-full bg-brand-100 px-3.5 py-1.5 text-sm font-semibold text-brand-700 transition hover:bg-brand-200"
+                >
+                  Carnet de salud
+                </Link>
+                {avisos[pet.id]?.total > 0 && (
+                  <ChipEstado
+                    estado={avisos[pet.id].vencidas > 0 ? "vencida" : "pronto"}
+                    texto={`${avisos[pet.id].total} pendiente${avisos[pet.id].total === 1 ? "" : "s"}`}
+                  />
+                )}
+              </div>
 
               {confirmingId === pet.id ? (
                 <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">

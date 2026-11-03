@@ -21,6 +21,7 @@ const RecuperarPassword = lazy(() => import("./pages/RecuperarPassword"))
 const RestablecerPassword = lazy(() => import("./pages/RestablecerPassword"))
 const Cuenta = lazy(() => import("./pages/Cuenta"))
 const Mascotas = lazy(() => import("./pages/Mascotas"))
+const MascotaCarnet = lazy(() => import("./pages/MascotaCarnet"))
 const AdminHome = lazy(() => import("./pages/admin/AdminHome"))
 const AdminVeterinarias = lazy(() => import("./pages/admin/AdminVeterinarias"))
 const AdminEspecialistas = lazy(() => import("./pages/admin/AdminEspecialistas"))
@@ -55,6 +56,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="cuenta" element={<Cuenta />} />
           <Route path="mascotas" element={<Mascotas />} />
+          <Route path="mascotas/:id" element={<MascotaCarnet />} />
           <Route path="comunidad" element={<Comunidad />} />
           <Route path="comunidad/:id" element={<ForoTema />} />
           <Route path="perfil/:id" element={<PerfilPublico />} />
