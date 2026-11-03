@@ -1,0 +1,115 @@
+name: Agente de control de calidad
+
+# Revisa cada 7 días que la información que ve el público en pettgo.cl sea correcta (BD + sitio)
+# y guarda el reporte en la rama `registro-mantenimiento`, carpeta calidad/ (historial en git,
+# sin tocar main ni disparar despliegues). Si hay hallazgos críticos, el flujo termina en error
+# y GitHub avisa por correo. Código y configuración en agente-calidad/.
+# También se puede ejecutar a mano: pestaña Actions → "Agente de control de calidad" → Run workflow.
+
+on:
+  schedule:
+    - cron: "0 13 * * 1" # lunes 13:00 UTC, una hora después del mantenimiento semanal
+  workflow_dispatch:
+  push: # al cambiar el agente o este flujo, se ejecuta para comprobar que sigue funcionando
+    branches: [main]
+    paths:
+      - agente-calidad/**
+      - .github/workflows/agente-calidad.yml
+
+permissions:
+  contents: write # guardar el reporte en la rama registro-mantenimiento
+
+concurrency:
+  group: agente-calidad
+  cancel-in-progress: false
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: agente-calidad
+    steps:
+      - name: Código del sitio
+        uses: actions/checkout@v4
+
+      - name: Historial de reportes
+        uses: actions/checkout@v4
+        with:
+          ref: registro-mantenimiento
+          path: registro
+
+      - name: Comprobar credenciales
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_KEY" ]; then
+            echo "::error::Faltan los secrets SUPABASE_URL y SUPABASE_KEY (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: agente-calidad/requirements.txt
+
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      # El reporte anterior sirve para marcar qué hallazgos son nuevos.
+      - name: Traer el reporte anterior
+        run: |
+          mkdir -p reportes
+          cp ../registro/calidad/ultimo.json reportes/ 2>/dev/null || echo "Primera ejecución: no hay reporte anterior."
+
+      - name: Ejecutar agente
+        id: agente
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} # opcional
+          SMTP_USUARIO: ${{ secrets.SMTP_USUARIO }}           # opcional
+          SMTP_CLAVE: ${{ secrets.SMTP_CLAVE }}               # opcional
+          CORREO_DESTINO: ${{ secrets.CORREO_DESTINO }}       # opcional
+        run: |
+          echo "fecha=$(TZ=America/Santiago date +%Y-%m-%d_%H%M)" >> "$GITHUB_OUTPUT"
+          python agente_calidad.py
+
+      # Cada ejecución queda en su propia carpeta (calidad/AAAA-MM-DD_HHMM, hora de Chile) y nunca
+      # se sobrescribe. calidad/ultimo.json es solo la copia que usa la próxima ejecución para comparar.
+      - name: Guardar el reporte en el historial
+        if: always() && steps.agente.outputs.fecha != '' && hashFiles('agente-calidad/reportes/resumen.md') != ''
+        working-directory: registro
+        run: |
+          fecha="${{ steps.agente.outputs.fecha }}"
+          carpeta="calidad/$fecha"
+          [ -e "$carpeta" ] && carpeta="$carpeta-${{ github.run_id }}"
+          mkdir -p "$carpeta"
+          cp ../agente-calidad/reportes/resumen.md ../agente-calidad/reportes/reporte.html ../agente-calidad/reportes/ultimo.json "$carpeta"/
+          cp ../agente-calidad/reportes/ultimo.json calidad/ultimo.json
+          if [ "${{ steps.agente.outcome }}" = success ]; then estado=verde; else estado=rojo; fi
+
+          # Índice con todas las ejecuciones, la más reciente arriba
+          [ -f calidad/README.md ] || printf '# Reportes del agente de calidad\n\n| Ejecución | Estado | Resultado |\n|---|---|---|\n' > calidad/README.md
+          fila="| [${fecha/_/ }](${carpeta#calidad/}/resumen.md) · [HTML](${carpeta#calidad/}/reporte.html) | $estado | $(sed -n 2p "$carpeta/resumen.md" | cut -d'(' -f1 | tr -d '*' | sed 's/ *$//') |"
+          sed -i "4a $fila" calidad/README.md
+
+          git config user.name "pettgo-agente-calidad"
+          git config user.email "agente-calidad@users.noreply.github.com"
+          git add -A calidad
+          git commit -m "Reporte de calidad $fecha ($estado)"
+          git pull --rebase origin registro-mantenimiento # por si el mantenimiento subió algo entretanto
+          git push origin registro-mantenimiento
+
+      - name: Publicar reporte descargable
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-calidad-${{ github.run_number }}
+          path: agente-calidad/reportes/
+          retention-days: 90

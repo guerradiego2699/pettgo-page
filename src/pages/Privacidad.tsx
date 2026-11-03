@@ -16,6 +16,10 @@ function Privacidad() {
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Datos de tu cuenta: nombre, correo electrónico y, si inicias sesión con Google, tu foto de perfil de Google.</li>
             <li>Datos de tus mascotas: nombre, especie, raza, edad, foto y cualquier información que agregues voluntariamente.</li>
+            <li>
+              Si usas el carnet de salud de tu mascota: sexo, fecha de nacimiento, esterilización, número de
+              microchip, veterinaria habitual, alergias, vacunas, desparasitaciones, historial de salud y peso.
+            </li>
             <li>Contenido que publicas en la comunidad: temas, respuestas y reportes.</li>
             <li>
               Si tienes una ficha de veterinaria o especialista: dirección, teléfono, correo de
@@ -41,7 +45,10 @@ function Privacidad() {
             almacenamiento de archivos), con reglas de seguridad a nivel de fila que restringen
             quién puede ver o modificar cada dato. Las fotos que subes a la plataforma (avatares,
             mascotas, fichas, productos) son de acceso público, ya que su propósito es mostrarse en
-            la plataforma.
+            la plataforma. En cambio, los datos del carnet de salud de tu mascota son privados y no se
+            muestran a otros usuarios ni en perfiles públicos: el historial de vacunas, desparasitaciones,
+            salud y peso solo lo ves tú, y los datos de su ficha (como microchip y alergias) solo los ves tú
+            y, si hace falta para dar soporte, el equipo administrador de PettGo.
           </p>
         </section>
 

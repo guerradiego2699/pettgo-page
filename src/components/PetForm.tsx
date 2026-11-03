@@ -2,7 +2,8 @@ import { useState, type ChangeEvent, type FormEvent } from "react"
 import { supabase } from "../lib/supabase"
 import { uploadImage, extensionFor } from "../lib/storage"
 import { useAuth } from "../context/AuthContext"
-import type { Pet, PetSpecies } from "../types/pet"
+import { edadEnAnios } from "../lib/carnet"
+import type { Pet, PetSex, PetSpecies } from "../types/pet"
 
 interface PetFormProps {
   pet?: Pet
@@ -17,6 +18,13 @@ function PetForm({ pet, onCancel, onSaved }: PetFormProps) {
   const [breed, setBreed] = useState(pet?.breed ?? "")
   const [ageYears, setAgeYears] = useState(pet?.age_years?.toString() ?? "")
   const [highlight, setHighlight] = useState(pet?.highlight ?? "")
+  // Datos de la ficha para el carnet de salud (todos opcionales).
+  const [sex, setSex] = useState<PetSex | "">(pet?.sex ?? "")
+  const [birthDate, setBirthDate] = useState(pet?.birth_date ?? "")
+  const [neutered, setNeutered] = useState(pet?.neutered === true ? "si" : pet?.neutered === false ? "no" : "")
+  const [microchip, setMicrochip] = useState(pet?.microchip ?? "")
+  const [usualVet, setUsualVet] = useState(pet?.usual_vet ?? "")
+  const [allergies, setAllergies] = useState(pet?.allergies ?? "")
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(pet?.photo_url ?? null)
   const [saving, setSaving] = useState(false)
@@ -33,6 +41,12 @@ function PetForm({ pet, onCancel, onSaved }: PetFormProps) {
     event.preventDefault()
     if (!user) return
 
+    const chip = microchip.replace(/\s/g, "")
+    if (chip && !/^\d{15}$/.test(chip)) {
+      setError("El número de microchip debe tener exactamente 15 dígitos.")
+      return
+    }
+
     setSaving(true)
     setError(null)
 
@@ -47,9 +61,16 @@ function PetForm({ pet, onCancel, onSaved }: PetFormProps) {
         name,
         species,
         breed: breed.trim() || null,
-        age_years: ageYears ? Number(ageYears) : null,
+        // Con fecha de nacimiento la edad se calcula sola (y se mantiene para las estadísticas del sitio).
+        age_years: birthDate ? edadEnAnios(birthDate) : ageYears ? Number(ageYears) : null,
         highlight: highlight.trim() || null,
         photo_url: photoUrl,
+        sex: sex || null,
+        birth_date: birthDate || null,
+        neutered: neutered === "si" ? true : neutered === "no" ? false : null,
+        microchip: chip || null,
+        usual_vet: usualVet.trim() || null,
+        allergies: allergies.trim() || null,
       }
 
       if (pet) {
@@ -131,12 +152,81 @@ function PetForm({ pet, onCancel, onSaved }: PetFormProps) {
             type="number"
             min={0}
             step="0.5"
-            value={ageYears}
+            value={birthDate ? "" : ageYears}
+            disabled={Boolean(birthDate)}
+            placeholder={birthDate ? "Se calcula con la fecha de nacimiento" : ""}
             onChange={(event) => setAgeYears(event.target.value)}
+            className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none disabled:bg-ink-50 disabled:text-ink-300"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+          Fecha de nacimiento
+          <input
+            type="date"
+            max={new Date().toISOString().slice(0, 10)}
+            value={birthDate}
+            onChange={(event) => setBirthDate(event.target.value)}
+            className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+          Sexo
+          <select
+            value={sex}
+            onChange={(event) => setSex(event.target.value as PetSex | "")}
+            className="rounded-lg border border-ink-900/15 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+          >
+            <option value="">Sin indicar</option>
+            <option value="macho">Macho</option>
+            <option value="hembra">Hembra</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+          Esterilizado
+          <select
+            value={neutered}
+            onChange={(event) => setNeutered(event.target.value)}
+            className="rounded-lg border border-ink-900/15 bg-white px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+          >
+            <option value="">Sin indicar</option>
+            <option value="si">Sí</option>
+            <option value="no">No</option>
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+          N° de microchip (15 dígitos)
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={15}
+            value={microchip}
+            onChange={(event) => setMicrochip(event.target.value.replace(/\D/g, ""))}
+            className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+          Veterinaria habitual
+          <input
+            type="text"
+            maxLength={120}
+            value={usualVet}
+            onChange={(event) => setUsualVet(event.target.value)}
             className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
           />
         </label>
       </div>
+
+      <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
+        Alergias o alertas de salud
+        <input
+          type="text"
+          maxLength={500}
+          value={allergies}
+          onChange={(event) => setAllergies(event.target.value)}
+          placeholder="Ej: alergia a la picadura de pulga"
+          className="rounded-lg border border-ink-900/15 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none"
+        />
+      </label>
 
       <label className="flex flex-col gap-1 text-sm font-medium text-ink-700">
         Algo destacable de tu mascota
