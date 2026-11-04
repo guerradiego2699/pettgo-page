@@ -2,6 +2,7 @@
 
 | Ejecución | Estado | Resultado |
 |---|---|---|
+| [2026-11-04 1652](2026-11-04_1652/resumen.md) · [HTML](2026-11-04_1652/reporte.html) | verde | 0 críticos · 14 advertencias · 48 menores |
 | [2026-11-03 0044](2026-11-03_0044/resumen.md) · [HTML](2026-11-03_0044/reporte.html) | rojo | 3 críticos · 1 advertencias · 6 menores |
 | [2026-11-03 0036](2026-11-03_0036/resumen.md) · [HTML](2026-11-03_0036/reporte.html) | rojo | 3 críticos · 1 advertencias · 6 menores |
 | [2026-11-03 0028](2026-11-03_0028/resumen.md) · [HTML](2026-11-03_0028/reporte.html) | rojo | 1 críticos · 1 advertencias · 6 menores |

@@ -1,0 +1,638 @@
+{
+  "fecha": "2026-11-04T16:54:01.587251-03:00",
+  "sitio": "https://www.pettgo.cl",
+  "conteo": {
+    "critico": 0,
+    "advertencia": 14,
+    "menor": 48
+  },
+  "metricas": {
+    "registros_revisados": 16,
+    "paginas_recorridas": 27,
+    "enlaces_externos": 3,
+    "enlaces_productos": 15
+  },
+  "resumen_ia": "",
+  "hallazgos": [
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Dog Fest Duck meat sticks For adult Dogs (id b80bd18b-f372-4927-b4e8-9ae292079a98)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Kansa PET Maravilloso Patas de pollo deshidratadas (id f69b6971-47b4-4267-8653-4fe8df5f8351)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Tuna (id 223e05d4-83ec-4cfe-a5de-55aeec5da2eb)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Salmón (id 0891a92e-dbc2-4370-a15b-e58a43571168)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios Dog Fest Duck Medallions de pato (id eef4d7ff-f585-48f0-9c9b-fd01ea392725)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Rabbit Drumsticks de conejo (id 3f10fe46-5085-4733-9f92-5c79d1cc475f)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios Dog Fest Meat Medallions con avestruz (id 7b2bfab3-81e8-4959-9a8e-889b97d2e890)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Pollo con vegetales (id b9f42e6a-d2a6-4d78-9a3d-fc496cf3f6f3)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Pollo (id 6dddf543-004d-4232-8c02-4eb57929d6f4)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Duck Fillet on Chewy Stick de pato (id dcccdb54-b916-4d25-8060-9a5be1bdad59)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Turkey Slices de pavo (id e79ab0d7-477b-432a-b8ac-5113f016d043)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Lamb Meat Sticks de cordero y conejo (id 83991b9d-faeb-4131-8776-abeceb0626de)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios SuniBonies Piel & Pelaje de SuniPet (id c4f6c9cf-1263-47a7-8936-0a6c5f456d01)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "advertencia",
+      "origen": "Base de datos",
+      "entidad": "productos_pyme_publicos",
+      "registro": "SuniBonies de SuniPet (id 04664a26-75bd-4635-aacf-af09b8ef4c4c)",
+      "problema": "Valor no permitido en categoria",
+      "detalle": "'alimento' no corresponde a la oferta definida por el equipo",
+      "url": "",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Base de datos",
+      "entidad": "vets",
+      "registro": "Clinica Veterinaria Santa Barbara (id e95febde-6039-48bf-ae9f-e6c1287156df)",
+      "problema": "Campo vacío: photos",
+      "detalle": "",
+      "url": "",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Dog Fest Duck meat sticks For adult Dogs (id b80bd18b-f372-4927-b4e8-9ae292079a98)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Kansa PET Maravilloso Patas de pollo deshidratadas (id f69b6971-47b4-4267-8653-4fe8df5f8351)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Tuna (id 223e05d4-83ec-4cfe-a5de-55aeec5da2eb)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Salmón (id 0891a92e-dbc2-4370-a15b-e58a43571168)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios Dog Fest Duck Medallions de pato (id eef4d7ff-f585-48f0-9c9b-fd01ea392725)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Rabbit Drumsticks de conejo (id 3f10fe46-5085-4733-9f92-5c79d1cc475f)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios Dog Fest Meat Medallions con avestruz (id 7b2bfab3-81e8-4959-9a8e-889b97d2e890)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Pollo con vegetales (id b9f42e6a-d2a6-4d78-9a3d-fc496cf3f6f3)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Churu sabor Pollo (id 6dddf543-004d-4232-8c02-4eb57929d6f4)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Duck Fillet on Chewy Stick de pato (id dcccdb54-b916-4d25-8060-9a5be1bdad59)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Turkey Slices de pavo (id e79ab0d7-477b-432a-b8ac-5113f016d043)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Snack Dog Fest Lamb Meat Sticks de cordero y conejo (id 83991b9d-faeb-4131-8776-abeceb0626de)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Premios SuniBonies Piel & Pelaje de SuniPet (id c4f6c9cf-1263-47a7-8936-0a6c5f456d01)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "SuniBonies de SuniPet (id 04664a26-75bd-4635-aacf-af09b8ef4c4c)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/kansapet?obrf=MXh4ajF5aW9iejd0aw%3D%3D",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Champu para perros espuma (id f393e0a7-a56c-4abf-8d07-e3f3b14c4ff8)",
+      "problema": "No verificable automáticamente",
+      "detalle": "https://www.instagram.com/pettgocl/ — instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Enlace del registro",
+      "entidad": "productos_pyme_publicos",
+      "registro": "Champu para perros espuma (id f393e0a7-a56c-4abf-8d07-e3f3b14c4ff8)",
+      "problema": "Temática no verificable automáticamente",
+      "detalle": "https://www.instagram.com/pettgocl/: red social que bloquea robots; revisar a mano que sea de mascotas",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "Facebook",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "WhatsApp",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/comunidad",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/especialistas",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/login",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "+",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "−",
+      "problema": "Enlace o botón sin destino",
+      "detalle": "href='#'",
+      "url": "https://www.pettgo.cl/mapa",
+      "nuevo": false
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/mapa",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/privacidad",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/04664a26-75bd-4635-aacf-af09b8ef4c4c",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/0891a92e-dbc2-4370-a15b-e58a43571168",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/223e05d4-83ec-4cfe-a5de-55aeec5da2eb",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/3f10fe46-5085-4733-9f92-5c79d1cc475f",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/6dddf543-004d-4232-8c02-4eb57929d6f4",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/7b2bfab3-81e8-4959-9a8e-889b97d2e890",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/83991b9d-faeb-4131-8776-abeceb0626de",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/b80bd18b-f372-4927-b4e8-9ae292079a98",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/b9f42e6a-d2a6-4d78-9a3d-fc496cf3f6f3",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/c4f6c9cf-1263-47a7-8936-0a6c5f456d01",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/dcccdb54-b916-4d25-8060-9a5be1bdad59",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/e79ab0d7-477b-432a-b8ac-5113f016d043",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/eef4d7ff-f585-48f0-9c9b-fd01ea392725",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/f393e0a7-a56c-4abf-8d07-e3f3b14c4ff8",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/productos/f69b6971-47b4-4267-8653-4fe8df5f8351",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/recuperar-password",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/registro",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/terminos",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    },
+    {
+      "severidad": "menor",
+      "origen": "Sitio web",
+      "entidad": "https://www.pettgo.cl/veterinarias/e95febde-6039-48bf-ae9f-e6c1287156df",
+      "registro": "https://www.instagram.com/pettgocl/",
+      "problema": "No verificable automáticamente",
+      "detalle": "instagram.com bloquea robots (HTTP 429); revisar a mano",
+      "url": "https://www.instagram.com/pettgocl/",
+      "nuevo": true
+    }
+  ]
+}
