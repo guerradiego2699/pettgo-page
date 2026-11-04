@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import logo from "../assets/pettgo-logo.webp"
 
 const socialLinks = [
-  { label: "Instagram", href: "#" },
+  { label: "Instagram", href: "https://www.instagram.com/pettgocl/" },
   { label: "Facebook", href: "#" },
   { label: "WhatsApp", href: "#" },
 ]
@@ -24,6 +24,8 @@ function Footer() {
             <a
               key={link.label}
               href={link.href}
+              // Los enlaces externos se abren en otra pestaña, sin darle acceso a esta página.
+              {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="text-cream-300/80 transition hover:text-brand-300"
             >
               {link.label}
