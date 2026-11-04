@@ -132,6 +132,10 @@ ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
   `pet_dewormings`, `pet_health_events` y `pet_weights`. Los datos de salud son SOLO del dueño
   (RLS por dueño; sin acceso para anon ni para admin). **Debe aplicarse antes de publicar el
   código del carnet**, porque el formulario de mascota empieza a guardar los campos nuevos.
+- `0017`: consulta de stock a las pymes y estado `archivado` para sus productos (valor nuevo
+  del enum `producto_pyme_estado` y columnas `stock_*` / `archivado_*` en `productos_pyme`).
+  **Debe aplicarse antes de publicar el código de stock**: el listado del admin pide esas
+  columnas y fallaría sin ellas.
 
 `productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
 que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:

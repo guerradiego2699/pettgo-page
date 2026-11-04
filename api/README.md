@@ -64,6 +64,24 @@ convenciones de ruteo dinámico específicas de un framework.
   agente de área, con la diferencia contra el avance real registrado en la actividad.
 - **`GET /api/admin/proyecto?seccion=auditoria`** — últimas 150 entradas.
 
+## Consulta de stock y archivado de productos
+
+Sin funciones nuevas (el plan Hobby permite 12): se agregó a las que ya existían.
+
+- **`POST /api/admin/producto/[id]`** con `{ accion }` — solo admin.
+  - `consultar_stock`: envía a la pyme un correo con dos botones ("Sí, sigue disponible" / "No, está
+    agotado"). El botón del admin queda bloqueado hasta que la pyme responda o pasen **4 días**
+    (también lo exige el servidor, `_lib/stock.ts`). Solo para productos publicados.
+  - `archivar` / `reactivar`: sacan o devuelven el producto al sitio sin perder su historial.
+- **`GET /api/propuesta?stock=<token>`** — público, solo lectura: lo que muestra la página `/stock/:token`.
+- **`POST /api/propuesta/responder`** con `{ stock_token, respuesta: "disponible" | "agotado" }` — público
+  (lo protege el token de un solo uso, válido 7 días). Si responde `agotado`, el producto queda
+  `archivado` (motivo `sin_stock`) y se avisa al admin por correo.
+
+Los botones del correo **no responden por sí solos**: abren `/stock/:token` y la pyme confirma con un
+clic. Así los filtros de correo que abren los enlaces automáticamente no pueden archivar un producto
+por error. Un enlace nuevo reemplaza al anterior.
+
 ## Avisos de moderación del foro
 
 - **`POST /api/foro/aviso`** — lo llaman los triggers de Supabase (migración `0014`), no el

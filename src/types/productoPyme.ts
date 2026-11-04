@@ -1,4 +1,5 @@
-export type ProductoPymeEstado = "pendiente" | "publicado" | "rechazado"
+export type ProductoPymeEstado = "pendiente" | "publicado" | "rechazado" | "archivado"
+export type StockEstado = "disponible" | "agotado"
 export type ProductoPymeEspecie = "perro" | "gato" | "ambos"
 
 export interface ProductoPymePublico {
@@ -38,6 +39,14 @@ export interface ProductoPymeMetrica {
   pyme_email: string
   categoria: string | null
   especie: ProductoPymeEspecie
+  // Consulta de stock a la pyme y archivado (migración 0017).
+  stock_estado: StockEstado | null
+  stock_confirmado_en: string | null
+  stock_consultado_en: string | null
+  // Mientras haya fecha, el botón "Preguntar stock" está bloqueado (hasta que responda o pasen 4 días).
+  stock_bloqueado_hasta: string | null
+  archivado_en: string | null
+  archivado_motivo: "manual" | "sin_stock" | null
   vistas_totales: number
   vistas_unicas: number
   clics_totales: number

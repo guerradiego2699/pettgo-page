@@ -64,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ] = await Promise.all([
     supabaseAdmin
       .from("productos_pyme")
-      .select("id, nombre, categoria, especie, pyme_nombre, pyme_email, estado, creado_en, actualizado_en, token_expira"),
+      .select("id, nombre, categoria, especie, pyme_nombre, pyme_email, estado, creado_en, actualizado_en, aceptado_en, token_expira"),
     supabaseAdmin
       .from("eventos_producto")
       .select("producto_id, tipo, creado_en, referer")
@@ -347,7 +347,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ).length
   const respondidas = todosLosProductos.filter((p) => p.estado !== "pendiente")
   const diasRespuestaProm = respondidas.length
-    ? respondidas.reduce((a, p) => a + (new Date(p.actualizado_en).getTime() - new Date(p.creado_en).getTime()), 0) /
+    // Con `aceptado_en` (fecha real de la respuesta) y no `actualizado_en`, que se mueve con cada consulta de stock o edición.
+    ? respondidas.reduce((a, p) => a + (new Date(p.aceptado_en ?? p.actualizado_en).getTime() - new Date(p.creado_en).getTime()), 0) /
       respondidas.length /
       MS_DIA
     : null

@@ -4,6 +4,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { useAuth } from "../../context/AuthContext"
 import { uploadImage, extensionFor } from "../../lib/storage"
 import { CATEGORIAS_PRODUCTO, ESPECIE_LABEL, etiquetaCategoria, normalizarCategoria } from "../../lib/categoriasProducto"
+import { fechaLarga, haceCuanto } from "../../lib/tiempo"
 import type { MetricasResponse, ProductoPymeEspecie, ProductoPymeMetrica } from "../../types/productoPyme"
 
 const RANGOS = [
@@ -16,6 +17,29 @@ const ESTADO_ESTILO: Record<string, string> = {
   pendiente: "bg-amber-100 text-amber-700",
   publicado: "bg-emerald-100 text-emerald-700",
   rechazado: "bg-red-100 text-red-700",
+  archivado: "bg-ink-50 text-ink-500",
+}
+
+// Estado de stock de un producto, debajo de su estado: qué dijo la pyme y hace cuánto.
+function LineaStock({ p }: { p: ProductoPymeMetrica }) {
+  if (p.estado === "archivado") {
+    return (
+      <span className="mt-1 block text-xs text-ink-500">
+        {p.archivado_motivo === "sin_stock" ? "La pyme informó que está agotado" : "Archivado manualmente"} · {haceCuanto(p.archivado_en)}
+      </span>
+    )
+  }
+  if (p.estado !== "publicado") return null
+  if (p.stock_bloqueado_hasta) {
+    return <span className="mt-1 block text-xs text-amber-700">Stock consultado {haceCuanto(p.stock_consultado_en)} · esperando respuesta</span>
+  }
+  if (p.stock_consultado_en && (!p.stock_confirmado_en || p.stock_consultado_en > p.stock_confirmado_en)) {
+    return <span className="mt-1 block text-xs text-amber-700">Stock consultado {haceCuanto(p.stock_consultado_en)} · sin respuesta</span>
+  }
+  if (p.stock_estado === "disponible") {
+    return <span className="mt-1 block text-xs text-emerald-700">Stock disponible · confirmado {haceCuanto(p.stock_confirmado_en)}</span>
+  }
+  return <span className="mt-1 block text-xs text-ink-400">Stock sin confirmar</span>
 }
 
 const CAMPOS_INICIALES = {
@@ -58,6 +82,7 @@ function AdminProductos() {
   const [aviso, setAviso] = useState<string | null>(null)
   const [filtroCategoria, setFiltroCategoria] = useState("")
   const [filtroMascota, setFiltroMascota] = useState("")
+  const [filtroEstado, setFiltroEstado] = useState("")
 
   const desde = useMemo(() => {
     const rangoActual = RANGOS.find((r) => r.id === rango)
@@ -97,9 +122,10 @@ function AdminProductos() {
       const cat = normalizarCategoria(p.categoria)
       if (filtroCategoria === "sin_categoria" ? cat !== null : filtroCategoria && cat !== filtroCategoria) return false
       if (filtroMascota && p.especie !== filtroMascota) return false
+      if (filtroEstado && p.estado !== filtroEstado) return false
       return true
     })
-  }, [metricas, filtroCategoria, filtroMascota])
+  }, [metricas, filtroCategoria, filtroMascota, filtroEstado])
 
   function handlePhotoChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
@@ -292,6 +318,32 @@ function AdminProductos() {
       cargarMetricas()
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo actualizar el estado.")
+    } finally {
+      setEnviando(null)
+    }
+  }
+
+  // Acciones sobre un producto publicado (preguntar stock, archivar) o archivado (reactivar).
+  async function accionProducto(id: string, accion: "consultar_stock" | "archivar" | "reactivar", exito: string) {
+    if (!session) return
+    setError(null)
+    setAviso(null)
+    setEnviando(id)
+
+    try {
+      const res = await fetch(`/api/admin/producto/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+        body: JSON.stringify({ accion }),
+      })
+      const body = await res.json()
+      if (!res.ok) throw new Error(body.error || "No se pudo completar la acción.")
+
+      setAviso(exito)
+      cargarMetricas()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "No se pudo completar la acción.")
+      cargarMetricas()
     } finally {
       setEnviando(null)
     }
@@ -679,12 +731,27 @@ function AdminProductos() {
                 <option value="ambos">Perro y gato</option>
               </select>
             </label>
-            {(filtroCategoria || filtroMascota) && (
+            <label className="flex items-center gap-2 text-sm font-medium text-ink-600">
+              Estado
+              <select
+                value={filtroEstado}
+                onChange={(e) => setFiltroEstado(e.target.value)}
+                className="rounded-lg border border-ink-900/15 px-3 py-1.5 text-sm focus:border-brand-500 focus:outline-none"
+              >
+                <option value="">Todos</option>
+                <option value="publicado">Publicados</option>
+                <option value="archivado">Archivados</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="rechazado">Rechazados</option>
+              </select>
+            </label>
+            {(filtroCategoria || filtroMascota || filtroEstado) && (
               <button
                 type="button"
                 onClick={() => {
                   setFiltroCategoria("")
                   setFiltroMascota("")
+                  setFiltroEstado("")
                 }}
                 className="text-sm font-semibold text-brand-700 hover:underline"
               >
@@ -723,6 +790,7 @@ function AdminProductos() {
                       <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${ESTADO_ESTILO[producto.estado]}`}>
                         {producto.estado}
                       </span>
+                      <LineaStock p={producto} />
                     </td>
                     <td className="px-4 py-3 text-ink-700">
                       {producto.vistas_totales} <span className="text-ink-400">({producto.vistas_unicas} únicas)</span>
@@ -753,7 +821,7 @@ function AdminProductos() {
                             </button>
                           </>
                         )}
-                        {producto.estado !== "publicado" && (
+                        {producto.estado !== "publicado" && producto.estado !== "archivado" && (
                           <button
                             type="button"
                             disabled={enviando === producto.id}
@@ -766,6 +834,43 @@ function AdminProductos() {
                         <button type="button" onClick={() => openEdit(producto)} className="text-ink-600 hover:underline">
                           Editar
                         </button>
+                        {producto.estado === "publicado" && (
+                          <>
+                            <button
+                              type="button"
+                              disabled={enviando === producto.id || Boolean(producto.stock_bloqueado_hasta)}
+                              title={
+                                producto.stock_bloqueado_hasta
+                                  ? `Ya se le preguntó a la pyme. Podrás volver a preguntar el ${fechaLarga(producto.stock_bloqueado_hasta)}, o antes si responde.`
+                                  : "Envía un correo a la pyme para confirmar si el producto sigue disponible"
+                              }
+                              onClick={() =>
+                                accionProducto(producto.id, "consultar_stock", `Consulta de stock enviada a ${producto.pyme_nombre}.`)
+                              }
+                              className="text-brand-700 hover:underline disabled:cursor-not-allowed disabled:text-ink-300 disabled:no-underline"
+                            >
+                              {enviando === producto.id ? "…" : producto.stock_bloqueado_hasta ? "Stock consultado" : "Preguntar stock"}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={enviando === producto.id}
+                              onClick={() => accionProducto(producto.id, "archivar", "Producto archivado: ya no se muestra en el sitio.")}
+                              className="text-ink-600 hover:underline disabled:opacity-50"
+                            >
+                              Archivar
+                            </button>
+                          </>
+                        )}
+                        {producto.estado === "archivado" && (
+                          <button
+                            type="button"
+                            disabled={enviando === producto.id}
+                            onClick={() => accionProducto(producto.id, "reactivar", "Producto reactivado: vuelve a mostrarse en el sitio.")}
+                            className="text-emerald-700 hover:underline disabled:opacity-50"
+                          >
+                            Reactivar
+                          </button>
+                        )}
                         {confirmingDeleteId === producto.id ? (
                           <>
                             <span className="font-normal text-ink-500">¿Eliminar?</span>

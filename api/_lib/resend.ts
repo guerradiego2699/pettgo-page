@@ -177,3 +177,119 @@ export async function enviarInformeTendencias(datos: DatosInforme) {
     ],
   })
 }
+
+// ---------- Consulta de stock a la pyme ----------
+
+function escaparHtml(valor: string): string {
+  return valor.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+}
+
+interface DatosConsultaStock {
+  destinatario: string
+  pymeNombre: string
+  productoNombre: string
+  imagenUrl: string | null
+  token: string
+  tokenExpira: string
+}
+
+// Correo con dos botones: "Sí, sigue disponible" y "No, está agotado". Los botones NO responden por sí
+// solos: abren una página donde la pyme confirma con un clic. Así los filtros de correo que abren los
+// enlaces automáticamente no pueden archivar un producto por error.
+export async function enviarConsultaStock(datos: DatosConsultaStock) {
+  const base = (process.env.SITE_URL ?? "https://www.pettgo.cl").replace(/\/+$/, "")
+  const enlaceSi = `${base}/stock/${datos.token}?r=si`
+  const enlaceNo = `${base}/stock/${datos.token}?r=no`
+  const producto = escaparHtml(datos.productoNombre)
+  const pyme = escaparHtml(datos.pymeNombre)
+  const imagen = datos.imagenUrl && datos.imagenUrl.startsWith("https://")
+    ? `<img src="${escaparHtml(datos.imagenUrl)}" alt="" width="200" style="max-width:100%;border-radius:12px;display:block;margin:0 0 16px;" />`
+    : ""
+
+  const html = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:24px 16px;font-family:Arial,Helvetica,sans-serif;color:#292524;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;">
+          <tr><td>
+            <p style="margin:0 0 16px;font-size:15px;">Hola ${pyme},</p>
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.5;">
+              Queremos asegurarnos de que quienes llegan a su tienda desde PettGo encuentren lo que buscan.
+              ¿Sigue disponible este producto?
+            </p>
+            ${imagen}
+            <p style="margin:0 0 20px;font-size:16px;font-weight:bold;">${producto}</p>
+            <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
+              <tr>
+                <td style="border-radius:999px;background:#2f6f5e;">
+                  <a href="${enlaceSi}" style="display:inline-block;padding:12px 22px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:bold;">Sí, sigue disponible</a>
+                </td>
+                <td style="width:12px;"></td>
+                <td style="border-radius:999px;background:#ffffff;border:2px solid #a8a29e;">
+                  <a href="${enlaceNo}" style="display:inline-block;padding:10px 20px;color:#44403c;text-decoration:none;font-size:14px;font-weight:bold;">No, está agotado</a>
+                </td>
+              </tr>
+            </table>
+            <p style="margin:0 0 16px;font-size:13px;line-height:1.5;color:#78716c;">
+              Al elegir una opción verá un paso final para confirmar. Si el producto está agotado, lo
+              pausaremos en nuestro sitio hasta que nos avise que volvió. El enlace es personal y vence el
+              ${formatoFecha(datos.tokenExpira)}.
+            </p>
+            <p style="margin:24px 0 0;font-size:14px;">
+              Equipo PettGo<br />
+              <a href="https://pettgo.cl" style="color:#e08a3f;">pettgo.cl</a>
+            </p>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+  `.trim()
+
+  const text = [
+    `Hola ${datos.pymeNombre},`,
+    "",
+    "Queremos asegurarnos de que quienes llegan a su tienda desde PettGo encuentren lo que buscan.",
+    `¿Sigue disponible "${datos.productoNombre}"?`,
+    "",
+    `Sí, sigue disponible: ${enlaceSi}`,
+    `No, está agotado: ${enlaceNo}`,
+    "",
+    "Al elegir una opción verá un paso final para confirmar. Si está agotado, lo pausaremos en nuestro sitio",
+    `hasta que nos avise que volvió. El enlace es personal y vence el ${formatoFecha(datos.tokenExpira)}.`,
+    "",
+    "Equipo PettGo",
+    "https://pettgo.cl",
+  ].join("\n")
+
+  const { error } = await resend.emails.send({
+    from: "Equipo PettGo <contacto@pettgo.cl>",
+    to: datos.destinatario,
+    replyTo: "contacto@pettgo.cl",
+    subject: `¿Sigue disponible "${datos.productoNombre}"? — PettGo`,
+    html,
+    text,
+  })
+  if (error) throw new Error(`Resend rechazó la consulta de stock: ${error.message}`)
+}
+
+interface DatosAvisoStock {
+  productoNombre: string
+  pymeNombre: string
+  disponible: boolean
+}
+
+// Aviso interno al admin cuando una pyme responde a la consulta de stock.
+export async function enviarAvisoStock(datos: DatosAvisoStock) {
+  const adminEmail = process.env.ADMIN_EMAIL
+  if (!adminEmail) return
+
+  const linea = datos.disponible
+    ? `${datos.pymeNombre} confirmó que "${datos.productoNombre}" sigue disponible.`
+    : `${datos.pymeNombre} informó que "${datos.productoNombre}" está agotado. El producto fue archivado y ya no se muestra en el sitio.`
+
+  await resend.emails.send({
+    from: "PettGo <contacto@pettgo.cl>",
+    to: adminEmail,
+    subject: datos.disponible ? `Stock confirmado — ${datos.productoNombre}` : `Producto archivado por falta de stock — ${datos.productoNombre}`,
+    text: linea,
+  })
+}

@@ -7,6 +7,7 @@ const Home = lazy(() => import("./pages/Home"))
 const Productos = lazy(() => import("./pages/Productos"))
 const ProductoDetalle = lazy(() => import("./pages/ProductoDetalle"))
 const Propuesta = lazy(() => import("./pages/Propuesta"))
+const StockPyme = lazy(() => import("./pages/StockPyme"))
 const Especialistas = lazy(() => import("./pages/Especialistas"))
 const EspecialistaDetalle = lazy(() => import("./pages/EspecialistaDetalle"))
 const Veterinarias = lazy(() => import("./pages/Veterinarias"))
@@ -42,6 +43,7 @@ function App() {
         <Route path="productos" element={<Productos />} />
         <Route path="productos/:id" element={<ProductoDetalle />} />
         <Route path="propuesta/:token" element={<Propuesta />} />
+        <Route path="stock/:token" element={<StockPyme />} />
         <Route path="especialistas" element={<Especialistas />} />
         <Route path="especialistas/:id" element={<EspecialistaDetalle />} />
         <Route path="veterinarias" element={<Veterinarias />} />

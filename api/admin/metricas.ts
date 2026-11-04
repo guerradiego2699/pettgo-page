@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 import { supabaseAdmin } from "../_lib/supabaseAdmin.js"
 import { requireAdmin } from "../_lib/auth.js"
+import { bloqueoConsultaStock } from "../_lib/stock.js"
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET") {
@@ -15,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { data: productos, error: errorProductos } = await supabaseAdmin
     .from("productos_pyme")
-    .select("id, nombre, descripcion, imagen_url, precio_ref, link_tienda, estado, pyme_nombre, pyme_email, categoria, especie")
+    .select("id, nombre, descripcion, imagen_url, precio_ref, link_tienda, estado, pyme_nombre, pyme_email, categoria, especie, stock_estado, stock_confirmado_en, stock_consultado_en, stock_token_usado, archivado_en, archivado_motivo")
     .order("creado_en", { ascending: false })
 
   if (errorProductos) {
@@ -45,10 +46,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const filasMetricas: MetricaFila[] = metricas ?? []
   const porProducto = new Map<string, MetricaFila>(filasMetricas.map((m) => [m.producto_id, m]))
 
-  const productosConMetricas = (productos ?? []).map((producto: { id: string }) => {
+  const productosConMetricas = (productos ?? []).map((producto) => {
     const m = porProducto.get(producto.id)
+    // El token y su estado de uso no salen del servidor: solo se informa hasta cuándo está bloqueada la consulta.
+    const { stock_token_usado, ...visible } = producto
     return {
-      ...producto,
+      ...visible,
+      stock_bloqueado_hasta: bloqueoConsultaStock({ stock_consultado_en: producto.stock_consultado_en, stock_token_usado }),
       vistas_totales: m?.vistas_totales ?? 0,
       vistas_unicas: m?.vistas_unicas ?? 0,
       clics_totales: m?.clics_totales ?? 0,
