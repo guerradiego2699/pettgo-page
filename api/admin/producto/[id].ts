@@ -55,13 +55,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const tokenExpira = new Date(ahora.getTime() + VIGENCIA_ENLACE_STOCK_MS).toISOString()
 
       // Primero se registra la consulta (así un doble clic no manda dos correos) y después se envía.
-      // Solo gana la primera solicitud: la actualización exige que nadie haya consultado entre medio.
+      // Solo gana la primera solicitud: la actualización exige que el token siga siendo el que leímos
+      // (cada consulta lo reemplaza), así dos clics simultáneos no mandan dos correos.
       const { data: registrada, error: errorGuardar } = await supabaseAdmin
         .from("productos_pyme")
         .update({ stock_token: token, stock_token_expira: tokenExpira, stock_token_usado: false, stock_consultado_en: ahora.toISOString() })
         .eq("id", id)
         .eq("estado", "publicado")
-        .filter("stock_consultado_en", producto.stock_consultado_en === null ? "is" : "eq", producto.stock_consultado_en)
+        .filter("stock_token", producto.stock_token === null ? "is" : "eq", producto.stock_token)
         .select("id")
       if (errorGuardar) {
         console.error("Error al registrar la consulta de stock:", errorGuardar)
