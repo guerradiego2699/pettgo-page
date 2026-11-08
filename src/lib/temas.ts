@@ -19,6 +19,9 @@ export const TEMAS: Record<Tema, { nombre: string }> = {
 // Clave = mes (1 = enero … 12 = diciembre).
 const TEMA_POR_MES: Partial<Record<number, Tema>> = {
   10: "halloween",
+  // Noviembre también lleva la navidad: se adelantó para la presentación del proyecto.
+  // Para volver al aspecto normal en noviembre, basta con borrar esta línea.
+  11: "navidad",
   12: "navidad",
 }
 
