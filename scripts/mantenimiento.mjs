@@ -277,7 +277,7 @@ async function chequeoRepositorio() {
   await esperar(r, "Repositorio", async () => {
     const archivos = execSync("git ls-files", { encoding: "utf8" }).split("\n").filter(Boolean)
 
-    const env = archivos.filter((f) => /(^|\/)\.env($|\.)/.test(f) && !/\.example$/.test(f))
+    const env = archivos.filter((f) => /(^|\/)\.env($|\.)/.test(f) && !/\.(example|ejemplo|sample|template)$/.test(f))
     if (env.length) r.falla(`Archivos de entorno versionados en git: ${env.join(", ")}`)
     else r.ok("Ningún archivo `.env` real está versionado")
 
