@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import type { MouseEvent } from "react"
 import logo from "../assets/pettgo-logo.webp"
 import PawPrint from "./PawPrint"
+import { FOTO_HERO } from "../lib/temas"
 
 function Hero() {
   const mouseX = useMotionValue(0)
@@ -29,6 +30,29 @@ function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-cream-100 via-cream-100 to-cream-50 px-6 pb-24 pt-16 sm:pt-20">
+      {/* La foto de fondo la define el tema del mes (src/lib/temas.ts). Un tema
+          sin foto deja el Hero con su fondo de siempre. */}
+      {FOTO_HERO && (
+        <>
+          <img
+            src={FOTO_HERO.src}
+            alt=""
+            aria-hidden="true"
+            // El encuadre (correrla, agrandarla) lo define cada tema junto con su
+            // foto, porque depende de dónde esté el animal en la imagen.
+            className={`pointer-events-none absolute inset-0 h-full w-full origin-center object-cover ${FOTO_HERO.ajuste ?? "object-center"}`}
+          />
+          {/* Dos capas distintas porque el texto se comporta distinto según el ancho.
+              En celular el título queda encima de toda la foto, así que se tapa casi
+              entera. Desde lg hay dos columnas: la foto se ve a la derecha y el
+              degradado protege solo la mitad izquierda, que es donde va el texto. */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-cream-100/90 lg:hidden" />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-cream-100 via-cream-100/85 to-transparent lg:block"
+          />
+        </>
+      )}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-brand-300/40 blur-3xl"
@@ -99,7 +123,11 @@ function Hero() {
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-          className="perspective-1000 relative mx-auto flex h-64 w-64 items-center justify-center sm:h-80 sm:w-80"
+          // Sin tema (o con un tema sin foto) el logo mide lo de siempre. Con foto de fondo se
+          // achica y, desde xl, se corre a la derecha para despejar al animal de la imagen.
+          className={`perspective-1000 relative mx-auto flex items-center justify-center ${
+            FOTO_HERO ? "h-56 w-56 sm:h-72 sm:w-72 xl:translate-x-20" : "h-64 w-64 sm:h-80 sm:w-80"
+          }`}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >

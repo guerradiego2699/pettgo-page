@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Temas por mes (sobrescriben las variables de @theme). Ver src/temas.css. */
+@import "./temas.css";
 
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;

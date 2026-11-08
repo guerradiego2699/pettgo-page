@@ -1,0 +1,81 @@
+/* PettGo — temas por mes.
+ *
+ * El tema base es el bloque @theme de index.css. Acá solo van los meses que
+ * tienen un aspecto propio: cada uno sobrescribe las mismas variables de color.
+ * Como todo el sitio público usa clases de Tailwind que apuntan a esas
+ * variables (bg-cream-100, text-ink-900, etc.), cambiar estos valores recolorea
+ * la página entera sin tocar ni un componente.
+ *
+ * Especificidad: @theme emite las variables en :root (0,1,0). Estos bloques son
+ * html[data-tema="..."] (0,1,1), así que ganan.
+ *
+ * REGLA AL CREAR UN TEMA NUEVO: la escala `cream` tiene que seguir siendo clara
+ * y la escala `ink` oscura. Hay 27 `bg-white` en las páginas públicas (las
+ * tarjetas), así que un tema de fondo oscuro dejaría texto claro sobre tarjetas
+ * blancas, ilegible. Se cambia el TONO, no la luminosidad.
+ */
+
+/* ── Octubre: Halloween ──────────────────────────────────────────
+ * Beige cálido → lavanda pálido, naranja → naranja calabaza,
+ * café → morado profundo. El ambiente lo dan los adornos.
+ */
+html[data-tema="halloween"] {
+  --color-cream-50: #faf7fc;
+  --color-cream-100: #f3edf7;
+  --color-cream-200: #e8dff0;
+  --color-cream-300: #ddd1e8;
+  --color-cream-400: #cbbad9;
+
+  --color-brand-50: #fdf0e2;
+  --color-brand-100: #fbdfc2;
+  --color-brand-200: #f7bf85;
+  --color-brand-300: #f29d4a;
+  --color-brand-400: #ec8a2d;
+  --color-brand-500: #e2761a;
+  --color-brand-600: #c25c0e;
+  --color-brand-700: #9c480b;
+  --color-brand-800: #703309;
+  --color-brand-900: #4f2306;
+
+  /* Escala de texto y bordes: morado de verdad, no café violáceo.
+   * ink-900 sobre cream-100 da ~13:1 de contraste, muy por encima del mínimo. */
+  --color-ink-50: #f1ecf8;
+  --color-ink-100: #ddd2ef;
+  --color-ink-300: #7b63a8;
+  --color-ink-500: #4b3379;
+  --color-ink-700: #372459;
+  --color-ink-900: #2b1a47;
+  --color-ink-950: #1b0f2e;
+}
+
+/* ── Diciembre: Navidad ──────────────────────────────────────────
+ * Crema cálido con un dejo rosado, naranja → rojo navideño, y el texto en
+ * verde pino muy oscuro (a simple vista se lee como negro, pero tiñe toda
+ * la página). El dorado y el verde claro viven en los adornos.
+ */
+html[data-tema="navidad"] {
+  --color-cream-50: #fffcf8;
+  --color-cream-100: #fbf1ec;
+  --color-cream-200: #f6e2da;
+  --color-cream-300: #eed3c9;
+  --color-cream-400: #e0bdb0;
+
+  --color-brand-50: #fdeceb;
+  --color-brand-100: #fad5d3;
+  --color-brand-200: #f3aaa6;
+  --color-brand-300: #e07c76;
+  --color-brand-400: #d4605a;
+  --color-brand-500: #c4433c;
+  --color-brand-600: #a82f29;
+  --color-brand-700: #8a241f;
+  --color-brand-800: #651a16;
+  --color-brand-900: #45110f;
+
+  --color-ink-50: #eef3ef;
+  --color-ink-100: #d5e2d9;
+  --color-ink-300: #5d8268;
+  --color-ink-500: #2f5a3e;
+  --color-ink-700: #1e3f2b;
+  --color-ink-900: #14301f;
+  --color-ink-950: #0b1e13;
+}

@@ -4,6 +4,10 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext'
+import { aplicarTema } from './lib/temas'
+
+// Antes del primer render, para que la página no parpadee con el tema base.
+aplicarTema()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

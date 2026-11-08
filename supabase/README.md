@@ -136,6 +136,8 @@ ejemplo un branch de desarrollo nuevo): en el SQL Editor, en ese orden.
   del enum `producto_pyme_estado` y columnas `stock_*` / `archivado_*` en `productos_pyme`).
   **Debe aplicarse antes de publicar el código de stock**: el listado del admin pide esas
   columnas y fallaría sin ellas.
+- `0018`: vista pública `productos_pyme_destacados` (productos publicados con su total de clics)
+  para la sección "Lo más visto" de la portada. Ya aplicada en producción; el archivo es solo registro.
 
 `productos_pyme_publicos` aparece en el Advisor como "Security Definer View", igual
 que `public_profiles` — es el mismo trade-off consciente ya documentado más abajo:
