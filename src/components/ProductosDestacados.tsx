@@ -5,8 +5,8 @@ import { supabase } from "../lib/supabase"
 import { ESPECIE_LABEL, etiquetaCategoria } from "../lib/categoriasProducto"
 import type { ProductoPymeDestacado } from "../types/productoPyme"
 
-// Cuántos productos se muestran en la portada.
-const CANTIDAD = 2
+// Cuántos productos se muestran en la portada: solo el más visto.
+const CANTIDAD = 1
 
 function formatoClp(valor: number | null) {
   if (valor == null) return null
@@ -47,11 +47,13 @@ function ProductosDestacados() {
         >
           <h2 className="font-heading text-3xl font-bold text-ink-900">Lo más visto</h2>
           <p className="mx-auto mt-2 max-w-xl text-ink-500">
-            Los productos que más están mirando en PettGo. Son de pymes chilenas y los recomendamos gratis.
+            {productos.length === 1
+              ? "El producto que más están mirando en PettGo. Es de una pyme chilena y lo recomendamos gratis."
+              : "Los productos que más están mirando en PettGo. Son de pymes chilenas y los recomendamos gratis."}
           </p>
         </motion.div>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className={`mt-12 grid grid-cols-1 gap-6 ${productos.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-2xl"}`}>
           {productos.map((producto, index) => {
             const etiqueta = etiquetaCategoria(producto.categoria)
             const precio = formatoClp(producto.precio_ref)

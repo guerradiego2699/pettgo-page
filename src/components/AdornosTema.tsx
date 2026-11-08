@@ -241,13 +241,14 @@ function useFlotar() {
         }
 }
 
-// Las figuras viven en los márgenes laterales, que están vacíos en pantallas
-// anchas. En móvil no hay márgenes, así que se ocultan para no quedar encima del
-// texto: ahí solo quedan las esquinas.
-const LATERAL_IZQ = "absolute left-3 top-[32%] hidden lg:block"
-const LATERAL_DER = "absolute right-4 top-[22%] hidden lg:block"
-const INICIO_IZQ = "absolute left-4 top-[66%] hidden xl:block"
-const INICIO_DER = "absolute right-6 top-[62%] hidden lg:block"
+// Las figuras viven en los márgenes laterales, que solo son lo bastante anchos desde
+// unos 1440 px (el contenido mide como máximo 1152 px, centrado, y las figuras
+// necesitan ~130 px a cada lado). En pantallas más angostas quedarían encima del
+// título y de los botones, así que se ocultan: ahí solo quedan las esquinas.
+const LATERAL_IZQ = "absolute left-3 top-[32%] hidden min-[1440px]:block"
+const LATERAL_DER = "absolute right-4 top-[22%] hidden min-[1440px]:block"
+const INICIO_IZQ = "absolute left-4 top-[66%] hidden min-[1440px]:block"
+const INICIO_DER = "absolute right-6 top-[62%] hidden min-[1440px]:block"
 
 function AdornosHalloween({ esInicio }: { esInicio: boolean }) {
   const flotar = useFlotar()
@@ -275,11 +276,11 @@ function AdornosHalloween({ esInicio }: { esInicio: boolean }) {
             <Calabaza className="h-20 w-24" conSombrero />
           </motion.div>
 
-          <Estrella className="absolute left-[18%] top-[14%] hidden h-4 w-4 text-ink-900/40 lg:block" />
-          <Estrella className="absolute right-[22%] top-[10%] hidden h-3 w-3 text-brand-500/60 lg:block" />
-          <Estrella className="absolute left-[30%] top-[78%] hidden h-3 w-3 text-ink-900/30 xl:block" />
-          <Estrella className="absolute right-[32%] top-[84%] hidden h-4 w-4 text-brand-500/50 xl:block" />
-          <Estrella className="absolute left-[8%] top-[52%] hidden h-3 w-3 text-brand-500/50 lg:block" />
+          <Estrella className="absolute left-[18%] top-[14%] hidden h-4 w-4 text-ink-900/40 min-[1440px]:block" />
+          <Estrella className="absolute right-[22%] top-[10%] hidden h-3 w-3 text-brand-500/60 min-[1440px]:block" />
+          <Estrella className="absolute left-[30%] top-[78%] hidden h-3 w-3 text-ink-900/30 min-[1440px]:block" />
+          <Estrella className="absolute right-[32%] top-[84%] hidden h-4 w-4 text-brand-500/50 min-[1440px]:block" />
+          <Estrella className="absolute left-[8%] top-[52%] hidden h-3 w-3 text-brand-500/50 min-[1440px]:block" />
         </>
       )}
     </>
@@ -312,11 +313,11 @@ function AdornosNavidad({ esInicio }: { esInicio: boolean }) {
             <Arbol className="h-24 w-20" />
           </motion.div>
 
-          <Copo className="absolute left-[18%] top-[14%] hidden h-5 w-5 text-ink-300/60 lg:block" />
-          <Copo className="absolute right-[22%] top-[10%] hidden h-4 w-4 text-brand-400/60 lg:block" />
-          <Copo className="absolute left-[30%] top-[78%] hidden h-4 w-4 text-ink-300/50 xl:block" />
-          <Copo className="absolute right-[32%] top-[84%] hidden h-5 w-5 text-brand-400/50 xl:block" />
-          <Copo className="absolute left-[8%] top-[52%] hidden h-4 w-4 text-ink-300/50 lg:block" />
+          <Copo className="absolute left-[18%] top-[14%] hidden h-5 w-5 text-ink-300/60 min-[1440px]:block" />
+          <Copo className="absolute right-[22%] top-[10%] hidden h-4 w-4 text-brand-400/60 min-[1440px]:block" />
+          <Copo className="absolute left-[30%] top-[78%] hidden h-4 w-4 text-ink-300/50 min-[1440px]:block" />
+          <Copo className="absolute right-[32%] top-[84%] hidden h-5 w-5 text-brand-400/50 min-[1440px]:block" />
+          <Copo className="absolute left-[8%] top-[52%] hidden h-4 w-4 text-ink-300/50 min-[1440px]:block" />
         </>
       )}
     </>

@@ -6,7 +6,6 @@ import PawPrint from "./PawPrint"
 import { FOTO_HERO } from "../lib/temas"
 
 function Hero() {
-
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), {
@@ -124,10 +123,11 @@ function Hero() {
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-          // Corrido a la derecha para despejar al gato gris de la foto. Solo desde
-          // xl: en pantallas más angostas el fantasma del tema queda muy cerca del
-          // borde y se juntarían.
-          className="perspective-1000 relative mx-auto flex h-56 w-56 items-center justify-center sm:h-72 sm:w-72 xl:translate-x-20"
+          // Sin tema (o con un tema sin foto) el logo mide lo de siempre. Con foto de fondo se
+          // achica y, desde xl, se corre a la derecha para despejar al animal de la imagen.
+          className={`perspective-1000 relative mx-auto flex items-center justify-center ${
+            FOTO_HERO ? "h-56 w-56 sm:h-72 sm:w-72 xl:translate-x-20" : "h-64 w-64 sm:h-80 sm:w-80"
+          }`}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >

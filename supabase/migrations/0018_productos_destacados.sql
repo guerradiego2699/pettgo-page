@@ -1,4 +1,7 @@
--- PettGo — 0017: productos destacados para la portada.
+-- PettGo — 0018: productos destacados para la portada.
+--
+-- YA APLICADA en producción (28 de octubre): este archivo es solo el registro. Se renumeró de
+-- 0017 a 0018 porque 0017 ya la ocupa `0017_stock_y_archivado.sql`.
 --
 -- La portada muestra los productos con más clics. El problema: `eventos_producto`
 -- tiene RLS y NO tiene política de select para anon (por diseño de 0007: las
