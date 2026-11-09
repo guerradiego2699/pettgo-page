@@ -1,0 +1,45 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Control de calidad PettGo</title><style>
+:root{--bg:#FBF7F2;--card:#fff;--tx:#2B2420;--mut:#7A6E66;--ln:#EADFD3;--acc:#E08A3F;--cr:#C0392B;--ad:#C77C0E;--me:#5D7A8C}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:auto;padding:24px 16px} h1{margin:0 0 4px;font-size:24px} .sub{color:var(--mut)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
+.kpi{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:14px} .kpi b{font-size:26px;display:block}
+.kpi.critico b{color:var(--cr)} .kpi.advertencia b{color:var(--ad)} .kpi.menor b{color:var(--me)}
+.ia{background:#FFF3E6;border-left:4px solid var(--acc);padding:12px 16px;border-radius:8px;white-space:pre-wrap}
+.tabla{overflow-x:auto;background:var(--card);border:1px solid var(--ln);border-radius:12px;margin-top:16px}
+table{border-collapse:collapse;width:100%;min-width:720px} th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--ln);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)} .det{color:var(--mut);font-size:13px;word-break:break-all}
+.pill{font-size:12px;padding:2px 8px;border-radius:99px;color:#fff;white-space:nowrap} .pill.critico{background:var(--cr)} .pill.advertencia{background:var(--ad)} .pill.menor{background:var(--me)}
+.nuevo{font-size:11px;color:var(--acc);font-weight:700}
+</style></head><body><main>
+<h1>Control de calidad de la información · PettGo</h1>
+<div class="sub">Revisión automática del 09-11-2026 19:50 · https://www.pettgo.cl</div>
+<div class="kpis">
+<div class="kpi critico"><b>0</b>Críticos</div><div class="kpi advertencia"><b>14</b>Advertencias</div>
+<div class="kpi menor"><b>6</b>Menores</div><div class="kpi"><b>16</b>Registros en BD revisados</div>
+<div class="kpi"><b>27</b>Páginas recorridas</div><div class="kpi"><b>3</b>Enlaces externos probados</div><div class="kpi"><b>15</b>Enlaces de productos</div>
+</div>
+
+
+<div class="tabla"><table><thead><tr><th>Gravedad</th><th>Origen</th><th>Tabla / página</th><th>Registro</th><th>Problema</th></tr></thead>
+<tbody><tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Dog Fest Duck meat sticks For adult Dogs (id b80bd18b-f372-4927-b4e8-9ae292079a98)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Kansa PET Maravilloso Patas de pollo deshidratadas (id f69b6971-47b4-4267-8653-4fe8df5f8351)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Churu sabor Tuna (id 223e05d4-83ec-4cfe-a5de-55aeec5da2eb)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Churu sabor Salmón (id 0891a92e-dbc2-4370-a15b-e58a43571168)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Premios Dog Fest Duck Medallions de pato (id eef4d7ff-f585-48f0-9c9b-fd01ea392725)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Snack Dog Fest Rabbit Drumsticks de conejo (id 3f10fe46-5085-4733-9f92-5c79d1cc475f)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Premios Dog Fest Meat Medallions con avestruz (id 7b2bfab3-81e8-4959-9a8e-889b97d2e890)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Churu sabor Pollo con vegetales (id b9f42e6a-d2a6-4d78-9a3d-fc496cf3f6f3)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Churu sabor Pollo (id 6dddf543-004d-4232-8c02-4eb57929d6f4)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Snack Dog Fest Duck Fillet on Chewy Stick de pato (id dcccdb54-b916-4d25-8060-9a5be1bdad59)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Snack Dog Fest Turkey Slices de pavo (id e79ab0d7-477b-432a-b8ac-5113f016d043)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Snack Dog Fest Lamb Meat Sticks de cordero y conejo (id 83991b9d-faeb-4131-8776-abeceb0626de)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>Premios SuniBonies Piel &amp; Pelaje de SuniPet (id c4f6c9cf-1263-47a7-8936-0a6c5f456d01)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='advertencia'><td><span class='pill advertencia'>Advertencia</span></td><td>Base de datos</td><td>productos_pyme_publicos</td><td>SuniBonies de SuniPet (id 04664a26-75bd-4635-aacf-af09b8ef4c4c)</td><td><b>Valor no permitido en categoria</b><div class=det>&#x27;alimento&#x27; no corresponde a la oferta definida por el equipo</div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Base de datos</td><td>vets</td><td>Clinica Veterinaria Santa Barbara (id e95febde-6039-48bf-ae9f-e6c1287156df)</td><td><b>Campo vacío: photos</b><div class=det></div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Enlace del registro</td><td>productos_pyme_publicos</td><td>Champu para perros espuma (id f393e0a7-a56c-4abf-8d07-e3f3b14c4ff8)</td><td><b>Temática no verificable automáticamente</b><div class=det>https://www.instagram.com/pettgocl/: red social que bloquea robots; revisar a mano que sea de mascotas</div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Sitio web</td><td>https://www.pettgo.cl/</td><td>Facebook</td><td><b>Enlace o botón sin destino</b><div class=det>href=&#x27;#&#x27;</div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Sitio web</td><td>https://www.pettgo.cl/</td><td>WhatsApp</td><td><b>Enlace o botón sin destino</b><div class=det>href=&#x27;#&#x27;</div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Sitio web</td><td>https://www.pettgo.cl/mapa</td><td>+</td><td><b>Enlace o botón sin destino</b><div class=det>href=&#x27;#&#x27;</div></td></tr>
+<tr class='menor'><td><span class='pill menor'>Menor</span></td><td>Sitio web</td><td>https://www.pettgo.cl/mapa</td><td>−</td><td><b>Enlace o botón sin destino</b><div class=det>href=&#x27;#&#x27;</div></td></tr></tbody></table></div></main></body></html>
