@@ -3,8 +3,6 @@ import logo from "../assets/pettgo-logo.webp"
 
 const socialLinks = [
   { label: "Instagram", href: "https://www.instagram.com/pettgocl/" },
-  { label: "Facebook", href: "#" },
-  { label: "WhatsApp", href: "#" },
 ]
 
 function Footer() {
