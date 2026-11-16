@@ -15,7 +15,7 @@ function Footer() {
             PettGo
           </p>
           <p className="mt-2 text-cream-300/80">Curicó, Chile</p>
-          <p className="mt-1 text-cream-300/80">contacto@pettgo.cl · +56 9 0000 0000</p>
+          <p className="mt-1 text-cream-300/80">contacto@pettgo.cl</p>
         </div>
         <div className="mt-6 flex justify-center gap-5 sm:mt-0">
           {socialLinks.map((link) => (
