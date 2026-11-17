@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { supabase } from "../../lib/supabase"
 import { fetchAuthorNames } from "../../lib/profiles"
+import ModeracionReporte from "../../components/ModeracionReporte"
 import type { ForumPost, ForumThread } from "../../types/forum"
 
 interface Report {
@@ -97,6 +98,7 @@ function AdminReportes() {
         <div className="mt-8 flex flex-col gap-4">
           {reports.map((report) => {
             const content = report.post_id ? posts[report.post_id] : report.thread_id ? threads[report.thread_id] : null
+            const contentText = content && ("title" in content ? `${content.title} — ${content.body}` : content.body)
             const contentAuthor = content ? authorNames[content.author_id] ?? "Alguien" : null
             const threadLink = report.post_id ? posts[report.post_id]?.thread_id : report.thread_id
 
@@ -122,7 +124,7 @@ function AdminReportes() {
                   <>
                     <p className="mt-2 text-xs text-ink-400">Autor: {contentAuthor}</p>
                     <p className="mt-1 whitespace-pre-wrap text-sm text-ink-700">
-                      {"title" in content ? content.title + " — " + content.body : content.body}
+                      {contentText}
                     </p>
                   </>
                 ) : (
@@ -134,7 +136,12 @@ function AdminReportes() {
                   {report.reason && <> · Motivo: {report.reason}</>}
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-4 text-sm font-semibold">
+                <ModeracionReporte
+                  key={contentText ?? ""}
+                  reportId={report.id}
+                  body={report.resolved ? undefined : contentText ?? undefined}
+                  onActualizar={loadReports}
+                >
                   {threadLink && (
                     <Link to={`/comunidad/${threadLink}`} className="text-brand-700 hover:underline">
                       Ver en el foro
@@ -146,7 +153,7 @@ function AdminReportes() {
                         <button
                           type="button"
                           onClick={() => handleDeleteContent(report)}
-                          className="text-red-600 hover:underline"
+                          className="text-red-600 hover:underline disabled:opacity-50"
                         >
                           Eliminar contenido
                         </button>
@@ -154,13 +161,13 @@ function AdminReportes() {
                       <button
                         type="button"
                         onClick={() => handleResolve(report.id)}
-                        className="text-ink-500 hover:underline"
+                        className="text-ink-500 hover:underline disabled:opacity-50"
                       >
                         Descartar reporte
                       </button>
                     </>
                   )}
-                </div>
+                </ModeracionReporte>
               </div>
             )
           })}
