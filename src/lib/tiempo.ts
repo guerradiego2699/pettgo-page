@@ -14,6 +14,11 @@ export function haceCuanto(iso: string | null | undefined, ahora: Date = new Dat
   return `hace ${meses} ${meses === 1 ? "mes" : "meses"}`
 }
 
+// "3 nov 2026" (para decir en qué fecha ocurrió algo).
+export function fechaCorta(iso: string): string {
+  return new Intl.DateTimeFormat("es-CL", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso))
+}
+
 // "el 8 de noviembre" (para decir cuándo se puede volver a preguntar).
 export function fechaLarga(iso: string): string {
   return new Intl.DateTimeFormat("es-CL", { day: "numeric", month: "long" }).format(new Date(iso))

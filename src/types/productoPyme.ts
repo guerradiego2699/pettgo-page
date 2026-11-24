@@ -53,6 +53,9 @@ export interface ProductoPymeMetrica {
   stock_bloqueado_hasta: string | null
   archivado_en: string | null
   archivado_motivo: "manual" | "sin_stock" | null
+  // Cuándo se propuso y cuándo la pyme lo aceptó (es decir, cuándo quedó en la página).
+  creado_en: string
+  aceptado_en: string | null
   vistas_totales: number
   vistas_unicas: number
   clics_totales: number

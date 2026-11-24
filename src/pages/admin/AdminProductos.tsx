@@ -4,7 +4,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { useAuth } from "../../context/AuthContext"
 import { uploadImage, extensionFor } from "../../lib/storage"
 import { CATEGORIAS_PRODUCTO, ESPECIE_LABEL, etiquetaCategoria, normalizarCategoria } from "../../lib/categoriasProducto"
-import { fechaLarga, haceCuanto } from "../../lib/tiempo"
+import { fechaCorta, fechaLarga, haceCuanto } from "../../lib/tiempo"
 import type { MetricasResponse, ProductoPymeEspecie, ProductoPymeMetrica } from "../../types/productoPyme"
 
 const RANGOS = [
@@ -40,6 +40,18 @@ function LineaStock({ p }: { p: ProductoPymeMetrica }) {
     return <span className="mt-1 block text-xs text-emerald-700">Stock disponible · confirmado {haceCuanto(p.stock_confirmado_en)}</span>
   }
   return <span className="mt-1 block text-xs text-ink-400">Stock sin confirmar</span>
+}
+
+// Fecha en que el producto quedó en la página (cuando la pyme lo aceptó); si aún no se
+// publicó, la de la propuesta.
+function LineaFecha({ p }: { p: ProductoPymeMetrica }) {
+  const publicado = p.estado === "publicado" || p.estado === "archivado"
+  const fecha = publicado ? p.aceptado_en ?? p.creado_en : p.creado_en
+  return (
+    <span className="mt-1 block text-xs text-ink-400">
+      {publicado ? "Agregado a la página el" : "Propuesto el"} {fechaCorta(fecha)}
+    </span>
+  )
 }
 
 const CAMPOS_INICIALES = {
@@ -791,6 +803,7 @@ function AdminProductos() {
                         {producto.estado}
                       </span>
                       <LineaStock p={producto} />
+                      <LineaFecha p={producto} />
                     </td>
                     <td className="px-4 py-3 text-ink-700">
                       {producto.vistas_totales} <span className="text-ink-400">({producto.vistas_unicas} únicas)</span>

@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { data: productos, error: errorProductos } = await supabaseAdmin
     .from("productos_pyme")
-    .select("id, nombre, descripcion, imagen_url, precio_ref, link_tienda, estado, pyme_nombre, pyme_email, categoria, especie, stock_estado, stock_confirmado_en, stock_consultado_en, stock_token_usado, archivado_en, archivado_motivo")
+    .select("id, nombre, descripcion, imagen_url, precio_ref, link_tienda, estado, pyme_nombre, pyme_email, categoria, especie, stock_estado, stock_confirmado_en, stock_consultado_en, stock_token_usado, archivado_en, archivado_motivo, creado_en, aceptado_en")
     .order("creado_en", { ascending: false })
 
   if (errorProductos) {
